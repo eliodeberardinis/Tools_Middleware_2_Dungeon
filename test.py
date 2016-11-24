@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     #Print number of elements in the kit
     for i in range(scene.GetRootNode().GetChildCount()):
-        print("%s" % scene.GetRootNode().GetChild(i).GetName())
+        print("%s: %s" % (i, scene.GetRootNode().GetChild(i).GetName()))
 
     #Save the scene in a new file
     if len(sys.argv) > 2:
