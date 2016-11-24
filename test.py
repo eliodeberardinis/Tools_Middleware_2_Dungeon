@@ -17,7 +17,8 @@ if __name__ == "__main__":
     importer.Destroy()
 
     #Print number of elements in the kit
-    print("Number of meshes: %s." % scene.GetRootNode().GetChildCount())
+    for i in range(scene.GetRootNode().GetChildCount()):
+        print("%s" % scene.GetRootNode().GetChild(i).GetName())
 
     #Save the scene in a new file
     if len(sys.argv) > 2:
