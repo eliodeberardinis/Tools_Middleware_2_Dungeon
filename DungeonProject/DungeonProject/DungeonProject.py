@@ -168,7 +168,7 @@ if __name__ == "__main__":
     scene2 = FbxScene.Create(manager, '')
 
     currentTransform = [0, 0, 0, 0]
-    sequence = [19, 6, 19, 0, 0, 1, 0, 1, 0, 2, 0, 2, 2, 1, 0, 13, 3, 5, 3, 11, 3, 5, 3, 19, 7, 19, 2, 0, 0, 10, 0, 0, 0, 14]
+    sequence = [19, 6, 19, 3, 17, 0, 1, 0, 1, 0, 2, 0, 2, 2, 1, 0, 17, 3, 5, 3, 11, 3, 5, 3, 19, 7, 19, 5, 17, 0, 0, 10, 0, 0, 0, 14]
     for i in sequence:
         currentTransform = generateTile(i, manager, scene, scene2, currentTransform)
     
