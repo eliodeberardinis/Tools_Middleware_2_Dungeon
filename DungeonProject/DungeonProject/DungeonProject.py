@@ -1,5 +1,24 @@
 from fbx import *
 import sys
+import math
+
+'''
+Structure with information about the tiles
+First element is the index to the actual tile
+    Note that the same tile can be used in several ways (the same corner tile can be used to
+    turn right or left), so it will need several entries, one for each configuration.
+Second element is the origin offset with which to place the tile so it matches the current transform
+Third element is the offset from the origin where the exit of the tile is (so where to place the next tile)
+
+Note that the offset is a 4-dimensional vector.
+The three first values are the x, y and z coordinate values.
+The fourth value is the rotation about the Y axis.
+'''
+tiles = [
+    [36, [0, 0, 400, 0], [0, 0, 800, 0]], #narrow hallway
+    [37, [0, 0, 200, 0], [200, 0, 200, -90]], #narrow corner right
+    [37, [200, 0, 0, 90], [-200, 0, 200, 90]] #narrow corner left
+]
 
 def copyTile(index, manager, scene, nodeName = "", meshName = ""):
     node = scene.GetRootNode().GetChild(index)
@@ -94,6 +113,22 @@ def makeBox(width, height, depth, manager, nodeName = "", meshName = ""):
 
     return newNode
 
+def generateTile(index, manager, kitScene, scene, transform):
+    tile = copyTile(tiles[index][0], manager, kitScene)
+    scene2.GetRootNode().AddChild(tile)
+    tile.LclRotation.Set(FbxDouble3(tile.LclRotation.Get()[0],
+                                    tile.LclRotation.Get()[1] + transform[3] - tiles[index][1][3],
+                                    tile.LclRotation.Get()[2]))
+    x = tiles[index][1][0] * math.cos(math.radians(tiles[index][1][3])) + tiles[index][1][2] * math.sin(math.radians(tiles[index][1][3]))
+    z = tiles[index][1][2] * math.cos(math.radians(tiles[index][1][3])) + tiles[index][1][0] * math.sin(math.radians(tiles[index][1][3]))
+    tile.LclTranslation.Set(FbxDouble3(transform[0] + x * math.cos(math.radians(transform[3])) - z * math.sin(math.radians(transform[3])),
+                                       transform[1] - tiles[index][1][1],
+                                       transform[2] - z * math.cos(math.radians(transform[3])) + x * math.sin(math.radians(transform[3]))))
+    return [transform[0] + tiles[index][2][0] * math.cos(math.radians(transform[3])) - tiles[index][2][2] * math.sin(math.radians(transform[3])),
+            transform[1] - tiles[index][2][1],
+            transform[2] - tiles[index][2][2] * math.cos(math.radians(transform[3])) - tiles[index][2][0] * math.sin(math.radians(transform[3])),
+            transform[3] + tiles[index][2][3]]
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -112,37 +147,22 @@ if __name__ == "__main__":
 
     #Make another scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
-    door = copyTile(29, manager, scene)
-    hallway1 = copyTile(17, manager, scene)
-    hallway2 = copyTile(17, manager, scene)
-    hallway3 = copyTile(17, manager, scene)
-    stairs = copyTile(18, manager, scene)
-    scene2.GetRootNode().AddChild(door)
-    scene2.GetRootNode().AddChild(hallway1)
-    scene2.GetRootNode().AddChild(hallway2)
-    scene2.GetRootNode().AddChild(hallway3)
-    scene2.GetRootNode().AddChild(stairs)
-    door.LclTranslation.Set(FbxDouble3(door.LclTranslation.Get()[0],
-                                       door.LclTranslation.Get()[1],
-                                       door.LclTranslation.Get()[2] - 1125))
-    hallway1.LclTranslation.Set(FbxDouble3(hallway1.LclTranslation.Get()[0],
-                                        hallway1.LclTranslation.Get()[1],
-                                        hallway1.LclTranslation.Get()[2] - 750))
-    #node2.LclTranslation.Set(FbxDouble3(node2.LclTranslation.Get()[0],
-                                        #node2.LclTranslation.Get()[1],
-                                        #node2.LclTranslation.Get()[2]))
-    hallway3.LclTranslation.Set(FbxDouble3(hallway3.LclTranslation.Get()[0],
-                                        hallway3.LclTranslation.Get()[1],
-                                        hallway3.LclTranslation.Get()[2] + 750))
-    stairs.LclTranslation.Set(FbxDouble3(stairs.LclTranslation.Get()[0],
-                                        stairs.LclTranslation.Get()[1],
-                                        stairs.LclTranslation.Get()[2] + 1500))
 
-    box = makeBox(32, 128, 32, manager, "Player", "PlayerMesh")
-    scene2.GetRootNode().AddChild(box)
-    box.LclTranslation.Set(FbxDouble3(box.LclTranslation.Get()[0],
-                                      box.LclTranslation.Get()[1],
-                                      box.LclTranslation.Get()[2] - 1125))
+    currentTransform = [0, 0, 0, 0]
+    currentTransform = generateTile(0, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(2, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(0, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(1, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(0, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(1, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(0, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(0, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(0, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(1, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(0, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(2, manager, scene, scene2, currentTransform)
+    currentTransform = generateTile(0, manager, scene, scene2, currentTransform)
+
     #Save the scene in a new file
     if len(sys.argv) > 2:
         print("Saving the scene into '%s'." % sys.argv[2])
