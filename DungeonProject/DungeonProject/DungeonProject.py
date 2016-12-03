@@ -113,14 +113,14 @@ if __name__ == "__main__":
     #Make another scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
     door = copyTile(29, manager, scene)
-    hallway1 = copyTile(8, manager, scene)
-    #hallway2 = copyTile(17, manager, scene)
-    #hallway3 = copyTile(17, manager, scene)
+    hallway1 = copyTile(17, manager, scene)
+    hallway2 = copyTile(17, manager, scene)
+    hallway3 = copyTile(17, manager, scene)
     stairs = copyTile(18, manager, scene)
     scene2.GetRootNode().AddChild(door)
     scene2.GetRootNode().AddChild(hallway1)
-    #scene2.GetRootNode().AddChild(hallway2)
-    #scene2.GetRootNode().AddChild(hallway3)
+    scene2.GetRootNode().AddChild(hallway2)
+    scene2.GetRootNode().AddChild(hallway3)
     scene2.GetRootNode().AddChild(stairs)
     door.LclTranslation.Set(FbxDouble3(door.LclTranslation.Get()[0],
                                        door.LclTranslation.Get()[1],
@@ -129,11 +129,11 @@ if __name__ == "__main__":
                                         hallway1.LclTranslation.Get()[1],
                                         hallway1.LclTranslation.Get()[2] - 750))
     #node2.LclTranslation.Set(FbxDouble3(node2.LclTranslation.Get()[0],
-    #                                    node2.LclTranslation.Get()[1],
-    #                                    node2.LclTranslation.Get()[2]))
-    #hallway3.LclTranslation.Set(FbxDouble3(hallway3.LclTranslation.Get()[0],
-     #                                   hallway3.LclTranslation.Get()[1],
-     #                                   hallway3.LclTranslation.Get()[2] + 750))
+                                        #node2.LclTranslation.Get()[1],
+                                        #node2.LclTranslation.Get()[2]))
+    hallway3.LclTranslation.Set(FbxDouble3(hallway3.LclTranslation.Get()[0],
+                                        hallway3.LclTranslation.Get()[1],
+                                        hallway3.LclTranslation.Get()[2] + 750))
     stairs.LclTranslation.Set(FbxDouble3(stairs.LclTranslation.Get()[0],
                                         stairs.LclTranslation.Get()[1],
                                         stairs.LclTranslation.Get()[2] + 1500))
