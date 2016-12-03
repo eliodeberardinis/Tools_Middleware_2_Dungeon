@@ -129,8 +129,8 @@ if __name__ == "__main__":
                                         hallway1.LclTranslation.Get()[1],
                                         hallway1.LclTranslation.Get()[2] - 750))
     #node2.LclTranslation.Set(FbxDouble3(node2.LclTranslation.Get()[0],
-    #                                    node2.LclTranslation.Get()[1],
-    #                                    node2.LclTranslation.Get()[2]))
+                                        #node2.LclTranslation.Get()[1],
+                                        #node2.LclTranslation.Get()[2]))
     hallway3.LclTranslation.Set(FbxDouble3(hallway3.LclTranslation.Get()[0],
                                         hallway3.LclTranslation.Get()[1],
                                         hallway3.LclTranslation.Get()[2] + 750))
