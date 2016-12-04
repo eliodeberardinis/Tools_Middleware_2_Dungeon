@@ -15,28 +15,40 @@ The three first values are the x, y and z coordinate values.
 The fourth value is the rotation about the Y axis.
 '''
 tiles = [
-    [36, [0, 0, 400, 0], [0, 0, -800, 0]], #narrow hallway
-    [37, [0, 0, 200, 0], [200, 0, -200, -90]], #narrow corner right
-    [37, [200, 0, 0, 90], [-200, 0, -200, 90]], #narrow corner left
-    [17, [0, 0, 400, 0], [0, 0, -800, 0]], #wide hallway
-    [30, [0, 0, 400, 0], [400, 0, -400, -90]], #wide corner right
-    [30, [400, 0, 0, 90], [-400, 0, -400, 90]], #wide corner left
-    [6, [0, 0, 800, 0], [0, 0, -1600, 0]], #extrawide hallway
-    [5, [0, 0, 800, 0], [800, 0, -800, -90]], #extrawide corner right
-    [5, [800, 0, 0, 90], [-800, 0, -800, 90]], #extrawide corner left
-    [35, [0, 0, -400, 180], [0, -400, -1600, 0]], #narrow ramp down
-    [35, [0, -400, 1200, 0], [0, 400, -1600, 0]], #narrow ramp up
-    [18, [0, 0, -400, 180], [0, -400, -1600, 0]], #wide ramp down
-    [18, [0, -400, 1200, 0], [0, 400, -1600, 0]], #wide ramp up
-    [24, [0, 0, 0, 0], [0, 0, 0, 0]], #narrow door square-wide
-    [28, [0, 0, 0, 0], [0, 0, 0, 0]], #narrow door pointy
-    [27, [0, 0, 0, 0], [0, 0, 0, 0]], #narrow door square-narrow
-    [25, [0, 0, 0, 0], [0, 0, 0, 0]], #wide door square
-    [29, [0, 0, 0, 0], [0, 0, 0, 0]], #wide door square
-    [26, [0, 0, 0, 0], [0, 0, 0, 0]], #wide door square
-    [2, [0, 0, 0, 0], [0, 0, 0, 0]], #extrawide door square
-    [0, [0, 0, 0, 0], [0, 0, 0, 0]], #extrawide door square
-    [1, [0, 0, 0, 0], [0, 0, 0, 0]], #extrawide door square
+    [36, [0, 0, 400, 0], [[0, 0, -800, 0]]], #narrow hallway
+    [37, [0, 0, 200, 0], [[200, 0, -200, -90]]], #narrow corner right
+    [37, [200, 0, 0, 90], [[-200, 0, -200, 90]]], #narrow corner left
+    [34, [200, 0, 0, 90], [[-200, 0, -200, 90], [200, 0, -200, -90]]], #narrow corner 3 T
+    [34, [0, 0, 200, 0], [[0, 0, -400, 0], [200, 0, -200, -90]]], #narrow corner 3 right
+    [34, [0, 0, -200, 180], [[-200, 0, -200, 90], [0, 0, -400, 0]]], #narrow corner 3 left
+    [33, [0, 0, 200, 0], [[-200, 0, -200, 90], [0, 0, -400, 0], [200, 0, -200, -90]]], #narrow corner 4
+    [24, [0, 0, 0, 0], [[0, 0, 0, 0]]], #narrow door square-wide
+    [28, [0, 0, 0, 0], [[0, 0, 0, 0]]], #narrow door angle
+    [27, [0, 0, 0, 0], [[0, 0, 0, 0]]], #narrow door square
+    [35, [0, 0, -400, 180], [[0, -400, -1600, 0]]], #narrow ramp down
+    [35, [0, -400, 1200, 0], [[0, 400, -1600, 0]]], #narrow ramp up
+    [17, [0, 0, 400, 0], [[0, 0, -800, 0]]], #wide hallway
+    [30, [0, 0, 400, 0], [[400, 0, -400, -90]]], #wide corner right
+    [30, [400, 0, 0, 90], [[-400, 0, -400, 90]]], #wide corner left
+    [31, [400, 0, 0, 90], [[-400, 0, -400, 90], [400, 0, -400, -90]]], #wide corner 3 T
+    [31, [0, 0, 400, 0], [[0, 0, -800, 0], [400, 0, -400, -90]]], #wide corner 3 right
+    [31, [0, 0, -400, 180], [[-400, 0, -400, 90], [0, 0, -800, 0]]], #wide corner 3 left
+    [32, [0, 0, 400, 0], [[-400, 0, -400, 90], [0, 0, -800, 0], [400, 0, -400, -90]]], #wide corner 4
+    [25, [0, 0, 0, 0], [[0, 0, 0, 0]]], #wide door angle-wide
+    [29, [0, 0, 0, 0], [[0, 0, 0, 0]]], #wide door angle
+    [26, [0, 0, 0, 0], [[0, 0, 0, 0]]], #wide door square
+    [18, [0, 0, -400, 180], [[0, -400, -1600, 0]]], #wide ramp down
+    [18, [0, -400, 1200, 0], [[0, 400, -1600, 0]]], #wide ramp up
+    [6, [0, 0, 800, 0], [[0, 0, -1600, 0]]], #extrawide hallway
+    [5, [0, 0, 800, 0], [[800, 0, -800, -90]]], #extrawide corner right
+    [5, [800, 0, 0, 90], [[-800, 0, -800, 90]]], #extrawide corner left
+    [4, [800, 0, 0, 90], [[-800, 0, -800, 90], [800, 0, -800, -90]]], #extrawide corner 3 T
+    [4, [0, 0, 800, 0], [[0, 0, -800, 0], [800, 0, -800, -90]]], #extrawide corner 3 right
+    [4, [0, 0, -800, 180], [[-800, 0, -800, 90], [0, 0, -1600, 0]]], #extrawide corner 3 left
+    [3, [0, 0, 800, 0], [[-800, 0, -800, 90], [0, 0, -1600, 0], [800, 0, -800, -90]]], #extrawide corner 4
+    [2, [0, 0, 0, 0], [[0, 0, 0, 0]]], #extrawide door angle-wide
+    [0, [0, 0, 0, 0], [[0, 0, 0, 0]]], #extrawide door angle
+    [1, [0, 0, 0, 0], [[0, 0, 0, 0]]], #extrawide door square
 ]
 
 def copyTile(index, manager, scene, nodeName = "", meshName = ""):
@@ -143,10 +155,11 @@ def generateTile(index, manager, kitScene, scene, transform):
     tile.LclTranslation.Set(FbxDouble3(transform[0] + x * math.cos(math.radians(transform[3])) - z * math.sin(math.radians(transform[3])),
                                        transform[1] - tiles[index][1][1],
                                        transform[2] - z * math.cos(math.radians(transform[3])) + x * math.sin(math.radians(transform[3]))))
-    return [transform[0] + tiles[index][2][0] * math.cos(math.radians(transform[3])) + tiles[index][2][2] * math.sin(math.radians(transform[3])),
-            transform[1] + tiles[index][2][1],
-            transform[2] + tiles[index][2][2] * math.cos(math.radians(transform[3])) - tiles[index][2][0] * math.sin(math.radians(transform[3])),
-            transform[3] + tiles[index][2][3]]
+    return [[transform[0] + exit[0] * math.cos(math.radians(transform[3])) + exit[2] * math.sin(math.radians(transform[3])),
+            transform[1] + exit[1],
+            transform[2] + exit[2] * math.cos(math.radians(transform[3])) - exit[0] * math.sin(math.radians(transform[3])),
+            transform[3] + exit[3]]
+            for exit in tiles[index][2]]
 
 
 if __name__ == "__main__":
@@ -164,14 +177,20 @@ if __name__ == "__main__":
     importer.Import(scene)
     importer.Destroy()
 
-    #Make another scene with a composite mesh
+    #Make a scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
+    sequences = [[31, 24, 33, 13, 20, 0, 0, 2, 2, 0, 1, 0, 5, 0, 20, 16, 12, 12, 14, 14, 20, 10, 10, 0, 0, 0, 6, 0, 9],
+                 [0, 3, 0, 9], [0, 9], [0, 9],
+                 [12, 12, 17, 13, 13, 16, 23, 32, 29, 12, 14, 20, 10, 0, 6, 1, 4, 4, 1], [], [], 
+                 [6], [6], [6], [7], [], [], [], [2, 5], [5], [2],
+                 [32, 12, 21],
+                 [], [],
+                 [0, 1, 0, 1, 0, 0, 9]]
+    paths = [[0, 0, 0, 0]]
+    for j in range(len(sequences)):
+        for i in sequences[j]:
+            paths = paths[:j] + generateTile(i, manager, scene, scene2, paths[j]) + paths[j+1:]
 
-    currentTransform = [0, 0, 0, 0]
-    sequence = [19, 6, 19, 3, 17, 0, 1, 0, 1, 0, 2, 0, 2, 2, 1, 0, 17, 3, 5, 3, 11, 3, 5, 3, 19, 7, 19, 5, 17, 0, 0, 10, 0, 0, 0, 14]
-    for i in sequence:
-        currentTransform = generateTile(i, manager, scene, scene2, currentTransform)
-    
     #Save the scene in a new file
     if len(sys.argv) > 2:
         print("Saving the scene into '%s'." % sys.argv[2])
