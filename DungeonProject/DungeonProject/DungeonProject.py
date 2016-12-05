@@ -161,6 +161,10 @@ def generateTile(index, manager, kitScene, scene, transform):
             transform[3] + exit[3]]
             for exit in tiles[index][2]]
 
+# 
+def generateSequenceTile(index, manager, kitScene, scene, transform):
+    return [0]
+   
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
