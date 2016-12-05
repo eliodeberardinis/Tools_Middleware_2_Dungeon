@@ -161,7 +161,7 @@ def generateTile(index, manager, kitScene, scene, transform):
             transform[3] + exit[3]]
             for exit in tiles[index][2]]
 
-# 
+# Function to generate the sequence of tiles that will form the dungeon
 def generateSequenceTile(index, manager, kitScene, scene, transform):
     return [0]
    
