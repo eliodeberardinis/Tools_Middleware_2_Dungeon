@@ -7,4 +7,9 @@ TASKS TO DO:
 - Function to create the rooms with columns, stairs... 
 - Easy, medium,hard dungeon modes
 
+- Extend elements in tile array to facilitate concatenation 
+	- Which tiles can fit
+
+- Random function to select one of the tiles can go with the current one
+
 
