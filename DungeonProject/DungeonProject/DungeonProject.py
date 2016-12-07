@@ -161,6 +161,19 @@ def generateTile(index, manager, kitScene, scene, transform):
             transform[3] + exit[3]]
             for exit in tiles[index][2]]
 
+def buildGraph(numIter):
+    g = "O_"
+    for i in range(numIter):
+        g_ = ""
+        for c in g:
+            if c == "_":
+                #Apply rules
+                g_ += "X_"
+            else:
+                g_ += c
+        g = g_
+    return g
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -176,6 +189,10 @@ if __name__ == "__main__":
         sys.exit(-1)
     importer.Import(scene)
     importer.Destroy()
+
+    #Create the graph for the dungeon
+    graph = buildGraph(5)
+    print graph
 
     #Make a scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
