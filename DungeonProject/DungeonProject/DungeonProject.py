@@ -144,7 +144,7 @@ def makeBox(width, height, depth, manager, nodeName = "", meshName = ""):
 
     return newNode
 
-def generateTile(index, manager, kitScene, scene, transform):
+def generateTile(index, transform, manager, kitScene, scene):
     tile = copyTile(tiles[index][0], manager, kitScene)
     scene2.GetRootNode().AddChild(tile)
     tile.LclRotation.Set(FbxDouble3(tile.LclRotation.Get()[0],
@@ -172,8 +172,39 @@ def buildGraph(numIter):
             else:
                 g_ += c
         g = g_
-    return g
 
+    #Remove the expanding characters ('_')
+    g_ = ""
+    for c in g:
+        if c != "_":
+            g_ += c
+    return g_
+
+def buildDungeon(graph, transform, manager, kitScene, scene):
+    if len(graph) == 0:
+        return
+
+    if graph[0] != "O":
+        transform = buildPath(transform, manager, kitScene, scene)
+
+    properties = {
+        "isSpawnRoom": graph[0] == "O",
+        "numExits": 1 if len(graph) > 1 else 0
+        }
+    transform = buildRoom(properties, transform, manager, kitScene, scene)
+    
+    buildDungeon(graph[1:], transform[0], manager, kitScene, scene)
+
+def buildRoom(properties, transform, manager, kitScene, scene):
+    transform = generateTile(20 if not properties["isSpawnRoom"] else 19, transform, manager, kitScene, scene)[0]
+    transform = generateTile(12, transform, manager, kitScene, scene)
+    for i in range(len(transform)):
+        transform[i] = generateTile(20 if properties["numExits"] > 0 else 21, transform[i], manager, kitScene, scene)[0]
+    return transform
+
+def buildPath(transform, manager, kitScene, scene):
+    transform = generateTile(0, transform, manager, kitScene, scene)[0]
+    return transform
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -191,11 +222,12 @@ if __name__ == "__main__":
     importer.Destroy()
 
     #Create the graph for the dungeon
-    graph = buildGraph(5)
+    graph = buildGraph(3)
     print graph
 
     #Make a scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
+    '''
     sequences = [[31, 24, 33, 13, 20, 0, 0, 2, 2, 0, 1, 0, 5, 0, 20, 16, 12, 12, 14, 14, 20, 10, 10, 0, 0, 0, 6, 0, 9],
                  [0, 3, 0, 9], [0, 9], [0, 9],
                  [12, 12, 17, 13, 13, 16, 23, 32, 29, 32, 12, 14, 20, 10, 0, 6, 1, 4, 4, 1], [], [], 
@@ -207,6 +239,8 @@ if __name__ == "__main__":
     for j in range(len(sequences)):
         for i in sequences[j]:
             paths = paths[:j] + generateTile(i, manager, scene, scene2, paths[j]) + paths[j+1:]
+    '''
+    buildDungeon(graph, [0, 0, 0, 0], manager, scene, scene2)
 
     #Save the scene in a new file
     if len(sys.argv) > 2:
