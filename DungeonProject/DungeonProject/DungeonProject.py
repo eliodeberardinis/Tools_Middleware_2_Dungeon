@@ -164,22 +164,27 @@ def generateTile(index, transform, manager, kitScene, scene):
 
 def buildGraph(numIter):
     g = "OX_"
+    prevExpansions = 1
     for i in range(numIter-1):
         g_ = ""
+        numNewExpansions = 0
         for c in g:
             if c == "_":
                 #Apply rules
-                branches = random.randint(1, 3)
+                branches = random.randint(0 if prevExpansions > 1 else 1, 3)
+                prevExpansions -= 1
+                numNewExpansions += branches
                 if branches == 1:
                     g_ += "X_"
-                else:
+                elif branches > 1:
                     g_ += "[X_"
-                    for i in range(branches-1):
+                    for j in range(branches-1):
                         g_ += ",X_"
                     g_ += "]"
             else:
                 g_ += c
         g = g_
+        prevExpansions = numNewExpansions
 
     #Remove the expanding characters ('_')
     g_ = ""
