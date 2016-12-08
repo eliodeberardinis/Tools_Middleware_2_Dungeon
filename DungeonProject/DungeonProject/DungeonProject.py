@@ -164,7 +164,7 @@ def generateTile(index, transform, manager, kitScene, scene):
 
 def buildGraph(numIter):
     g = "O_"
-    prevExpansions = 0
+    prevExpansions = 1
     for i in range(numIter):
         g_ = ""
         numNewExpansions = 0
