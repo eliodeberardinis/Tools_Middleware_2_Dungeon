@@ -163,9 +163,9 @@ def generateTile(index, transform, manager, kitScene, scene):
             for exit in tiles[index][2]]
 
 def buildGraph(numIter):
-    g = "OX_"
-    prevExpansions = 1
-    for i in range(numIter-1):
+    g = "O_"
+    prevExpansions = 0
+    for i in range(numIter):
         g_ = ""
         numNewExpansions = 0
         for c in g:
