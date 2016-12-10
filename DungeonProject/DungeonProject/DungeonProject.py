@@ -152,7 +152,7 @@ def makeBox(width, height, depth, manager, nodeName = "", meshName = ""):
 
     return newNode
 
-# Places a the tile specified by index to match with the point specified by transform, and adds it to the scene.
+# Places the tile specified by index to match with the point specified by transform, and adds it to the scene.
 def generateTile(index, transform, manager, kitScene, scene):
     # Create the node with the tile's mesh and adds it to the scene
     tile = copyTile(tiles[index][0], manager, kitScene)
@@ -224,7 +224,7 @@ def buildGraph(numIter):
 # Splits a graph into its immediate branches
 # Examples:
 # split("XXXX") = ["XXXX"]
-# split("[X,XXX]") = ["X", "XXX"]
+# split("[X,XXX]") = ["X","XXX"]
 def split(graph):
     if len(graph) == 0 or graph[0] != "[":
         return [graph]
