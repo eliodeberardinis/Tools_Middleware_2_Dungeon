@@ -5,15 +5,20 @@ import random
 
 '''
 Structure with information about the tiles
+
 First element is the index to the actual tile
     Note that the same tile can be used in several ways (the same corner tile can be used to
     turn right or left), so it will need several entries, one for each configuration.
-Second element is the origin offset with which to place the tile so it matches the current transform
-Third element is the offset from the origin where the exit of the tile is (so where to place the next tile)
 
-Note that the offset is a 4-dimensional vector.
+Second element is the "in point", that is the offset from the origin/centre of the tile to the point
+    of the tile that should match the final point of the previously placed tile.
+
+Third element is the "out point", that is the offset from the tile's "in point" that would be the point
+    where to place the next tile.
+
+Note that offsets are expressed as 4-dimensional vectorr.
 The three first values are the x, y and z coordinate values.
-The fourth value is the rotation about the Y axis.
+The fourth value is the rotation around the Y axis.
 '''
 tiles = [
     [36, [0, 0, 400, 0], [[0, 0, -800, 0]]], #narrow hallway
@@ -52,6 +57,7 @@ tiles = [
     [1, [0, 0, 0, 0], [[0, 0, 0, 0]]], #extrawide door square
 ]
 
+# Makes a copy of the tile specified by index and returns a node that contains the new mesh
 def copyTile(index, manager, scene, nodeName = "", meshName = ""):
     node = scene.GetRootNode().GetChild(index)
     mesh = node.GetMesh()
@@ -87,6 +93,7 @@ def copyTile(index, manager, scene, nodeName = "", meshName = ""):
     return newNode
 
 
+# Creates a box mesh with the specified dimensions and returns a node that contains it
 def makeBox(width, height, depth, manager, nodeName = "", meshName = ""):
     width *= 0.5
     depth *= 0.5
@@ -145,48 +152,69 @@ def makeBox(width, height, depth, manager, nodeName = "", meshName = ""):
 
     return newNode
 
+# Places a the tile specified by index to match with the point specified by transform, and adds it to the scene.
 def generateTile(index, transform, manager, kitScene, scene):
+    # Create the node with the tile's mesh and adds it to the scene
     tile = copyTile(tiles[index][0], manager, kitScene)
     scene2.GetRootNode().AddChild(tile)
+
+    # Changes the rotation of the node to match the orientation given by transform
     tile.LclRotation.Set(FbxDouble3(tile.LclRotation.Get()[0],
                                     tile.LclRotation.Get()[1] + transform[3] - tiles[index][1][3],
                                     tile.LclRotation.Get()[2]))
+
+    # Calculates the x and z coordinates of the tile (these depend on the rotation of the "in point" of the tile)
     x = tiles[index][1][0] * math.cos(math.radians(tiles[index][1][3])) + tiles[index][1][2] * math.sin(math.radians(tiles[index][1][3]))
     z = tiles[index][1][2] * math.cos(math.radians(tiles[index][1][3])) + tiles[index][1][0] * math.sin(math.radians(tiles[index][1][3]))
+
+    # Sets the final coordinates of the tile to match the coordinates of the given transform
     tile.LclTranslation.Set(FbxDouble3(transform[0] + x * math.cos(math.radians(transform[3])) - z * math.sin(math.radians(transform[3])),
                                        transform[1] - tiles[index][1][1],
                                        transform[2] - z * math.cos(math.radians(transform[3])) + x * math.sin(math.radians(transform[3]))))
+
+    # Returns a list of the new points (transforms) where the next tiles will be placed
     return [[transform[0] + exit[0] * math.cos(math.radians(transform[3])) + exit[2] * math.sin(math.radians(transform[3])),
             transform[1] + exit[1],
             transform[2] + exit[2] * math.cos(math.radians(transform[3])) - exit[0] * math.sin(math.radians(transform[3])),
             transform[3] + exit[3]]
             for exit in tiles[index][2]]
 
+# Generates a tree graph that represents the high level structure of the dungeon
+# Nodes are represented by each letter character
+# Two nodes connected by one path are represented by two consecutive letters: XX
+# A node branching out into multiple paths is represented by X[path1, path2, ..., pathN]
+# The character '_' represents the points where the grammar will be expanding the tree on each iteration
 def buildGraph(numIter):
-    g = "O_"
+    g = "O_" #Axiom of the grammar
     prevExpansions = 1
-    for i in range(numIter):
+    for i in range(numIter): #Generate iterations
         g_ = ""
         numNewExpansions = 0
         for c in g:
-            if c == "_":
-                #Apply rules
+            if c == "_": #If it is an expansion character, apply the rules
+                #Decide on how many paths will branch out from this point (0 through 3)
+                #Only allow for 0 when there is at least another expansion character in the current iteration
+                #   (meaning that at least one branch of the tree will reach the maximum number of iterations)
                 branches = random.randint(0 if prevExpansions > 1 else 1, 3)
                 prevExpansions -= 1
                 numNewExpansions += branches
+
                 if branches == 1:
+                    #Expand the tree with one sequencial node
                     g_ += "X_"
                 elif branches > 1:
+                    #Expand the tree with a branching structure
                     g_ += "[X_"
                     for j in range(branches-1):
                         g_ += ",X_"
                     g_ += "]"
-            else:
+
+            else: #If it is any other character, copy it to the string
                 g_ += c
         g = g_
         prevExpansions = numNewExpansions
 
-    #Remove the expanding characters ('_')
+    #Remove the expanding characters ('_') from the final graph string
     g_ = ""
     for c in g:
         if c != "_":
@@ -194,6 +222,9 @@ def buildGraph(numIter):
     return g_
 
 # Splits a graph into its immediate branches
+# Examples:
+# split("XXXX") = ["XXXX"]
+# split("[X,XXX]") = ["X", "XXX"]
 def split(graph):
     if len(graph) == 0 or graph[0] != "[":
         return [graph]
@@ -207,36 +238,53 @@ def split(graph):
             depth += 1 if c == "[" else -1 if c == "]" else 0
     return graphs
 
+# Build a dungeon according to the given branch from the given transform point
+# Builds a path followed by the first room in the graph, the recursively does so for the continuing branches
 def buildDungeon(graph, transform, manager, kitScene, scene):
     if len(graph) == 0:
         return
 
+    #If the spawn room is to be built, don't build a path first
     if graph[0] != "O":
         transform = buildPath(transform, manager, kitScene, scene)
 
+    #Obtain the branches after the room to be built
     graphs = split(graph[1:]) if len(graph) > 1 else [] 
 
+    #Build the room
     properties = {
         "isSpawnRoom": graph[0] == "O",
         "numExits": len(graphs)
         }
     transform = buildRoom(properties, transform, manager, kitScene, scene)
 
+    #Recursively build the next part of the dungeon
     for i in range(len(graphs)):
         buildDungeon(graphs[i], transform[i], manager, kitScene, scene)
 
+# Builds a room from the given transform point according to the given properties
+# Returns the list of points from where build the next paths of the dungeon
 def buildRoom(properties, transform, manager, kitScene, scene):
+    #Build a door
     transform = generateTile(20 if not properties["isSpawnRoom"] else 19, transform, manager, kitScene, scene)[0]
+
+    #Build the room with one tile according to the number of exits needed for the room
     transform = generateTile({
             0: 12,
             1: 12,
             2: 15,
             3: 18
         }[properties["numExits"]], transform, manager, kitScene, scene)
+
+    #Build doors on each exit
     for i in range(len(transform)):
         transform[i] = generateTile(20 if properties["numExits"] > 0 else 21, transform[i], manager, kitScene, scene)[0]
+
     return transform
 
+#Builds a path from the given transform point
+#Returns the end point of the path, from where to build the next part of the dungeon
+#For now, paths should only return one path, since they are built between one room and another
 def buildPath(transform, manager, kitScene, scene):
     transform = generateTile(0, transform, manager, kitScene, scene)[0]
     return transform
