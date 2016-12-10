@@ -162,6 +162,50 @@ def generateTile(index, transform, manager, kitScene, scene):
             transform[3] + exit[3]]
             for exit in tiles[index][2]]
 
+def buildGraph(numIter):
+    g = "O_"
+    prevExpansions = 1
+    for i in range(numIter):
+        g_ = ""
+        numNewExpansions = 0
+        for c in g:
+            if c == "_":
+                #Apply rules
+                branches = random.randint(0 if prevExpansions > 1 else 1, 3)
+                prevExpansions -= 1
+                numNewExpansions += branches
+                if branches == 1:
+                    g_ += "X_"
+                elif branches > 1:
+                    g_ += "[X_"
+                    for j in range(branches-1):
+                        g_ += ",X_"
+                    g_ += "]"
+            else:
+                g_ += c
+        g = g_
+        prevExpansions = numNewExpansions
+
+    #Remove the expanding characters ('_')
+    g_ = ""
+    for c in g:
+        if c != "_":
+            g_ += c
+    return g_
+
+# Splits a graph into its immediate branches
+def split(graph):
+    if len(graph) == 0 or graph[0] != "[":
+        return [graph]
+    graphs = [""]
+    depth = 0
+    for c in graph[1:-1]:
+        if c == "," and depth == 0:
+            graphs += [""]
+        else:
+            graphs[-1] += c
+            depth += 1 if c == "[" else -1 if c == "]" else 0
+    return graphs
 
 def buildDungeon(graph, transform, manager, kitScene, scene):
     if len(graph) == 0:
