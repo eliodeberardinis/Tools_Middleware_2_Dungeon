@@ -304,6 +304,10 @@ if __name__ == "__main__":
     importer.Import(scene)
     importer.Destroy()
 
+    #Input the number of iterations ([1-10])
+
+    #Input the difficulty of the dungeon (E/M/H)
+
     #Create the graph for the dungeon
     graph = buildGraph(3)
     print graph
