@@ -289,16 +289,19 @@ def buildPath(transform, manager, kitScene, scene):
     transform = generateTile(0, transform, manager, kitScene, scene)[0]
     return transform
 
-#Function to limit the input of difficulty to three letter only
+# Function to limit the input of difficulty to three letter only (E/M/H)
 def inputDifficulty():
+    # Get input from command line
     diff = raw_input("Enter dungeon difficulty (E/M/H): ")
     while True:
+        # If it´s one of the values we need we exit the function
         if (diff == "E" or diff == "e" or diff == "M" or diff == "m" or diff == "H" or diff == "h"):
             break
         else:
             #We ask for the input again until it´s one of the values we want
             diff = raw_input("Enter dungeon difficulty (E/M/H): ")
 
+    # Return the upper case to avoid problems in the generation
     return diff.upper()
 
 if __name__ == "__main__":
