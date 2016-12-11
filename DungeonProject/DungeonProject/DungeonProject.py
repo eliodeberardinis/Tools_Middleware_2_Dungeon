@@ -310,7 +310,7 @@ if __name__ == "__main__":
     #Input the difficulty of the dungeon (E/M/H)
 
     #Create the graph for the dungeon
-    graph = buildGraph(3)
+    graph = buildGraph(int(numIteration))
     print graph
 
     #Make a scene with a composite mesh
