@@ -305,7 +305,8 @@ if __name__ == "__main__":
     importer.Destroy()
 
     #Input the number of iterations ([1-10])
-
+    numIteration = raw_input("Enter the number of dungeon iterations: ")
+    print("ITERATIONS: '%s'." % numIteration)
     #Input the difficulty of the dungeon (E/M/H)
 
     #Create the graph for the dungeon
