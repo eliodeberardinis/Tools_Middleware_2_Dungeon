@@ -296,30 +296,48 @@ def buildGraph(numIter, difficultyLevel):
                         branches = 1
 
                      if branches == 2:
-                           num2Splits +=1
+                           num2Splits += 1
                      elif branches == 3:
-                           num3Splits +=1
+                           num3Splits += 1
                 #Hard
-                elif difficultyLevel == 3:
-                     if numSubIter in mylist[:3] and prevSplits < 3: # Use prevSplit parameter if you want to count the splits globally
-                        if num2Splits + num2Splits < 2:
+                elif difficultyLevel == 4:
+                     if numSubIter in mylist[:3] and prevSplits < 3: # Maybe change the rules to add minmum 2 1:2 splits
+                        if num2Splits + num3Splits < 2:
+                           branches = random.randint(2,3)
+                        else:
+                            branches = random.randint(0,2)
+
+                        prevSplits += 1
+                            
+                     elif prevExpansions > 2:
+                            branches = random.randint(0,1)
+                     else:
+                        branches = 1
+
+                     if branches == 2:
+                           num2Splits += 1
+                     elif branches == 3:
+                           num3Splits += 1
+                
+                #VeryHard
+                elif difficultyLevel == 5:
+                     if numSubIter in mylist[:4] and prevSplits < 4: # Maybe change the rules to add minmum 2 1:3 splits
+                        if num2Splits + num3Splits < 3:
                            branches = random.randint(2,3)
                         else:
                             branches = random.randint(0,3)
 
                         prevSplits += 1
                             
-                     elif prevExpansions > 1:
+                     elif prevExpansions > 3:
                             branches = random.randint(0,1)
                      else:
                         branches = 1
 
                      if branches == 2:
-                           num2Splits +=1
+                           num2Splits += 1
                      elif branches == 3:
-                           num3Splits +=1
-                
-                #VeryHard
+                           num3Splits += 1
                 
 
                 prevExpansions -= 1
@@ -432,7 +450,7 @@ if __name__ == "__main__":
     importer.Destroy()
 
     #Create the graph for the dungeon
-    graph = buildGraph(15,2)
+    graph = buildGraph(10,3)
     print graph
 
     #Make a scene with a composite mesh
