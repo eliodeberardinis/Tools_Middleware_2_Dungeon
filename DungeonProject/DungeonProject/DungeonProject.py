@@ -308,6 +308,8 @@ if __name__ == "__main__":
     numIteration = raw_input("Enter the number of dungeon iterations: ")
     print("ITERATIONS: '%s'." % numIteration)
     #Input the difficulty of the dungeon (E/M/H)
+    difficulty = raw_input("Enter dungeon difficulty (E/M/H): ")
+    print("DIFFICULTY: '%s'." % difficulty)
 
     #Create the graph for the dungeon
     graph = buildGraph(int(numIteration))
