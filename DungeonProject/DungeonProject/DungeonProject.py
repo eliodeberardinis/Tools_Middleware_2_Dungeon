@@ -292,6 +292,10 @@ def buildPath(transform, manager, kitScene, scene):
 #Function to limit the input of difficulty to three letter only
 def inputDifficulty():
     diff = raw_input("Enter dungeon difficulty (E/M/H): ")
+    while True:
+        if (diff == "E" or diff == "e" or diff == "M" or diff == "m" or diff == "H" or diff == "h"):
+            break
+
     return diff
 
 if __name__ == "__main__":
