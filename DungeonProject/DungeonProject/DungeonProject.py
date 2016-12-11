@@ -295,6 +295,9 @@ def inputDifficulty():
     while True:
         if (diff == "E" or diff == "e" or diff == "M" or diff == "m" or diff == "H" or diff == "h"):
             break
+        else:
+            #We ask for the input again until it´s one of the values we want
+            diff = raw_input("Enter dungeon difficulty (E/M/H): ")
 
     return diff
 
