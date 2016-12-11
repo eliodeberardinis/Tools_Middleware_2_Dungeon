@@ -289,6 +289,95 @@ def buildPath(transform, manager, kitScene, scene):
     transform = generateTile(0, transform, manager, kitScene, scene)[0]
     return transform
 
+# Checks if two BB's (Bounding Boxes) overlap
+# A BB is defined by: [centre, [sizeX, sizeY, sizeZ]]
+#   where centre is a transform (4D vector),
+#   and sizeN is a pair of two values (each one for each direction)
+# This collision test is based on checking collisions in the projections to the planes of each BB
+#   This is called the Separating Axis Theorem (reference: http://www.dyn4j.org/2010/01/sat/)
+def checkCollision(bb1, bb2):
+    return checkCollisionOnProjectionPlane(bb1[0][3], bb1, bb2) and \
+        checkCollisionOnProjectionPlane(bb1[0][3] + 90, bb1, bb2) and \
+        checkCollisionOnProjectionPlane(bb2[0][3], bb1, bb2) and \
+        checkCollisionOnProjectionPlane(bb2[0][3] + 90, bb1, bb2)
+
+# Checks if two BB's collide when projected onto the vertical origin-passing plane given by the angle
+def checkCollisionOnProjectionPlane(angle, bb1, bb2):
+    # Get the corner points of each BB
+    bb1points = getBBpoints(bb1)
+    bb2points = getBBpoints(bb2)
+
+    # Project every point onto the plane
+    projbb1 = [projectPointOntoPlane(angle, point) for point in bb1points]
+    projbb2 = [projectPointOntoPlane(angle, point) for point in bb2points]
+
+    # Check if the AABB's that contain the projected points collide
+    aabb1 = AABB(projbb1)
+    aabb2 = AABB(projbb2)
+    return checkCollisionAABB(aabb1, aabb2)
+
+# Returns the eight corner points of the given BB
+def getBBpoints(bb):
+    vectors = [
+        [[bb[1][0][0] * math.cos(math.radians(bb[0][3])), 0, bb[1][0][0] * math.sin(math.radians(bb[0][3]))], 
+         [bb[1][0][1] * math.cos(math.radians(bb[0][3])), 0, bb[1][0][1] * math.sin(math.radians(bb[0][3]))],],
+        [[0, bb[1][1][0], 0], [0, bb[1][1][1], 0]],
+        [[-bb[1][2][0] * math.sin(math.radians(bb[0][3])), 0, bb[1][2][0] * math.cos(math.radians(bb[0][3]))], 
+         [-bb[1][2][1] * math.sin(math.radians(bb[0][3])), 0, bb[1][2][1] * math.cos(math.radians(bb[0][3]))]],
+        ]
+
+    return [
+        addVectors([bb[0][:3], vectors[0][0], vectors[1][0], vectors[2][0]]),
+        addVectors([bb[0][:3], vectors[0][0], vectors[1][0], vectors[2][1]]),
+        addVectors([bb[0][:3], vectors[0][0], vectors[1][1], vectors[2][0]]),
+        addVectors([bb[0][:3], vectors[0][0], vectors[1][1], vectors[2][1]]),
+        addVectors([bb[0][:3], vectors[0][1], vectors[1][0], vectors[2][0]]),
+        addVectors([bb[0][:3], vectors[0][1], vectors[1][0], vectors[2][1]]),
+        addVectors([bb[0][:3], vectors[0][1], vectors[1][1], vectors[2][0]]),
+        addVectors([bb[0][:3], vectors[0][1], vectors[1][1], vectors[2][1]])
+    ]
+
+# Adds an infinite amount of vectors
+# PRE: all vectors must have the same dimension (behaviour undefined if not true)
+def addVectors(vectors):
+    result = vectors[0]
+    for v in vectors[1:]:
+        for i in range(len(result)):
+            result[i] += v[i]
+    return result
+
+# Checks if the two AABB's (Axis Aligned Bounding Box) collide
+# Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+def checkCollisionAABB(aabb1, aabb2):
+    return aabb1[0] < aabb2[0] + aabb2[2] and \
+        aabb1[0] + aabb1[2] > aabb2[0] and \
+        aabb1[1] < aabb2[1] + aabb2[3] and \
+        aabb1[1] + aabb1[3] > aabb2[1]
+
+# Creates the AABB that contains all points
+def AABB(points):
+    points = zip(*points)
+    min_x = min(points[0])
+    max_x = max(points[0])
+    min_y = min(points[1])
+    max_y = max(points[1])
+    return (min_x, min_y, max_x - min_x, max_y - min_y)
+
+# Projects a point onto a vertical origin-passing plane given by the angle
+# Returns the projected point in the local coordinates of the plane
+def projectPointOntoPlane(angle, point):
+    # Computes the projection of the point onto the normal vector
+    #normal = [math.cos(math.radians(angle + 90)), 0, math.sin(math.radians(angle + 90))]
+    normal = [-math.sin(math.radians(angle)), 0, math.cos(math.radians(angle))]
+    dotProduct = point[0] * normal[0] + point[2] * normal[2]
+    projection = [v * dotProduct for v in normal]
+
+    # Substract the projection the the original point to obtain the projected point
+    projected = [point[i] - projection[i] for i in range(len(point))]
+
+    # Change the point to return it in the local coordinates of the plane
+    return [projected[0] * math.cos(math.radians(-angle)) - projected[2] * math.sin(math.radians(-angle)), projected[1]]
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print("Error: no kit file path specified.")
