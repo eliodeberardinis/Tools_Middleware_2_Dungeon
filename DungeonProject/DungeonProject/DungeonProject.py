@@ -299,7 +299,7 @@ def inputDifficulty():
             #We ask for the input again until it´s one of the values we want
             diff = raw_input("Enter dungeon difficulty (E/M/H): ")
 
-    return diff
+    return diff.upper()
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
