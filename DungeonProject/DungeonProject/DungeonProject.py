@@ -289,6 +289,11 @@ def buildPath(transform, manager, kitScene, scene):
     transform = generateTile(0, transform, manager, kitScene, scene)[0]
     return transform
 
+#Function to limit the input of difficulty to three letter only
+def inputDifficulty():
+    diff = raw_input("Enter dungeon difficulty (E/M/H): ")
+    return diff
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print("Error: no kit file path specified.")
@@ -308,7 +313,8 @@ if __name__ == "__main__":
     numIteration = raw_input("Enter the number of dungeon iterations: ")
     print("ITERATIONS: '%s'." % numIteration)
     #Input the difficulty of the dungeon (E/M/H)
-    difficulty = raw_input("Enter dungeon difficulty (E/M/H): ")
+
+    difficulty = inputDifficulty()
     print("DIFFICULTY: '%s'." % difficulty)
 
     #Create the graph for the dungeon
