@@ -4,6 +4,57 @@ import math
 import random
 
 '''
+Naming Convention for tiles
+
+Index X : Type_Width_Name
+
+Type: Room/Door/Corridor/Wall/Stair/Floor/Column
+Width: EW (extra wide) / W (wide) / N (narrow) / X (nothing)
+Name: whatever the piece is
+
+Index 0: DOOR_EW_SQUARE
+Index 1: DOOR_EW_HOUSE
+Index 2: DOOR_EW_COMBI
+Index 3: ROOM_EW_4WAY
+Index 4: ROOM_EW_3WAY
+Index 5: ROOM_EW_2WAY
+Index 6: ROOM_EW_1WAY
+Index 7: WALL_X_L
+Index 8: STEP_X_INNER
+Index 9: STEP_X_OUTER
+Index 10: FLOOR_X_SUNKSTEP
+Index 11: FLOOR_X_PLAIN
+Index 12: STEP_X_INNERCURVED
+Index 13: STEP_X_OUTERCURVED
+Index 14: STEP_X_PLAIN
+Index 15: COLUMN_X_LARGE
+Index 16: FLOOR_EW_SUNKCURVED
+Index 17: CORRIDOR_W_1WAY
+Index 18: CORRIDOR_W_DOWN
+Index 19: COLUMN_X_SMALL
+Index 20: FLOOR_X_SUNKL
+Index 21: WALL_X_CURVED
+Index 22: WALL_X_END
+Index 23: WALL_X_STEP
+Index 24: DOOR_N_RECTANGLE
+Index 25: DOOR_W_COMBI
+Index 26: DOOR_W_SQUARE
+Index 27: DOOR_N_SQUARE
+Index 28: DOOR_N_HOUSE
+Index 29: DOOR_W_HOUSE
+Index 30: CORRIDOR_W_2WAY
+Index 31: CORRIDOR_W_3WAY
+Index 32: CORRIDOR_W_4WAY
+Index 33: CORRIDOR_N_4WAY
+Index 34: CORRIDOR_N_3WAY
+Index 35: CORRIDOR_N_DOWN
+Index 36: CORRIDOR_N_1WAY
+Index 37: CORRIDOR_N_2WAY
+
+'''
+
+
+'''
 Structure with information about the tiles
 
 First element is the index to the actual tile
@@ -286,7 +337,10 @@ def buildRoom(properties, transform, manager, kitScene, scene):
 #Returns the end point of the path, from where to build the next part of the dungeon
 #For now, paths should only return one path, since they are built between one room and another
 def buildPath(transform, manager, kitScene, scene):
+
     transform = generateTile(0, transform, manager, kitScene, scene)[0]
+
+
     return transform
 
 # Function to limit the input of difficulty to three letter only (E/M/H)
