@@ -450,7 +450,7 @@ if __name__ == "__main__":
     importer.Destroy()
 
     #Create the graph for the dungeon
-    graph = buildGraph(10,3)
+    graph = buildGraph(10,5)
     print graph
 
     #Make a scene with a composite mesh
