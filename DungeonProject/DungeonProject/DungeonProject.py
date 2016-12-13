@@ -16,14 +16,16 @@ Second element is the "in point", that is the offset from the origin/centre of t
 Third element is the "out point", that is the offset from the tile's "in point" that would be the point
     where to place the next tile.
 
+Fourth element is the dimensions of the tile (two values for each axis)
+
 Note that offsets are expressed as 4-dimensional vectorr.
 The three first values are the x, y and z coordinate values.
 The fourth value is the rotation around the Y axis.
 '''
 tiles = [
-    [36, [0, 0, 400, 0], [[0, 0, -800, 0]]], #narrow hallway
-    [37, [0, 0, 200, 0], [[200, 0, -200, -90]]], #narrow corner right
-    [37, [200, 0, 0, 90], [[-200, 0, -200, 90]]], #narrow corner left
+    [36, [0, 0, 400, 0], [[0, 0, -800, 0]], [[-200, 200], [-400, 400], [-400, 400]]], #narrow hallway
+    [37, [0, 0, 200, 0], [[200, 0, -200, -90]], [[-200, 200], [-400, 400], [-200, 200]]], #narrow corner right
+    [37, [200, 0, 0, 90], [[-200, 0, -200, 90]], [[-200, 200], [-400, 400], [-200, 200]]], #narrow corner left
     [34, [200, 0, 0, 90], [[-200, 0, -200, 90], [200, 0, -200, -90]]], #narrow corner 3 T
     [34, [0, 0, 200, 0], [[0, 0, -400, 0], [200, 0, -200, -90]]], #narrow corner 3 right
     [34, [0, 0, -200, 180], [[-200, 0, -200, 90], [0, 0, -400, 0]]], #narrow corner 3 left
@@ -33,16 +35,16 @@ tiles = [
     [27, [0, 0, 0, 0], [[0, 0, 0, 0]]], #narrow door square
     [35, [0, 0, -400, 180], [[0, -400, -1600, 0]]], #narrow ramp down
     [35, [0, -400, 1200, 0], [[0, 400, -1600, 0]]], #narrow ramp up
-    [17, [0, 0, 400, 0], [[0, 0, -800, 0]]], #wide hallway
+    [17, [0, 0, 400, 0], [[0, 0, -800, 0]], [[-400, 400], [-400, 400], [-400, 400]]], #wide hallway
     [30, [0, 0, 400, 0], [[400, 0, -400, -90]]], #wide corner right
     [30, [400, 0, 0, 90], [[-400, 0, -400, 90]]], #wide corner left
-    [31, [400, 0, 0, 90], [[-400, 0, -400, 90], [400, 0, -400, -90]]], #wide corner 3 T
+    [31, [400, 0, 0, 90], [[-400, 0, -400, 90], [400, 0, -400, -90]], [[-400, 400], [-400, 400], [-400, 400]]], #wide corner 3 T
     [31, [0, 0, 400, 0], [[0, 0, -800, 0], [400, 0, -400, -90]]], #wide corner 3 right
     [31, [0, 0, -400, 180], [[-400, 0, -400, 90], [0, 0, -800, 0]]], #wide corner 3 left
-    [32, [0, 0, 400, 0], [[-400, 0, -400, 90], [0, 0, -800, 0], [400, 0, -400, -90]]], #wide corner 4
-    [25, [0, 0, 0, 0], [[0, 0, 0, 0]]], #wide door angle-wide
-    [29, [0, 0, 0, 0], [[0, 0, 0, 0]]], #wide door angle
-    [26, [0, 0, 0, 0], [[0, 0, 0, 0]]], #wide door square
+    [32, [0, 0, 400, 0], [[-400, 0, -400, 90], [0, 0, -800, 0], [400, 0, -400, -90]], [[-400, 400], [-400, 400], [-400, 400]]], #wide corner 4
+    [25, [0, 0, 0, 0], [[0, 0, 0, 0]], [[0, 0], [0, 0], [0, 0]]], #wide door angle-wide
+    [29, [0, 0, 0, 0], [[0, 0, 0, 0]], [[0, 0], [0, 0], [0, 0]]], #wide door angle
+    [26, [0, 0, 0, 0], [[0, 0, 0, 0]], [[0, 0], [0, 0], [0, 0]]], #wide door square
     [18, [0, 0, -400, 180], [[0, -400, -1600, 0]]], #wide ramp down
     [18, [0, -400, 1200, 0], [[0, 400, -1600, 0]]], #wide ramp up
     [6, [0, 0, 800, 0], [[0, 0, -1600, 0]]], #extrawide hallway
@@ -56,6 +58,32 @@ tiles = [
     [0, [0, 0, 0, 0], [[0, 0, 0, 0]]], #extrawide door angle
     [1, [0, 0, 0, 0], [[0, 0, 0, 0]]], #extrawide door square
 ]
+
+# Added for precision issues
+def sin(angle):
+    while angle < 0:
+        angle += 360
+    while angle >= 360:
+        angle -= 360
+    return {
+        0: 0,
+        90: 1,
+        180: 0,
+        270: -1
+        }.get(angle, math.sin(math.radians(angle)))
+
+# Added for precision issues
+def cos(angle):
+    while angle < 0:
+        angle += 360
+    while angle >= 360:
+        angle -= 360
+    return {
+        0: 1,
+        90: 0,
+        180: -1,
+        270: 0
+        }.get(angle, math.cos(math.radians(angle)))
 
 # Makes a copy of the tile specified by index and returns a node that contains the new mesh
 def copyTile(index, manager, scene, nodeName = "", meshName = ""):
@@ -153,29 +181,39 @@ def makeBox(width, height, depth, manager, nodeName = "", meshName = ""):
     return newNode
 
 # Places a the tile specified by index to match with the point specified by transform, and adds it to the scene.
-def generateTile(index, transform, manager, kitScene, scene):
+# Returns the new transform points where to place the next tiles
+# If the tile to be generated would overlap any of the previously placed tiles, returns false.
+def generateTile(index, transform, manager, kitScene, scene, placedTiles):
+    # Calculates the x and z coordinates of the tile (these depend on the rotation of the "in point" of the tile)
+    x = tiles[index][1][0] * cos(tiles[index][1][3]) + tiles[index][1][2] * sin(tiles[index][1][3])
+    z = tiles[index][1][2] * cos(tiles[index][1][3]) + tiles[index][1][0] * sin(tiles[index][1][3])
+
+    # Sets the final coordinates of the tile to match the coordinates of the given transform
+    newTransform = [transform[0] + x * cos(transform[3]) - z * sin(transform[3]),
+                    transform[1] - tiles[index][1][1],
+                    transform[2] - z * cos(transform[3]) + x * sin(transform[3]),
+                    transform[3] - tiles[index][1][3]]
+
+    # Check if the tile would overlap any of the previously place
+    bb = [newTransform, tiles[index][3]]
+    if checkCollision(bb, placedTiles):
+        return False
+
+    # Add the tile to the collision system
+    placedTiles += [bb]
+
     # Create the node with the tile's mesh and adds it to the scene
     tile = copyTile(tiles[index][0], manager, kitScene)
     scene2.GetRootNode().AddChild(tile)
 
-    # Changes the rotation of the node to match the orientation given by transform
-    tile.LclRotation.Set(FbxDouble3(tile.LclRotation.Get()[0],
-                                    tile.LclRotation.Get()[1] + transform[3] - tiles[index][1][3],
-                                    tile.LclRotation.Get()[2]))
-
-    # Calculates the x and z coordinates of the tile (these depend on the rotation of the "in point" of the tile)
-    x = tiles[index][1][0] * math.cos(math.radians(tiles[index][1][3])) + tiles[index][1][2] * math.sin(math.radians(tiles[index][1][3]))
-    z = tiles[index][1][2] * math.cos(math.radians(tiles[index][1][3])) + tiles[index][1][0] * math.sin(math.radians(tiles[index][1][3]))
-
-    # Sets the final coordinates of the tile to match the coordinates of the given transform
-    tile.LclTranslation.Set(FbxDouble3(transform[0] + x * math.cos(math.radians(transform[3])) - z * math.sin(math.radians(transform[3])),
-                                       transform[1] - tiles[index][1][1],
-                                       transform[2] - z * math.cos(math.radians(transform[3])) + x * math.sin(math.radians(transform[3]))))
+    # Set the transform of the tile
+    tile.LclRotation.Set(FbxDouble3(tile.LclRotation.Get()[0], tile.LclRotation.Get()[1] + newTransform[3], tile.LclRotation.Get()[2]))
+    tile.LclTranslation.Set(FbxDouble3(newTransform[0], newTransform[1], newTransform[2]))
 
     # Returns a list of the new points (transforms) where the next tiles will be placed
-    return [[transform[0] + exit[0] * math.cos(math.radians(transform[3])) + exit[2] * math.sin(math.radians(transform[3])),
+    return [[transform[0] + exit[0] * cos(transform[3]) + exit[2] * sin(transform[3]),
             transform[1] + exit[1],
-            transform[2] + exit[2] * math.cos(math.radians(transform[3])) - exit[0] * math.sin(math.radians(transform[3])),
+            transform[2] + exit[2] * cos(transform[3]) - exit[0] * sin(transform[3]),
             transform[3] + exit[3]]
             for exit in tiles[index][2]]
 
@@ -240,13 +278,13 @@ def split(graph):
 
 # Build a dungeon according to the given branch from the given transform point
 # Builds a path followed by the first room in the graph, the recursively does so for the continuing branches
-def buildDungeon(graph, transform, manager, kitScene, scene):
+def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles):
     if len(graph) == 0:
         return
 
     #If the spawn room is to be built, don't build a path first
     if graph[0] != "O":
-        transform = buildPath(transform, manager, kitScene, scene)
+        transform = buildPath(transform, manager, kitScene, scene, placedTiles)
 
     #Obtain the branches after the room to be built
     graphs = split(graph[1:]) if len(graph) > 1 else [] 
@@ -256,38 +294,49 @@ def buildDungeon(graph, transform, manager, kitScene, scene):
         "isSpawnRoom": graph[0] == "O",
         "numExits": len(graphs)
         }
-    transform = buildRoom(properties, transform, manager, kitScene, scene)
+    transform = buildRoom(properties, transform, manager, kitScene, scene, placedTiles)
 
     #Recursively build the next part of the dungeon
     for i in range(len(graphs)):
-        buildDungeon(graphs[i], transform[i], manager, kitScene, scene)
+        buildDungeon(graphs[i], transform[i], manager, kitScene, scene, placedTiles)
 
 # Builds a room from the given transform point according to the given properties
 # Returns the list of points from where build the next paths of the dungeon
-def buildRoom(properties, transform, manager, kitScene, scene):
+def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
     #Build a door
-    transform = generateTile(20 if not properties["isSpawnRoom"] else 19, transform, manager, kitScene, scene)[0]
+    transform = generateTile(20 if not properties["isSpawnRoom"] else 19, transform, manager, kitScene, scene, [])[0]
 
     #Build the room with one tile according to the number of exits needed for the room
-    transform = generateTile({
+    ret = generateTile({
             0: 12,
             1: 12,
             2: 15,
             3: 18
-        }[properties["numExits"]], transform, manager, kitScene, scene)
+        }[properties["numExits"]], transform, manager, kitScene, scene, placedTiles)
+    transform = ret if ret else [transform for i in range(properties["numExits"])]
 
     #Build doors on each exit
     for i in range(len(transform)):
-        transform[i] = generateTile(20 if properties["numExits"] > 0 else 21, transform[i], manager, kitScene, scene)[0]
+        transform[i] = generateTile(20 if properties["numExits"] > 0 else 21, transform[i], manager, kitScene, scene, [])[0]
 
     return transform
 
 #Builds a path from the given transform point
 #Returns the end point of the path, from where to build the next part of the dungeon
 #For now, paths should only return one path, since they are built between one room and another
-def buildPath(transform, manager, kitScene, scene):
-    transform = generateTile(0, transform, manager, kitScene, scene)[0]
+def buildPath(transform, manager, kitScene, scene, placedTiles):
+    for i in range(random.randint(1, 10)):
+        ret = generateTile(random.choice([0, 0, 0, 0, 1, 2]), transform, manager, kitScene, scene, placedTiles)
+        if ret:
+            transform = ret[0]
     return transform
+
+# Checks if the given BB overlaps with any of the of BB's in the list
+def checkCollision(bb1, bbs):
+    for bb in bbs:
+        if testCollision(bb1, bb):
+            return True
+    return False
 
 # Checks if two BB's (Bounding Boxes) overlap
 # A BB is defined by: [centre, [sizeX, sizeY, sizeZ]]
@@ -295,14 +344,14 @@ def buildPath(transform, manager, kitScene, scene):
 #   and sizeN is a pair of two values (each one for each direction)
 # This collision test is based on checking collisions in the projections to the planes of each BB
 #   This is called the Separating Axis Theorem (reference: http://www.dyn4j.org/2010/01/sat/)
-def checkCollision(bb1, bb2):
-    return checkCollisionOnProjectionPlane(bb1[0][3], bb1, bb2) and \
-        checkCollisionOnProjectionPlane(bb1[0][3] + 90, bb1, bb2) and \
-        checkCollisionOnProjectionPlane(bb2[0][3], bb1, bb2) and \
-        checkCollisionOnProjectionPlane(bb2[0][3] + 90, bb1, bb2)
+def testCollision(bb1, bb2):
+    return testCollisionOnProjectionPlane(bb1[0][3], bb1, bb2) and \
+        testCollisionOnProjectionPlane(bb1[0][3] + 90, bb1, bb2) and \
+        testCollisionOnProjectionPlane(bb2[0][3], bb1, bb2) and \
+        testCollisionOnProjectionPlane(bb2[0][3] + 90, bb1, bb2)
 
 # Checks if two BB's collide when projected onto the vertical origin-passing plane given by the angle
-def checkCollisionOnProjectionPlane(angle, bb1, bb2):
+def testCollisionOnProjectionPlane(angle, bb1, bb2):
     # Get the corner points of each BB
     bb1points = getBBpoints(bb1)
     bb2points = getBBpoints(bb2)
@@ -319,11 +368,11 @@ def checkCollisionOnProjectionPlane(angle, bb1, bb2):
 # Returns the eight corner points of the given BB
 def getBBpoints(bb):
     vectors = [
-        [[bb[1][0][0] * math.cos(math.radians(bb[0][3])), 0, bb[1][0][0] * math.sin(math.radians(bb[0][3]))], 
-         [bb[1][0][1] * math.cos(math.radians(bb[0][3])), 0, bb[1][0][1] * math.sin(math.radians(bb[0][3]))],],
+        [[bb[1][0][0] * cos(bb[0][3]), 0, bb[1][0][0] * sin(bb[0][3])], 
+         [bb[1][0][1] * cos(bb[0][3]), 0, bb[1][0][1] * sin(bb[0][3])],],
         [[0, bb[1][1][0], 0], [0, bb[1][1][1], 0]],
-        [[-bb[1][2][0] * math.sin(math.radians(bb[0][3])), 0, bb[1][2][0] * math.cos(math.radians(bb[0][3]))], 
-         [-bb[1][2][1] * math.sin(math.radians(bb[0][3])), 0, bb[1][2][1] * math.cos(math.radians(bb[0][3]))]],
+        [[-bb[1][2][0] * sin(bb[0][3]), 0, bb[1][2][0] * cos(bb[0][3])], 
+         [-bb[1][2][1] * sin(bb[0][3]), 0, bb[1][2][1] * cos(bb[0][3])]],
         ]
 
     return [
@@ -367,8 +416,7 @@ def AABB(points):
 # Returns the projected point in the local coordinates of the plane
 def projectPointOntoPlane(angle, point):
     # Computes the projection of the point onto the normal vector
-    #normal = [math.cos(math.radians(angle + 90)), 0, math.sin(math.radians(angle + 90))]
-    normal = [-math.sin(math.radians(angle)), 0, math.cos(math.radians(angle))]
+    normal = [-sin(angle), 0, cos(angle)]
     dotProduct = point[0] * normal[0] + point[2] * normal[2]
     projection = [v * dotProduct for v in normal]
 
@@ -376,7 +424,7 @@ def projectPointOntoPlane(angle, point):
     projected = [point[i] - projection[i] for i in range(len(point))]
 
     # Change the point to return it in the local coordinates of the plane
-    return [projected[0] * math.cos(math.radians(-angle)) - projected[2] * math.sin(math.radians(-angle)), projected[1]]
+    return [projected[0] * cos(-angle) - projected[2] * sin(-angle), projected[1]]
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -399,7 +447,7 @@ if __name__ == "__main__":
 
     #Make a scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
-    buildDungeon(graph, [0, 0, 0, 0], manager, scene, scene2)
+    buildDungeon(graph, [0, 0, 0, 0], manager, scene, scene2, [])
 
     #Save the scene in a new file
     if len(sys.argv) > 2:
