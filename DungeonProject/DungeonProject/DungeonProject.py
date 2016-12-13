@@ -222,7 +222,7 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
 # Two nodes connected by one path are represented by two consecutive letters: XX
 # A node branching out into multiple paths is represented by X[path1, path2, ..., pathN]
 # The character '_' represents the points where the grammar will be expanding the tree on each iteration
-def buildGraph(numIter):
+def buildGraph(numIter, difficultyLevel):
     g = "O_" #Axiom of the grammar
     prevExpansions = 1
     prevSplits = 0
@@ -530,7 +530,7 @@ if __name__ == "__main__":
     importer.Destroy()
 
     #Create the graph for the dungeon
-    graph = buildGraph(10,5)
+    graph = buildGraph(5,5)
     print graph
 
     #Make a scene with a composite mesh
