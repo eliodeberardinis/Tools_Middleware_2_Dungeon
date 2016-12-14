@@ -373,6 +373,7 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles):
     #If the spawn room is to be built, don't build a path first
     path = [transform]
     if graph[0] != "O":
+        scene.GetRootNode().AddChild(makeBox(32, 128, 32, manager))
         path = buildPath(transform, manager, kitScene, scene, placedTiles)
 
     #Obtain the branches after the room to be built
@@ -385,9 +386,25 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles):
         }
     transform = buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
 
-    #If failed to place room, stop generating
+    #If failed to place room, retry
     if not transform:
-        return
+        for back in range(len(path)-1): # Backtrack until no more path is available
+            #Remove last tile
+            node = scene.GetRootNode().GetChild(scene.GetRootNode().GetChildCount() - 1)
+            scene.GetRootNode().RemoveChild(node)
+            node.Destroy()
+            path.pop()
+            placedTiles.pop()
+
+            #Retry without adding anything
+            transform = buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
+            #Break when successfully placed the room
+            if transform:
+                break
+
+        #If still failed to place the room, stop this branch's generation
+        if not transform:
+            return
 
     #Recursively build the next part of the dungeon
     for i in range(len(graphs)):
@@ -412,7 +429,7 @@ def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
         return False
 
     #Build entry door
-    generateTile(20 if not properties["isSpawnRoom"] else 19, originalTransform, manager, kitScene, scene, [])[0]
+    generateTile(20 if not properties["isSpawnRoom"] else 19, originalTransform, manager, kitScene, scene, [])
 
     #Build doors on each exit
     for i in range(len(transform)):
