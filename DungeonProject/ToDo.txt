@@ -1,0 +1,15 @@
+TASKS TO DO:
+
+- Identify the tiles that form the dungeon hallways (and complete if they are not in the tiles array)
+- Identify the tiles that form the room elements 
+	- Create the tile array similar to the corridor one
+- Function to generate the dungeon hallways (skeleton already created)
+- Function to create the rooms with columns, stairs... 
+- Easy, medium,hard dungeon modes
+
+- Extend elements in tile array to facilitate concatenation 
+	- Which tiles can fit
+
+- Random function to select one of the tiles can go with the current one
+
+
