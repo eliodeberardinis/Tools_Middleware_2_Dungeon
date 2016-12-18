@@ -127,7 +127,14 @@ tiles = [
 
 # DUNGEON TILES HASH ARRAY
 # Similar to the previous one but with the new name convention list like KEY
-dungeon_tiles = {}
+dungeon_tiles = {
+    "DOOR_EW_SQUARE_Z_": [0, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door angle
+
+
+    "CORRIDOR_N_1WAY_Z_": [36, [0, 0, 400, 0], [[0, 0, -800, 0]], [[-200, 200], [0, 800], [-400, 400]]], #narrow hallway
+    "CORRIDOR_N_2WAY_R_": [37, [0, 0, 200, 0], [[200, 0, -200, -90]], [[-200, 200], [0, 800], [-200, 200]]], #narrow corner right
+    "CORRIDOR_N_2WAY_L_": [37, [200, 0, 0, 90], [[-200, 0, -200, 90]], [[-200, 200], [0, 800], [-200, 200]]] #narrow corner left
+    }
 
 # Added for precision issues
 def sin(angle):
