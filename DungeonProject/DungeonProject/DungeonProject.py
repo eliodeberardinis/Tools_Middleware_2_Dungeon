@@ -8,48 +8,60 @@ Naming Convention for tiles
 
 Index X : Type_Width_Name
 
-Type: Room/Door/Corridor/Wall/Stair/Floor/Column
-Width: EW (extra wide) / W (wide) / N (narrow) / X (nothing)
-Name: whatever the piece is
+TYPE: Room/Door/Corridor/Wall/Stair/Floor/Column
+WIDTH: EW (extra wide) / W (wide) / N (narrow) / X (nothing)
+NAME: whatever the piece is
+ORIENTATION: L (left) / R (right) / T (t form) / Z (nothing)
 
-Index 0: DOOR_EW_SQUARE
-Index 1: DOOR_EW_HOUSE
-Index 2: DOOR_EW_COMBI
-Index 3: ROOM_EW_4WAY
-Index 4: ROOM_EW_3WAY
-Index 5: ROOM_EW_2WAY
-Index 6: ROOM_EW_1WAY
-Index 7: WALL_X_L
-Index 8: STEP_X_INNER
-Index 9: STEP_X_OUTER
-Index 10: FLOOR_X_SUNKSTEP
-Index 11: FLOOR_X_PLAIN
-Index 12: STEP_X_INNERCURVED
-Index 13: STEP_X_OUTERCURVED
-Index 14: STEP_X_PLAIN
-Index 15: COLUMN_X_LARGE
-Index 16: FLOOR_EW_SUNKCURVED
-Index 17: CORRIDOR_W_1WAY
-Index 18: CORRIDOR_W_DOWN
-Index 19: COLUMN_X_SMALL
-Index 20: FLOOR_X_SUNKL
-Index 21: WALL_X_CURVED
-Index 22: WALL_X_END
-Index 23: WALL_X_STEP
-Index 24: DOOR_N_RECTANGLE
-Index 25: DOOR_W_COMBI
-Index 26: DOOR_W_SQUARE
-Index 27: DOOR_N_SQUARE
-Index 28: DOOR_N_HOUSE
-Index 29: DOOR_W_HOUSE
-Index 30: CORRIDOR_W_2WAY
-Index 31: CORRIDOR_W_3WAY
-Index 32: CORRIDOR_W_4WAY
-Index 33: CORRIDOR_N_4WAY
-Index 34: CORRIDOR_N_3WAY
-Index 35: CORRIDOR_N_DOWN
-Index 36: CORRIDOR_N_1WAY
-Index 37: CORRIDOR_N_2WAY
+Index 0: DOOR_EW_SQUARE_Z_
+Index 1: DOOR_EW_HOUSE_Z_
+Index 2: DOOR_EW_COMBI_Z_
+Index 3: ROOM_EW_4WAY_Z_
+Index 4: ROOM_EW_3WAY_L_
+Index 4: ROOM_EW_3WAY_R_
+Index 4: ROOM_EW_3WAY_T_
+Index 5: ROOM_EW_2WAY_L_
+Index 5: ROOM_EW_2WAY_R_
+Index 6: ROOM_EW_1WAY_Z_
+Index 7: WALL_X_LFORM_Z_
+Index 8: STEP_X_INNER_Z_
+Index 9: STEP_X_OUTER_Z_
+Index 10: FLOOR_X_SUNKSTEP_Z_
+Index 11: FLOOR_X_PLAIN_Z_
+Index 12: STEP_X_INNERCURVED_Z_
+Index 13: STEP_X_OUTERCURVED_Z_
+Index 14: STEP_X_PLAIN_Z_
+Index 15: COLUMN_X_LARGE_Z_
+Index 16: FLOOR_EW_SUNKCURVED_Z_
+Index 17: CORRIDOR_W_1WAY_Z_
+Index 18: CORRIDOR_W_UP_Z_
+Index 18: CORRIDOR_W_DOWN_Z_
+Index 19: COLUMN_X_SMALL_Z_
+Index 20: FLOOR_X_SUNKL_Z_
+Index 21: WALL_X_CURVED_Z_
+Index 22: WALL_X_END_Z_
+Index 23: WALL_X_STEP_Z_
+Index 24: DOOR_N_RECTANGLE_Z_
+Index 25: DOOR_W_COMBI_Z_
+Index 26: DOOR_W_SQUARE_Z_
+Index 27: DOOR_N_SQUARE_Z_
+Index 28: DOOR_N_HOUSE_Z_
+Index 29: DOOR_W_HOUSE_Z_
+Index 30: CORRIDOR_W_2WAY_L_
+Index 30: CORRIDOR_W_2WAY_R_
+Index 31: CORRIDOR_W_3WAY_L_
+Index 31: CORRIDOR_W_3WAY_R_
+Index 31: CORRIDOR_W_3WAY_T_
+Index 32: CORRIDOR_W_4WAY_Z_
+Index 33: CORRIDOR_N_4WAY_Z_
+Index 34: CORRIDOR_N_3WAY_L_
+Index 34: CORRIDOR_N_3WAY_R_
+Index 34: CORRIDOR_N_3WAY_T_
+Index 35: CORRIDOR_N_UP_Z_
+Index 35: CORRIDOR_N_DOWN_Z_
+Index 36: CORRIDOR_N_1WAY_Z_
+Index 37: CORRIDOR_N_2WAY_L_
+Index 37: CORRIDOR_N_2WAY_R_
 
 '''
 
