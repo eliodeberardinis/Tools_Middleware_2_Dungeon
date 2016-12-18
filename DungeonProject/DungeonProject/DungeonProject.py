@@ -125,6 +125,10 @@ tiles = [
     [1, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door square
 ]
 
+# DUNGEON TILES HASH ARRAY
+# Similar to the previous one but with the new name convention list like KEY
+dungeon_tiles = {}
+
 # Added for precision issues
 def sin(angle):
     while angle < 0:
