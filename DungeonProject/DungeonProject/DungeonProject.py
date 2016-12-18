@@ -6,50 +6,65 @@ import random
 '''
 Naming Convention for tiles
 
-Index X : Type_Width_Name
+Index X : Type_Width_Name_Orientation
 
-Type: Room/Door/Corridor/Wall/Stair/Floor/Column
-Width: EW (extra wide) / W (wide) / N (narrow) / X (nothing)
-Name: whatever the piece is
+TYPE: Room/Door/Corridor/Wall/Stair/Floor/Column
+WIDTH: EW (extra wide) / W (wide) / N (narrow) / X (nothing)
+NAME: whatever the piece is
+ORIENTATION: L (left) / R (right) / T (t form) / Z (nothing)
 
-Index 0: DOOR_EW_SQUARE
-Index 1: DOOR_EW_HOUSE
-Index 2: DOOR_EW_COMBI
-Index 3: ROOM_EW_4WAY
-Index 4: ROOM_EW_3WAY
-Index 5: ROOM_EW_2WAY
-Index 6: ROOM_EW_1WAY
-Index 7: WALL_X_L
-Index 8: STEP_X_INNER
-Index 9: STEP_X_OUTER
-Index 10: FLOOR_X_SUNKSTEP
-Index 11: FLOOR_X_PLAIN
-Index 12: STEP_X_INNERCURVED
-Index 13: STEP_X_OUTERCURVED
-Index 14: STEP_X_PLAIN
-Index 15: COLUMN_X_LARGE
-Index 16: FLOOR_EW_SUNKCURVED
-Index 17: CORRIDOR_W_1WAY
-Index 18: CORRIDOR_W_DOWN
-Index 19: COLUMN_X_SMALL
-Index 20: FLOOR_X_SUNKL
-Index 21: WALL_X_CURVED
-Index 22: WALL_X_END
-Index 23: WALL_X_STEP
-Index 24: DOOR_N_RECTANGLE
-Index 25: DOOR_W_COMBI
-Index 26: DOOR_W_SQUARE
-Index 27: DOOR_N_SQUARE
-Index 28: DOOR_N_HOUSE
-Index 29: DOOR_W_HOUSE
-Index 30: CORRIDOR_W_2WAY
-Index 31: CORRIDOR_W_3WAY
-Index 32: CORRIDOR_W_4WAY
-Index 33: CORRIDOR_N_4WAY
-Index 34: CORRIDOR_N_3WAY
-Index 35: CORRIDOR_N_DOWN
-Index 36: CORRIDOR_N_1WAY
-Index 37: CORRIDOR_N_2WAY
+When you are trying to find a specific piece you look for the parameters in the legend above
+enclosed between _WHATEVER_
+
+Index 0: DOOR_EW_SQUARE_Z_
+Index 1: DOOR_EW_HOUSE_Z_
+Index 2: DOOR_EW_COMBI_Z_
+Index 3: ROOM_EW_4WAY_Z_
+Index 4: ROOM_EW_3WAY_L_
+Index 4: ROOM_EW_3WAY_R_
+Index 4: ROOM_EW_3WAY_T_
+Index 5: ROOM_EW_2WAY_L_
+Index 5: ROOM_EW_2WAY_R_
+Index 6: ROOM_EW_1WAY_Z_
+Index 7: WALL_X_LFORM_Z_
+Index 8: STEP_X_INNER_Z_
+Index 9: STEP_X_OUTER_Z_
+Index 10: FLOOR_X_SUNKSTEP_Z_
+Index 11: FLOOR_X_PLAIN_Z_
+Index 12: STEP_X_INNERCURVED_Z_
+Index 13: STEP_X_OUTERCURVED_Z_
+Index 14: STEP_X_PLAIN_Z_
+Index 15: COLUMN_X_LARGE_Z_
+Index 16: FLOOR_EW_SUNKCURVED_Z_
+Index 17: CORRIDOR_W_1WAY_Z_
+Index 18: CORRIDOR_W_UP_Z_
+Index 18: CORRIDOR_W_DOWN_Z_
+Index 19: COLUMN_X_SMALL_Z_
+Index 20: FLOOR_X_SUNKL_Z_
+Index 21: WALL_X_CURVED_Z_
+Index 22: WALL_X_END_Z_
+Index 23: WALL_X_STEP_Z_
+Index 24: DOOR_N_RECTANGLE_Z_
+Index 25: DOOR_W_COMBI_Z_
+Index 26: DOOR_W_SQUARE_Z_
+Index 27: DOOR_N_SQUARE_Z_
+Index 28: DOOR_N_HOUSE_Z_
+Index 29: DOOR_W_HOUSE_Z_
+Index 30: CORRIDOR_W_2WAY_L_
+Index 30: CORRIDOR_W_2WAY_R_
+Index 31: CORRIDOR_W_3WAY_L_
+Index 31: CORRIDOR_W_3WAY_R_
+Index 31: CORRIDOR_W_3WAY_T_
+Index 32: CORRIDOR_W_4WAY_Z_
+Index 33: CORRIDOR_N_4WAY_Z_
+Index 34: CORRIDOR_N_3WAY_L_
+Index 34: CORRIDOR_N_3WAY_R_
+Index 34: CORRIDOR_N_3WAY_T_
+Index 35: CORRIDOR_N_UP_Z_
+Index 35: CORRIDOR_N_DOWN_Z_
+Index 36: CORRIDOR_N_1WAY_Z_
+Index 37: CORRIDOR_N_2WAY_L_
+Index 37: CORRIDOR_N_2WAY_R_
 
 '''
 
@@ -109,6 +124,45 @@ tiles = [
     [0, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door angle
     [1, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door square
 ]
+
+# DUNGEON TILES HASH ARRAY
+# Similar to the previous one but with the new name convention list like KEY
+dungeon_tiles = {
+    "DOOR_EW_SQUARE_Z_"   : [0, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door angle
+    "DOOR_EW_HOUSE_Z_"    : [1, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door square
+    "DOOR_EW_COMBI_Z_"    : [2, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door angle-wide
+    "ROOM_EW_4WAY_Z_"     : [3, [0, 0, 800, 0], [[-800, 0, -800, 90], [0, 0, -1600, 0], [800, 0, -800, -90]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner 4
+    "ROOM_EW_3WAY_L_"     : [4, [0, 0, -800, 180], [[-800, 0, -800, 90], [0, 0, -1600, 0]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner 3 left
+    "ROOM_EW_3WAY_R_"     : [4, [0, 0, 800, 0], [[0, 0, -800, 0], [800, 0, -800, -90]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner 3 right
+    "ROOM_EW_3WAY_T_"     : [4, [800, 0, 0, 90], [[-800, 0, -800, 90], [800, 0, -800, -90]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner 3 T
+    "ROOM_EW_2WAY_L_"     : [5, [800, 0, 0, 90], [[-800, 0, -800, 90]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner left
+    "ROOM_EW_2WAY_R_"     : [5, [0, 0, 800, 0], [[800, 0, -800, -90]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner right
+    "ROOM_EW_1WAY_Z_"     : [6, [0, 0, 800, 0], [[0, 0, -1600, 0]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide hallway
+    "CORRIDOR_W_1WAY_Z_"  : [17, [0, 0, 400, 0], [[0, 0, -800, 0]], [[-400, 400], [0, 800], [-400, 400]]], #wide hallway
+    "CORRIDOR_W_DOWN_Z_"  : [18, [0, 0, -400, 180], [[0, -400, -1600, 0]], [[-400, 400], [-800, 800], [-400, 1200]]], #wide ramp down
+    "CORRIDOR_W_UP_Z_"    : [18, [0, -400, 1200, 0], [[0, 400, -1600, 0]], [[-400, 400], [0, 1600], [-1200, 400]]], #wide ramp up
+    "DOOR_N_RECTANGLE_Z_" : [24, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-200, 200], [0, 800], [0, 0]]], #narrow door square-wide
+    "DOOR_W_COMBI_Z_"     : [25, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-400, 400], [0, 800], [0, 0]]], #wide door angle-wide
+    "DOOR_W_SQUARE_Z_"    : [26, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-400, 400], [0, 800], [0, 0]]], #wide door square
+    "DOOR_N_SQUARE_Z_"    : [27, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-200, 200], [0, 800], [0, 0]]], #narrow door square
+    "DOOR_N_HOUSE_Z_"     : [28, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-200, 200], [0, 800], [0, 0]]], #narrow door angle
+    "DOOR_W_HOUSE_Z_"     : [29, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-400, 400], [0, 800], [0, 0]]], #wide door angle
+    "CORRIDOR_W_2WAY_L_"  : [30, [400, 0, 0, 90], [[-400, 0, -400, 90]], [[-400, 400], [0, 800], [-400, 400]]], #wide corner left
+    "CORRIDOR_W_2WAY_R_"  : [30, [0, 0, 400, 0], [[400, 0, -400, -90]], [[-400, 400], [0, 800], [-400, 400]]], #wide corner right
+    "CORRIDOR_W_3WAY_L_"  : [31, [0, 0, -400, 180], [[-400, 0, -400, 90], [0, 0, -800, 0]], [[-400, 400], [0, 800], [-400, 400]]], #wide corner 3 left
+    "CORRIDOR_W_2WAY_R_"  : [31, [0, 0, 400, 0], [[0, 0, -800, 0], [400, 0, -400, -90]], [[-400, 400], [0, 800], [-400, 400]]], #wide corner 3 right
+    "CORRIDOR_W_3WAY_T_"  : [31, [400, 0, 0, 90], [[-400, 0, -400, 90], [400, 0, -400, -90]], [[-400, 400], [0, 800], [-400, 400]]], #wide corner 3 T
+    "CORRIDOR_W_4WAY_Z_"  : [32, [0, 0, 400, 0], [[-400, 0, -400, 90], [0, 0, -800, 0], [400, 0, -400, -90]], [[-400, 400], [0, 800], [-400, 400]]], #wide corner 4
+    "CORRIDOR_N_4WAY_Z_"  : [33, [0, 0, 200, 0], [[-200, 0, -200, 90], [0, 0, -400, 0], [200, 0, -200, -90]], [[-200, 200], [0, 800], [-200, 200]]], #narrow corner 4
+    "CORRIDOR_N_3WAY_L_"  : [34, [0, 0, -200, 180], [[-200, 0, -200, 90], [0, 0, -400, 0]], [[-200, 200], [0, 800], [-200, 200]]], #narrow corner 3 left
+    "CORRIDOR_N_3WAY_R_"  : [34, [0, 0, 200, 0], [[0, 0, -400, 0], [200, 0, -200, -90]], [[-200, 200], [0, 800], [-200, 200]]], #narrow corner 3 right
+    "CORRIDOR_N_3WAY_T_"  : [34, [200, 0, 0, 90], [[-200, 0, -200, 90], [200, 0, -200, -90]], [[-200, 200], [0, 800], [-200, 200]]], #narrow corner 3 T
+    "CORRIDOR_N_DOWN_Z_"  : [35, [0, 0, -400, 180], [[0, -400, -1600, 0]], [[-200, 200], [-800, 800], [-400, 1200]]], #narrow ramp down
+    "CORRIDOR_N_UP_Z_"    : [35, [0, -400, 1200, 0], [[0, 400, -1600, 0]], [[-200, 200], [0, 1600], [-1200, 400]]], #narrow ramp up
+    "CORRIDOR_N_1WAY_Z_"  : [36, [0, 0, 400, 0], [[0, 0, -800, 0]], [[-200, 200], [0, 800], [-400, 400]]], #narrow hallway
+    "CORRIDOR_N_2WAY_R_"  : [37, [0, 0, 200, 0], [[200, 0, -200, -90]], [[-200, 200], [0, 800], [-200, 200]]], #narrow corner right
+    "CORRIDOR_N_2WAY_L_"  : [37, [200, 0, 0, 90], [[-200, 0, -200, 90]], [[-200, 200], [0, 800], [-200, 200]]] #narrow corner left
+    }
 
 # Added for precision issues
 def sin(angle):
@@ -568,17 +622,17 @@ def projectPointOntoPlane(angle, point):
 # Function to limit the input of difficulty to three letter only (E/M/H)
 def inputDifficulty():
     # Get input from command line
-    diff = raw_input("Enter dungeon difficulty (E/M/H): ")
+    diff = raw_input("Enter dungeon difficulty (1-5): ")
     while True:
         # If it´s one of the values we need we exit the function
-        if (diff == "E" or diff == "e" or diff == "M" or diff == "m" or diff == "H" or diff == "h"):
+        if (int(diff)>0 and int(diff)<= 5):
             break
         else:
             #We ask for the input again until it´s one of the values we want
-            diff = raw_input("Enter dungeon difficulty (E/M/H): ")
+            diff = raw_input("Enter dungeon difficulty (1-5): ")
 
     # Return the upper case to avoid problems in the generation
-    return diff.upper()
+    return int(diff)
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -604,8 +658,7 @@ if __name__ == "__main__":
     print("DIFFICULTY: '%s'." % difficulty)
 
     #Create the graph for the dungeon
-    #graph = buildGraph(int(numIteration))
-    graph = buildGraph(5,5)
+    graph = buildGraph(int(numIteration),difficulty)
     print graph
 
     #Make a scene with a composite mesh
