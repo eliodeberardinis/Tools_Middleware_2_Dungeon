@@ -6,12 +6,15 @@ import random
 '''
 Naming Convention for tiles
 
-Index X : Type_Width_Name
+Index X : Type_Width_Name_Orientation
 
 TYPE: Room/Door/Corridor/Wall/Stair/Floor/Column
 WIDTH: EW (extra wide) / W (wide) / N (narrow) / X (nothing)
 NAME: whatever the piece is
 ORIENTATION: L (left) / R (right) / T (t form) / Z (nothing)
+
+When you are trying to find a specific piece you look for the parameters in the legend above
+enclosed between _WHATEVER_
 
 Index 0: DOOR_EW_SQUARE_Z_
 Index 1: DOOR_EW_HOUSE_Z_
