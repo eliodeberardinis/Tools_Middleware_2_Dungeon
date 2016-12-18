@@ -128,7 +128,13 @@ tiles = [
 # DUNGEON TILES HASH ARRAY
 # Similar to the previous one but with the new name convention list like KEY
 dungeon_tiles = {
-    "DOOR_EW_SQUARE_Z_": [0, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door angle
+    "DOOR_EW_SQUARE_Z_" : [0, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door angle
+    "DOOR_EW_HOUSE_Z_"  : [1, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door square
+    "DOOR_EW_COMBI_Z_"  : [2, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 800], [0, 0]]], #extrawide door angle-wide
+    "ROOM_EW_4WAY_Z_"   : [3, [0, 0, 800, 0], [[-800, 0, -800, 90], [0, 0, -1600, 0], [800, 0, -800, -90]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner 4
+    "ROOM_EW_3WAY_L_"   : [4, [0, 0, -800, 180], [[-800, 0, -800, 90], [0, 0, -1600, 0]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner 3 left
+    "ROOM_EW_3WAY_R_"   : [4, [0, 0, 800, 0], [[0, 0, -800, 0], [800, 0, -800, -90]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner 3 right
+    "ROOM_EW_3WAY_T_"   : [4, [800, 0, 0, 90], [[-800, 0, -800, 90], [800, 0, -800, -90]], [[-800, 800], [0, 800], [-800, 800]]], #extrawide corner 3 T
 
 
     "CORRIDOR_N_1WAY_Z_": [36, [0, 0, 400, 0], [[0, 0, -800, 0]], [[-200, 200], [0, 800], [-400, 400]]], #narrow hallway
