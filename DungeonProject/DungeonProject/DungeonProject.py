@@ -568,17 +568,17 @@ def projectPointOntoPlane(angle, point):
 # Function to limit the input of difficulty to three letter only (E/M/H)
 def inputDifficulty():
     # Get input from command line
-    diff = raw_input("Enter dungeon difficulty (E/M/H): ")
+    diff = raw_input("Enter dungeon difficulty (1-5): ")
     while True:
         # If it´s one of the values we need we exit the function
-        if (diff == "E" or diff == "e" or diff == "M" or diff == "m" or diff == "H" or diff == "h"):
+        if (int(diff)>0 and int(diff)<= 5):
             break
         else:
             #We ask for the input again until it´s one of the values we want
-            diff = raw_input("Enter dungeon difficulty (E/M/H): ")
+            diff = raw_input("Enter dungeon difficulty (1-5): ")
 
     # Return the upper case to avoid problems in the generation
-    return diff.upper()
+    return int(diff)
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -604,8 +604,7 @@ if __name__ == "__main__":
     print("DIFFICULTY: '%s'." % difficulty)
 
     #Create the graph for the dungeon
-    #graph = buildGraph(int(numIteration))
-    graph = buildGraph(5,5)
+    graph = buildGraph(int(numIteration),difficulty)
     print graph
 
     #Make a scene with a composite mesh
