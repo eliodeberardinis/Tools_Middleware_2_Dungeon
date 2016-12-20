@@ -2,6 +2,7 @@ from fbx import *
 import sys
 import math
 import random
+import TileFile
 
 '''
 Naming Convention for tiles
