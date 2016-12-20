@@ -4,6 +4,8 @@ import math
 import random
 import TileFile
 from TileFile import *
+import MathModule
+from MathModule import *
 
 # Added for precision issues
 def sin(angle):
