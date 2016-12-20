@@ -7,32 +7,6 @@ from TileFile import *
 import MathModule
 from MathModule import *
 
-# Added for precision issues
-def sin(angle):
-    while angle < 0:
-        angle += 360
-    while angle >= 360:
-        angle -= 360
-    return {
-        0: 0,
-        90: 1,
-        180: 0,
-        270: -1
-        }.get(angle, math.sin(math.radians(angle)))
-
-# Added for precision issues
-def cos(angle):
-    while angle < 0:
-        angle += 360
-    while angle >= 360:
-        angle -= 360
-    return {
-        0: 1,
-        90: 0,
-        180: -1,
-        270: 0
-        }.get(angle, math.cos(math.radians(angle)))
-
 # Makes a copy of the tile specified by index and returns a node that contains the new mesh
 def copyTile(index, manager, scene, nodeName = "", meshName = ""):
     node = scene.GetRootNode().GetChild(index)
@@ -133,13 +107,13 @@ def makeBox(width, height, depth, manager, nodeName = "", meshName = ""):
 # If the tile to be generated would overlap any of the previously placed tiles, returns false.
 def generateTile(index, transform, manager, kitScene, scene, placedTiles):
     # Calculates the x and z coordinates of the tile (these depend on the rotation of the "in point" of the tile)
-    x = TileFile.tiles[index][1][0] * cos(TileFile.tiles[index][1][3]) + TileFile.tiles[index][1][2] * sin(TileFile.tiles[index][1][3])
-    z = TileFile.tiles[index][1][2] * cos(TileFile.tiles[index][1][3]) + TileFile.tiles[index][1][0] * sin(TileFile.tiles[index][1][3])
+    x = TileFile.tiles[index][1][0] * MathModule.cos(TileFile.tiles[index][1][3]) + TileFile.tiles[index][1][2] * MathModule.sin(TileFile.tiles[index][1][3])
+    z = TileFile.tiles[index][1][2] * MathModule.cos(TileFile.tiles[index][1][3]) + TileFile.tiles[index][1][0] * MathModule.sin(TileFile.tiles[index][1][3])
 
     # Sets the final coordinates of the tile to match the coordinates of the given transform
-    newTransform = [transform[0] + x * cos(transform[3]) - z * sin(transform[3]),
+    newTransform = [transform[0] + x * MathModule.cos(transform[3]) - z * MathModule.sin(transform[3]),
                     transform[1] - TileFile.tiles[index][1][1],
-                    transform[2] - z * cos(transform[3]) + x * sin(transform[3]),
+                    transform[2] - z * MathModule.cos(transform[3]) + x * MathModule.sin(transform[3]),
                     transform[3] - TileFile.tiles[index][1][3]]
 
     # Check if the tile would overlap any of the previously place
@@ -159,9 +133,9 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
     tile.LclTranslation.Set(FbxDouble3(newTransform[0], newTransform[1], newTransform[2]))
 
     # Returns a list of the new points (transforms) where the next tiles will be placed
-    return [[transform[0] + exit[0] * cos(transform[3]) + exit[2] * sin(transform[3]),
+    return [[transform[0] + exit[0] * MathModule.cos(transform[3]) + exit[2] * MathModule.sin(transform[3]),
              transform[1] + exit[1],
-             transform[2] + exit[2] * cos(transform[3]) - exit[0] * sin(transform[3]),
+             transform[2] + exit[2] * MathModule.cos(transform[3]) - exit[0] * MathModule.sin(transform[3]),
              transform[3] + exit[3]]
              for exit in TileFile.tiles[index][2]]
 
@@ -404,11 +378,11 @@ def testCollisionOnProjectionPlane(angle, bb1, bb2):
 # Returns the eight corner points of the given BB
 def getBBpoints(bb):
     vectors = [
-        [[bb[1][0][0] * cos(bb[0][3]), 0, bb[1][0][0] * sin(bb[0][3])], 
-         [bb[1][0][1] * cos(bb[0][3]), 0, bb[1][0][1] * sin(bb[0][3])],],
+        [[bb[1][0][0] * MathModule.cos(bb[0][3]), 0, bb[1][0][0] * MathModule.sin(bb[0][3])], 
+         [bb[1][0][1] * MathModule.cos(bb[0][3]), 0, bb[1][0][1] * MathModule.sin(bb[0][3])],],
         [[0, bb[1][1][0], 0], [0, bb[1][1][1], 0]],
-        [[-bb[1][2][0] * sin(bb[0][3]), 0, bb[1][2][0] * cos(bb[0][3])], 
-         [-bb[1][2][1] * sin(bb[0][3]), 0, bb[1][2][1] * cos(bb[0][3])]],
+        [[-bb[1][2][0] * MathModule.sin(bb[0][3]), 0, bb[1][2][0] * MathModule.cos(bb[0][3])], 
+         [-bb[1][2][1] * MathModule.sin(bb[0][3]), 0, bb[1][2][1] * MathModule.cos(bb[0][3])]],
         ]
 
     return [
@@ -452,7 +426,7 @@ def AABB(points):
 # Returns the projected point in the local coordinates of the plane
 def projectPointOntoPlane(angle, point):
     # Computes the projection of the point onto the normal vector
-    normal = [-sin(angle), 0, cos(angle)]
+    normal = [-MathModule.sin(angle), 0, MathModule.cos(angle)]
     dotProduct = point[0] * normal[0] + point[2] * normal[2]
     projection = [v * dotProduct for v in normal]
 
@@ -460,7 +434,7 @@ def projectPointOntoPlane(angle, point):
     projected = [point[i] - projection[i] for i in range(len(point))]
 
     # Change the point to return it in the local coordinates of the plane
-    return [projected[0] * cos(-angle) - projected[2] * sin(-angle), projected[1]]
+    return [projected[0] * MathModule.cos(-angle) - projected[2] * MathModule.sin(-angle), projected[1]]
 
 # Function to limit the input of difficulty to three letter only (E/M/H)
 def inputDifficulty():

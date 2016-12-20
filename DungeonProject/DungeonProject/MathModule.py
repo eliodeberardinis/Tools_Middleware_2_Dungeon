@@ -1,8 +1,10 @@
 import sys
+import math
 
 class MathModule:
     
     # Added for precision issues
+    @staticmethod
     def sin(angle):
         while angle < 0:
             angle += 360
@@ -16,6 +18,7 @@ class MathModule:
             }.get(angle, math.sin(math.radians(angle)))
 
     # Added for precision issues
+    @staticmethod
     def cos(angle):
         while angle < 0:
             angle += 360
