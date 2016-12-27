@@ -295,7 +295,7 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
 
     # Sets the final coordinates of the tile to match the coordinates of the given transform
     newTransform = [transform[0] + x * cos(transform[3]) - z * sin(transform[3]),
-                                       transform[1] - tiles[index][1][1],
+                    transform[1] - tiles[index][1][1],
                     transform[2] - z * cos(transform[3]) + x * sin(transform[3]),
                     transform[3] - tiles[index][1][3]]
 
@@ -568,13 +568,11 @@ def buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel)
         # If the generator comes from backtracking, use the remaining weights that 
         #   were not explored when generating this tile
         if len(weights) <= i:
-            weights.append({
-                0: 10,
-                1: 2.5,
-                2: 2.5,
-                10: 1,
-                11: 1
-              })
+            weights.append([{0: 10, 1: 1, 2: 1},
+                            {0: 10, 1: 2.5, 2: 2.5},
+                            {0: 10, 1: 2.5, 2: 2.5, 10: 1, 11: 1},
+                            {0: 10, 1: 3.33, 2: 3.33, 10: 2.5, 11: 2.5},
+                            {0: 10, 1: 5, 2: 5, 10: 3.33, 11: 3.33}][difficultyLevel-1])
 
         # Try with all alternatives
         while not ret and len(weights[-1]) > 0:
