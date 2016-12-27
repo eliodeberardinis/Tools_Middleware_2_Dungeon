@@ -471,7 +471,7 @@ def split(graph):
 
 # Build a dungeon according to the given branch from the given transform point
 # Builds a path followed by the first room in the graph, the recursively does so for the continuing branches
-def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles):
+def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles, difficultyLevel):
     if len(graph) == 0:
         return
 
@@ -479,7 +479,7 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles):
     path = [transform]
     if graph[0] != "O":
         scene.GetRootNode().AddChild(makeBox(32, 128, 32, manager))
-        path = buildPath(transform, manager, kitScene, scene, placedTiles)
+        path = buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel)
 
     #Obtain the branches after the room to be built
     graphs = split(graph[1:]) if len(graph) > 1 else [] 
@@ -513,7 +513,7 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles):
 
     #Recursively build the next part of the dungeon
     for i in range(len(graphs)):
-        buildDungeon(graphs[i], transform[i], manager, kitScene, scene, placedTiles)
+        buildDungeon(graphs[i], transform[i], manager, kitScene, scene, placedTiles, difficultyLevel)
 
 # Builds a room from the given transform point according to the given properties
 # Returns the list of points from where build the next paths of the dungeon
@@ -554,13 +554,16 @@ def randomWeightedChoice(data):
 # Returns the sequence of path transforms (allowing for simple backtracking)
 #   Path transform: end point of the path, from where to build the next part of the dungeon
 # For now, paths should only return one path, since they are built between one room and another
-def buildPath(transform, manager, kitScene, scene, placedTiles):
+def buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel):
     transforms = [transform]
     weights = []
 
-    i = 0
+    # Choose the length of the corridor depending on the chosen difficulty
+    numTiles = random.randint(*[[5, 10], [5, 15], [10, 20], [15, 25], [20, 30]][difficultyLevel-1])
+
     # Repeat the generation until the number of tiles to place has been reached
-    while i < 10: 
+    i = 0
+    while i < numTiles: 
         ret = False
         # If the generator comes from backtracking, use the remaining weights that 
         #   were not explored when generating this tile
@@ -735,7 +738,7 @@ if __name__ == "__main__":
 
     #Make a scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
-    buildDungeon(graph, [0, 0, 0, 0], manager, scene, scene2, [])
+    buildDungeon(graph, [0, 0, 0, 0], manager, scene, scene2, [], difficulty)
 
     #Save the scene in a new file
     if len(sys.argv) > 2:
