@@ -556,24 +556,44 @@ def randomWeightedChoice(data):
 # For now, paths should only return one path, since they are built between one room and another
 def buildPath(transform, manager, kitScene, scene, placedTiles):
     transforms = [transform]
-    for i in range(random.randint(1, 10)):
+    weights = []
+
+    i = 0
+    # Repeat the generation until the number of tiles to place has been reached
+    while i < 10: 
         ret = False
-        weights = {
-            0: 10,
-            1: 2.5,
-            2: 2.5,
-            10: 1,
-            11: 1
-          }
-        while not ret and len(weights) > 0:
-            tile = randomWeightedChoice(weights)
+        # If the generator comes from backtracking, use the remaining weights that 
+        #   were not explored when generating this tile
+        if len(weights) <= i:
+            weights.append({
+                0: 10,
+                1: 2.5,
+                2: 2.5,
+                10: 1,
+                11: 1
+              })
+
+        # Try with all alternatives
+        while not ret and len(weights[-1]) > 0:
+            tile = randomWeightedChoice(weights[-1])
             ret = generateTile(tile, transforms[-1], manager, kitScene, scene, placedTiles)
-            del weights[tile]
+            del weights[-1][tile]
 
         if ret:
             transforms += [ret[0]]
-        else:
-            break
+            i += 1
+        # If all alternatives failed, backtrack and continue generation
+        else: 
+            if i == 0: # Do not backtrack if no more elements available
+                break
+            node = scene.GetRootNode().GetChild(scene.GetRootNode().GetChildCount() - 1)
+            scene.GetRootNode().RemoveChild(node)
+            node.Destroy()
+            placedTiles.pop()
+            weights.pop()
+            transforms.pop()
+            i -= 1
+
     return transforms
 
 # Checks if the given BB overlaps with any of the of BB's in the list
