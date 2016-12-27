@@ -476,8 +476,10 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles):
         return
 
     #If the spawn room is to be built, don't build a path first
+    path = [transform]
     if graph[0] != "O":
-        transform = buildPath(transform, manager, kitScene, scene, placedTiles)
+        scene.GetRootNode().AddChild(makeBox(32, 128, 32, manager))
+        path = buildPath(transform, manager, kitScene, scene, placedTiles)
 
     #Obtain the branches after the room to be built
     graphs = split(graph[1:]) if len(graph) > 1 else [] 
@@ -487,7 +489,27 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles):
         "isSpawnRoom": graph[0] == "O",
         "numExits": len(graphs)
         }
-    transform = buildRoom(properties, transform, manager, kitScene, scene, placedTiles)
+    transform = buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
+
+    #If failed to place room, retry
+    if not transform:
+        for back in range(len(path)-1): # Backtrack until no more path is available
+            #Remove last tile
+            node = scene.GetRootNode().GetChild(scene.GetRootNode().GetChildCount() - 1)
+            scene.GetRootNode().RemoveChild(node)
+            node.Destroy()
+            path.pop()
+            placedTiles.pop()
+
+            #Retry without adding anything
+            transform = buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
+            #Break when successfully placed the room
+            if transform:
+                break
+
+        #If still failed to place the room, stop this branch's generation
+        if not transform:
+            return
 
     #Recursively build the next part of the dungeon
     for i in range(len(graphs)):
@@ -496,17 +518,23 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles):
 # Builds a room from the given transform point according to the given properties
 # Returns the list of points from where build the next paths of the dungeon
 def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
-    #Build a door
-    transform = generateTile(20 if not properties["isSpawnRoom"] else 19, transform, manager, kitScene, scene, [])[0]
+    #Save original transform to place a door if room succeeds to be placed
+    originalTransform = [i for i in transform]
 
     #Build the room with one tile according to the number of exits needed for the room
-    ret = generateTile({
+    transform = generateTile({
             0: 12,
             1: 12,
             2: 15,
             3: 18
         }[properties["numExits"]], transform, manager, kitScene, scene, placedTiles)
-    transform = ret if ret else [transform for i in range(properties["numExits"])]
+
+    #If room collided, remove added tiles and return error
+    if not transform:
+        return False
+
+    #Build entry door
+    generateTile(20 if not properties["isSpawnRoom"] else 19, originalTransform, manager, kitScene, scene, [])
 
     #Build doors on each exit
     for i in range(len(transform)):
@@ -514,15 +542,17 @@ def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
 
     return transform
 
-#Builds a path from the given transform point
-#Returns the end point of the path, from where to build the next part of the dungeon
-#For now, paths should only return one path, since they are built between one room and another
+# Builds a path from the given transform point
+# Returns the sequence of path transforms (allowing for simple backtracking)
+#   Path transform: end point of the path, from where to build the next part of the dungeon
+# For now, paths should only return one path, since they are built between one room and another
 def buildPath(transform, manager, kitScene, scene, placedTiles):
+    transforms = [transform]
     for i in range(random.randint(1, 10)):
-        ret = generateTile(random.choice([0, 0, 0, 0, 1, 2]), transform, manager, kitScene, scene, placedTiles)
+        ret = generateTile(random.choice([0, 0, 0, 0, 1, 2]), transforms[-1], manager, kitScene, scene, placedTiles)
         if ret:
-            transform = ret[0]
-    return transform
+            transforms += [ret[0]]
+    return transforms
 
 # Checks if the given BB overlaps with any of the of BB's in the list
 def checkCollision(bb1, bbs):
