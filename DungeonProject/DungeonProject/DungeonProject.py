@@ -542,6 +542,14 @@ def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
 
     return transform
 
+# Returns a random key using the given weights
+# Data must be inputed as a dictionary, with choices as keys and weights as values.
+def randomWeightedChoice(data):
+    cumulative = [sum(data.values()[:i+1]) for i in range(len(data.values()))]
+    value = random.uniform(0, cumulative[-1])
+    index = next(i for i in range(len(cumulative)) if cumulative[i] > value)
+    return data.keys()[index]
+
 # Builds a path from the given transform point
 # Returns the sequence of path transforms (allowing for simple backtracking)
 #   Path transform: end point of the path, from where to build the next part of the dungeon
@@ -549,9 +557,23 @@ def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
 def buildPath(transform, manager, kitScene, scene, placedTiles):
     transforms = [transform]
     for i in range(random.randint(1, 10)):
-        ret = generateTile(random.choice([0, 0, 0, 0, 1, 2]), transforms[-1], manager, kitScene, scene, placedTiles)
+        ret = False
+        weights = {
+            0: 10,
+            1: 2.5,
+            2: 2.5,
+            10: 1,
+            11: 1
+          }
+        while not ret and len(weights) > 0:
+            tile = randomWeightedChoice(weights)
+            ret = generateTile(tile, transforms[-1], manager, kitScene, scene, placedTiles)
+            del weights[tile]
+
         if ret:
             transforms += [ret[0]]
+        else:
+            break
     return transforms
 
 # Checks if the given BB overlaps with any of the of BB's in the list
@@ -688,7 +710,7 @@ if __name__ == "__main__":
     print("DIFFICULTY: '%s'." % difficulty)
 
     #Create the graph for the dungeon
-    graph = buildGraph(int(numIteration),difficulty)
+    graph = buildGraph(int(numIteration), difficulty)
     print graph
 
     #Make a scene with a composite mesh
