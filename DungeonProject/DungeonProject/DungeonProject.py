@@ -84,45 +84,58 @@ Third element is the "out point", that is the offset from the tile's "in point" 
 
 Fourth element is the dimensions of the tile (two values for each axis)
 
-Note that offsets are expressed as 4-dimensional vectorr.
+Note that offsets are expressed as 5-dimensional vectorr.
 The three first values are the x, y and z coordinate values.
 The fourth value is the rotation around the Y axis.
+The fifth value is the width of the connection. This is used for example in corridors so tiles match in width.
 '''
 tiles = [
-    [36, [0, 0, 400, 0], [[0, 0, -800, 0]], [[-200, 200], [0, 600], [-400, 400]]], #narrow hallway
-    [37, [0, 0, 200, 0], [[200, 0, -200, -90]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner right
-    [37, [200, 0, 0, 90], [[-200, 0, -200, 90]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner left
-    [34, [200, 0, 0, 90], [[-200, 0, -200, 90], [200, 0, -200, -90]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner 3 T
-    [34, [0, 0, 200, 0], [[0, 0, -400, 0], [200, 0, -200, -90]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner 3 right
-    [34, [0, 0, -200, 180], [[-200, 0, -200, 90], [0, 0, -400, 0]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner 3 left
-    [33, [0, 0, 200, 0], [[-200, 0, -200, 90], [0, 0, -400, 0], [200, 0, -200, -90]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner 4
-    [24, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-200, 200], [0, 600], [0, 0]]], #narrow door square-wide
-    [28, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-200, 200], [0, 600], [0, 0]]], #narrow door angle
-    [27, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-200, 200], [0, 600], [0, 0]]], #narrow door square
-    [35, [0, 0, -400, 180], [[0, -400, -1600, 0]], [[-200, 200], [-400, 600], [-400, 1200]]], #narrow ramp down
-    [35, [0, -400, 1200, 0], [[0, 400, -1600, 0]], [[-200, 200], [-400, 600], [-400, 1200]]], #narrow ramp up
-    [17, [0, 0, 400, 0], [[0, 0, -800, 0]], [[-400, 400], [0, 600], [-400, 400]]], #wide hallway
-    [30, [0, 0, 400, 0], [[400, 0, -400, -90]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner right
-    [30, [400, 0, 0, 90], [[-400, 0, -400, 90]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner left
-    [31, [400, 0, 0, 90], [[-400, 0, -400, 90], [400, 0, -400, -90]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 3 T
-    [31, [0, 0, 400, 0], [[0, 0, -800, 0], [400, 0, -400, -90]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 3 right
-    [31, [0, 0, -400, 180], [[-400, 0, -400, 90], [0, 0, -800, 0]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 3 left
-    [32, [0, 0, 400, 0], [[-400, 0, -400, 90], [0, 0, -800, 0], [400, 0, -400, -90]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 4
-    [25, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide
-    [29, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle
-    [26, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-400, 400], [0, 600], [0, 0]]], #wide door square
-    [18, [0, 0, -400, 180], [[0, -400, -1600, 0]], [[-400, 400], [-400, 600], [-400, 1200]]], #wide ramp down
-    [18, [0, -400, 1200, 0], [[0, 400, -1600, 0]], [[-400, 400], [-400, 600], [-400, 1200]]], #wide ramp up
-    [6, [0, 0, 800, 0], [[0, 0, -1600, 0]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide hallway
-    [5, [0, 0, 800, 0], [[800, 0, -800, -90]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner right
-    [5, [800, 0, 0, 90], [[-800, 0, -800, 90]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner left
-    [4, [800, 0, 0, 90], [[-800, 0, -800, 90], [800, 0, -800, -90]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 3 T
-    [4, [0, 0, 800, 0], [[0, 0, -800, 0], [800, 0, -800, -90]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 3 right
-    [4, [0, 0, -800, 180], [[-800, 0, -800, 90], [0, 0, -1600, 0]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 3 left
-    [3, [0, 0, 800, 0], [[-800, 0, -800, 90], [0, 0, -1600, 0], [800, 0, -800, -90]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 4
-    [2, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle-wide
-    [0, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle
-    [1, [0, 0, 0, 0], [[0, 0, 0, 0]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square
+    [36, [0, 0, 400, 0, 400], [[0, 0, -800, 0, 400]], [[-200, 200], [0, 600], [-400, 400]]], #narrow hallway
+    [37, [0, 0, 200, 0, 400], [[200, 0, -200, -90, 400]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner right
+    [37, [200, 0, 0, 90, 400], [[-200, 0, -200, 90, 400]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner left
+    [34, [200, 0, 0, 90, 400], [[-200, 0, -200, 90, 400], [200, 0, -200, -90, 400]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner 3 T
+    [34, [0, 0, 200, 0, 400], [[0, 0, -400, 0, 400], [200, 0, -200, -90, 400]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner 3 right
+    [34, [0, 0, -200, 180, 400], [[-200, 0, -200, 90, 400], [0, 0, -400, 0, 400]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner 3 left
+    [33, [0, 0, 200, 0, 400], [[-200, 0, -200, 90, 400], [0, 0, -400, 0, 400], [200, 0, -200, -90, 400]], [[-200, 200], [0, 600], [-200, 200]]], #narrow corner 4
+    [24, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 400]], [[-200, 200], [0, 600], [0, 0]]], #narrow door square-wide (narrow-to-narrow)
+    [28, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 400]], [[-200, 200], [0, 600], [0, 0]]], #narrow door angle (narrow-to-narrow)
+    [27, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 400]], [[-200, 200], [0, 600], [0, 0]]], #narrow door square (narrow-to-narrow)
+    [35, [0, 0, -400, 180, 400], [[0, -400, -1600, 0, 400]], [[-200, 200], [-400, 600], [-400, 1200]]], #narrow ramp down
+    [35, [0, -400, 1200, 0, 400], [[0, 400, -1600, 0, 400]], [[-200, 200], [-400, 600], [-400, 1200]]], #narrow ramp up
+    [17, [0, 0, 400, 0, 800], [[0, 0, -800, 0, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide hallway
+    [30, [0, 0, 400, 0, 800], [[400, 0, -400, -90, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner right
+    [30, [400, 0, 0, 90, 800], [[-400, 0, -400, 90, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner left
+    [31, [400, 0, 0, 90, 800], [[-400, 0, -400, 90, 800], [400, 0, -400, -90, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 3 T
+    [31, [0, 0, 400, 0, 800], [[0, 0, -800, 0, 800], [400, 0, -400, -90, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 3 right
+    [31, [0, 0, -400, 180, 800], [[-400, 0, -400, 90, 800], [0, 0, -800, 0, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 3 left
+    [32, [0, 0, 400, 0, 800], [[-400, 0, -400, 90, 800], [0, 0, -800, 0, 800], [400, 0, -400, -90, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 4
+    [25, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide (narrow-to-wide)
+    [25, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 400]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide (wide-to-narrow)
+    [25, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide (wide-to-wide)
+    [29, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle (narrow-to-wide)
+    [29, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 400]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle (wide-to-narrow)
+    [29, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle (wide-to-wide)
+    [26, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door square (narrow-to-wide)
+    [26, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 400]], [[-400, 400], [0, 600], [0, 0]]], #wide door square (wide-to-narrow)
+    [26, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door square (wide-to-wide)
+    [18, [0, 0, -400, 180, 1600], [[0, -400, -1600, 0, 1600]], [[-400, 400], [-400, 600], [-400, 1200]]], #wide ramp down
+    [18, [0, -400, 1200, 0, 1600], [[0, 400, -1600, 0, 1600]], [[-400, 400], [-400, 600], [-400, 1200]]], #wide ramp up
+    [6, [0, 0, 800, 0, 1600], [[0, 0, -1600, 0, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide hallway
+    [5, [0, 0, 800, 0, 1600], [[800, 0, -800, -90, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner right
+    [5, [800, 0, 0, 90, 1600], [[-800, 0, -800, 90, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner left
+    [4, [800, 0, 0, 90, 1600], [[-800, 0, -800, 90, 1600], [800, 0, -800, -90, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 3 T
+    [4, [0, 0, 800, 0, 1600], [[0, 0, -800, 0, 1600], [800, 0, -800, -90, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 3 right
+    [4, [0, 0, -800, 180, 1600], [[-800, 0, -800, 90, 1600], [0, 0, -1600, 0, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 3 left
+    [3, [0, 0, 800, 0, 1600], [[-800, 0, -800, 90, 1600], [0, 0, -1600, 0, 1600], [800, 0, -800, -90, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 4
+    [2, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle-wide (wide-to-extrawide)
+    [2, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle-wide (extrawide-to-wide)
+    [2, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle-wide (extrawide-to-extrawide)
+    [0, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (wide-to-extrawide)
+    [0, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (extrawide-to-wide)
+    [0, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (extrawide-to-extrawide)
+    [1, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (wide-to-extrawide)
+    [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-wide)
+    [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-extrawide)
 ]
 
 # DUNGEON TILES HASH ARRAY
@@ -297,7 +310,8 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
     newTransform = [transform[0] + x * cos(transform[3]) - z * sin(transform[3]),
                     transform[1] - tiles[index][1][1],
                     transform[2] - z * cos(transform[3]) + x * sin(transform[3]),
-                    transform[3] - tiles[index][1][3]]
+                    transform[3] - tiles[index][1][3],
+                    tiles[index][1][4]]
 
     # Check if the tile would overlap any of the previously place
     bb = [newTransform, tiles[index][3]]
@@ -319,7 +333,8 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
     return [[transform[0] + exit[0] * cos(transform[3]) + exit[2] * sin(transform[3]),
             transform[1] + exit[1],
             transform[2] + exit[2] * cos(transform[3]) - exit[0] * sin(transform[3]),
-            transform[3] + exit[3]]
+            transform[3] + exit[3],
+            exit[4]]
             for exit in tiles[index][2]]
 
 # Generates a tree graph that represents the high level structure of the dungeon
@@ -523,10 +538,10 @@ def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
 
     #Build the room with one tile according to the number of exits needed for the room
     transform = generateTile({
-            0: 12,
-            1: 12,
-            2: 15,
-            3: 18
+            0: 12 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 30,
+            1: 12 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 30,
+            2: 15 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 33,
+            3: 18 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 36
         }[properties["numExits"]], transform, manager, kitScene, scene, placedTiles)
 
     #If room collided, remove added tiles and return error
@@ -534,11 +549,19 @@ def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
         return False
 
     #Build entry door
-    generateTile(20 if not properties["isSpawnRoom"] else 19, originalTransform, manager, kitScene, scene, [])
+    generateTile({
+            400: 22 if not properties["isSpawnRoom"] else 19,
+            800: 40 if not properties["isSpawnRoom"] else 37,
+            1600: 42 if not properties["isSpawnRoom"] else 39
+        }[originalTransform[4] if not properties["isSpawnRoom"] else 400], originalTransform, manager, kitScene, scene, [])
 
     #Build doors on each exit
     for i in range(len(transform)):
-        transform[i] = generateTile(20 if properties["numExits"] > 0 else 21, transform[i], manager, kitScene, scene, [])[0]
+        transform[i] = generateTile({
+                400: 8 if properties["numExits"] > 0 else 9,
+                800: 23 if properties["numExits"] > 0 else 26,
+                1600: 41 if properties["numExits"] > 0 else 44
+            }[transform[i][4]], transform[i], manager, kitScene, scene, [])[0]
 
     return transform
 
@@ -736,7 +759,7 @@ if __name__ == "__main__":
 
     #Make a scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
-    buildDungeon(graph, [0, 0, 0, 0], manager, scene, scene2, [], difficulty)
+    buildDungeon(graph, [0, 0, 0, 0, 0], manager, scene, scene2, [], difficulty)
 
     #Save the scene in a new file
     if len(sys.argv) > 2:
