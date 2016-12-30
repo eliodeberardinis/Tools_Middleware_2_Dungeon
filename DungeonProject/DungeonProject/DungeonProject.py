@@ -6,42 +6,8 @@ import TileFile
 from TileFile import *
 import MathModule
 from MathModule import *
-
-# Makes a copy of the tile specified by index and returns a node that contains the new mesh
-def copyTile(index, manager, scene, nodeName = "", meshName = ""):
-    node = scene.GetRootNode().GetChild(index)
-    mesh = node.GetMesh()
-
-    #Create the new node
-    if nodeName == "":
-        nodeName = node.GetName()
-    newNode = FbxNode.Create(manager, nodeName)
-    newNode.LclTranslation.Set(FbxDouble3(0, 0, 0))
-    newNode.LclScaling.Set(node.LclScaling.Get())
-    newNode.LclRotation.Set(node.LclRotation.Get())
-
-    #Create the new mesh
-    if meshName == "":
-        meshName = mesh.GetName()
-    newMesh = FbxMesh.Create(manager, meshName)
-
-    #Copy the vertices in the mesh
-    newMesh.InitControlPoints(mesh.GetControlPointsCount())
-    for i in range(mesh.GetControlPointsCount()):
-        newMesh.SetControlPointAt(mesh.GetControlPointAt(i), i)
-
-    #Copy the polygons in the mesh
-    for i in range(mesh.GetPolygonCount()):
-        newMesh.BeginPolygon()
-        for j in range(mesh.GetPolygonSize(i)):
-            newMesh.AddPolygon(mesh.GetPolygonVertex(i, j))
-        newMesh.EndPolygon()
-    
-    #Add the mesh to the node
-    newNode.SetNodeAttribute(newMesh)
-
-    return newNode
-
+import TileGenerator
+from TileGenerator import *
 
 # Creates a box mesh with the specified dimensions and returns a node that contains it
 def makeBox(width, height, depth, manager, nodeName = "", meshName = ""):
@@ -126,7 +92,7 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
     placedTiles += [bb]
 
     # Create the node with the tile's mesh and adds it to the scene
-    tile = copyTile(TileFile.tiles[index][0], manager, kitScene)
+    tile = TileGenerator.copyTile(TileFile.tiles[index][0], manager, kitScene)
     scene2.GetRootNode().AddChild(tile)
 
     # Set the transform of the tile
