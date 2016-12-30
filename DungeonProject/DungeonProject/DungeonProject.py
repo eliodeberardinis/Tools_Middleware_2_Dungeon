@@ -114,7 +114,8 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
     newTransform = [transform[0] + x * MathModule.cos(transform[3]) - z * MathModule.sin(transform[3]),
                     transform[1] - TileFile.tiles[index][1][1],
                     transform[2] - z * MathModule.cos(transform[3]) + x * MathModule.sin(transform[3]),
-                    transform[3] - TileFile.tiles[index][1][3]]
+                    transform[3] - TileFile.tiles[index][1][3], 
+                    TileFile.tiles[index][1][4]]
 
     # Check if the tile would overlap any of the previously place
     bb = [newTransform, TileFile.tiles[index][3]]
@@ -135,10 +136,10 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
     # Returns a list of the new points (transforms) where the next tiles will be placed
     return [[transform[0] + exit[0] * MathModule.cos(transform[3]) + exit[2] * MathModule.sin(transform[3]),
             transform[1] + exit[1],
-            transform[2] + exit[2] * cos(transform[3]) - exit[0] * sin(transform[3]),
+            transform[2] + exit[2] * MathModule.cos(transform[3]) - exit[0] * MathModule.sin(transform[3]),
             transform[3] + exit[3],
             exit[4]]
-            for exit in tiles[index][2]]
+            for exit in TileFile.tiles[index][2]]
 
 # Generates a tree graph that represents the high level structure of the dungeon
 # Nodes are represented by each letter character

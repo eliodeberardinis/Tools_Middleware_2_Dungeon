@@ -1,7 +1,3 @@
 import sys
 
 class TileGenerator:
-
-
-
-
