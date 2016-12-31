@@ -2,6 +2,9 @@ import sys
 import random
 import Utilities
 from Utilities import *
+from MathModule import *
+import TileGenerator
+from TileGenerator import *
 
 class DungeonBuilder:
 
@@ -157,7 +160,7 @@ class DungeonBuilder:
             "isSpawnRoom": graph[0] == "O",
             "numExits": len(graphs)
             }
-        transform = buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
+        transform = DungeonBuilder.buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
 
         #If failed to place room, retry
         if not transform:
@@ -170,7 +173,7 @@ class DungeonBuilder:
                 placedTiles.pop()
 
                 #Retry without adding anything
-                transform = buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
+                transform = DungeonBuilder.buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
                 #Break when successfully placed the room
                 if transform:
                     break
@@ -181,7 +184,7 @@ class DungeonBuilder:
 
         #Recursively build the next part of the dungeon
         for i in range(len(graphs)):
-            buildDungeon(graphs[i], transform[i], manager, kitScene, scene, placedTiles, difficultyLevel)
+            DungeonBuilder.buildDungeon(graphs[i], transform[i], manager, kitScene, scene, placedTiles, difficultyLevel)
 
     # Builds a path from the given transform point
     # Returns the sequence of path transforms (allowing for simple backtracking)
@@ -228,7 +231,7 @@ class DungeonBuilder:
 
             # Try with all alternatives
             while not ret and len(weights[-1]) > 0:
-                tile = randomWeightedChoice(weights[-1])
+                tile = Utilities.randomWeightedChoice(weights[-1])
                 ret = TileGenerator.generateTile(tile, transforms[-1], manager, kitScene, scene, placedTiles)
                 del weights[-1][tile]
 
@@ -248,6 +251,42 @@ class DungeonBuilder:
                 i -= 1
 
         return transforms
+
+    # Builds a room from the given transform point according to the given properties
+    # Returns the list of points from where build the next paths of the dungeon
+    @staticmethod
+    def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
+        #Save original transform to place a door if room succeeds to be placed
+        originalTransform = [i for i in transform]
+
+        #Build the room with one tile according to the number of exits needed for the room
+        transform = TileGenerator.generateTile({
+                0: 12 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 30,
+                1: 12 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 30,
+                2: 15 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 33,
+                3: 18 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 36
+            }[properties["numExits"]], transform, manager, kitScene, scene, placedTiles)
+
+        #If room collided, remove added tiles and return error
+        if not transform:
+            return False
+
+        #Build entry door
+        TileGenerator.generateTile({
+                400: 22 if not properties["isSpawnRoom"] else 19,
+                800: 40 if not properties["isSpawnRoom"] else 37,
+                1600: 42 if not properties["isSpawnRoom"] else 39
+            }[originalTransform[4] if not properties["isSpawnRoom"] else 400], originalTransform, manager, kitScene, scene, [])
+
+        #Build doors on each exit
+        for i in range(len(transform)):
+            transform[i] = TileGenerator.generateTile({
+                    400: 8 if properties["numExits"] > 0 else 9,
+                    800: 23 if properties["numExits"] > 0 else 26,
+                    1600: 41 if properties["numExits"] > 0 else 44
+                }[transform[i][4]], transform[i], manager, kitScene, scene, [])[0]
+
+        return transform
 
 
 

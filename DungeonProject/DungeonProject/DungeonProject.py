@@ -1,13 +1,5 @@
 from fbx import *
 import sys
-import math
-import random
-import TileFile
-from TileFile import *
-import MathModule
-from MathModule import *
-import TileGenerator
-from TileGenerator import *
 import DungeonBuilder
 from DungeonBuilder import *
 
@@ -70,49 +62,6 @@ def makeBox(width, height, depth, manager, nodeName = "", meshName = ""):
 
     return newNode
 
-# Builds a room from the given transform point according to the given properties
-# Returns the list of points from where build the next paths of the dungeon
-def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
-    #Save original transform to place a door if room succeeds to be placed
-    originalTransform = [i for i in transform]
-
-    #Build the room with one tile according to the number of exits needed for the room
-    transform = TileGenerator.generateTile({
-            0: 12 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 30,
-            1: 12 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 30,
-            2: 15 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 33,
-            3: 18 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 36
-        }[properties["numExits"]], transform, manager, kitScene, scene, placedTiles)
-
-    #If room collided, remove added tiles and return error
-    if not transform:
-        return False
-
-    #Build entry door
-    TileGenerator.generateTile({
-            400: 22 if not properties["isSpawnRoom"] else 19,
-            800: 40 if not properties["isSpawnRoom"] else 37,
-            1600: 42 if not properties["isSpawnRoom"] else 39
-        }[originalTransform[4] if not properties["isSpawnRoom"] else 400], originalTransform, manager, kitScene, scene, [])
-
-    #Build doors on each exit
-    for i in range(len(transform)):
-        transform[i] = TileGenerator.generateTile({
-                400: 8 if properties["numExits"] > 0 else 9,
-                800: 23 if properties["numExits"] > 0 else 26,
-                1600: 41 if properties["numExits"] > 0 else 44
-            }[transform[i][4]], transform[i], manager, kitScene, scene, [])[0]
-
-    return transform
-
-# Returns a random key using the given weights
-# Data must be inputed as a dictionary, with choices as keys and weights as values.
-def randomWeightedChoice(data):
-    cumulative = [sum(data.values()[:i+1]) for i in range(len(data.values()))]
-    value = random.uniform(0, cumulative[-1])
-    index = next(i for i in range(len(cumulative)) if cumulative[i] > value)
-    return data.keys()[index]
-
 # Function to limit the input of difficulty to three letter only (E/M/H)
 def inputDifficulty():
     # Get input from command line
@@ -157,7 +106,7 @@ if __name__ == "__main__":
 
     #Make a scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
-    buildDungeon(graph, [0, 0, 0, 0, 0], manager, scene, scene2, [], difficulty)
+    DungeonBuilder.buildDungeon(graph, [0, 0, 0, 0, 0], manager, scene, scene2, [], difficulty)
 
     #Save the scene in a new file
     if len(sys.argv) > 2:
