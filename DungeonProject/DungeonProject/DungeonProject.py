@@ -433,14 +433,6 @@ def addVectors(vectors):
             result[i] += v[i]
     return result
 
-# Checks if the two AABB's (Axis Aligned Bounding Box) collide
-# Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-def checkCollisionAABB(aabb1, aabb2):
-    return aabb1[0] < aabb2[0] + aabb2[2] and \
-        aabb1[0] + aabb1[2] > aabb2[0] and \
-        aabb1[1] < aabb2[1] + aabb2[3] and \
-        aabb1[1] + aabb1[3] > aabb2[1]
-
 # Creates the AABB that contains all points
 def AABB(points):
     points = zip(*points)
