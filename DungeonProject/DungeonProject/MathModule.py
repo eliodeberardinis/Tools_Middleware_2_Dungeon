@@ -80,3 +80,24 @@ def projectPointOntoPlane(angle, point):
 
     # Change the point to return it in the local coordinates of the plane
     return [projected[0] * cos(-angle) - projected[2] * sin(-angle), projected[1]]
+
+# Transform a known 3D AABB given in BB format into AABB format
+# Returns None if the BB is not actually axis-aligned
+def BBToAABB(bb):
+    cosValue = cos(bb[0][3])
+    sinValue = sin(bb[0][3])
+    if cosValue not in [-1, 0, 1]:
+        return None
+
+    # Rotate dimensions as necessary
+    x = bb[1][0] if cosValue > sinValue else [-bb[1][0][1],-bb[1][0][0]]
+    y = bb[1][1]
+    z = bb[1][2] if cosValue + sinValue > 0 else [-bb[1][2][1],-bb[1][2][0]]
+    if cosValue == 0:
+        t = x
+        x = z
+        z = t
+
+    return [[bb[0][0] + x[0], bb[0][0] + x[1]],
+            [bb[0][1] + y[0], bb[0][1] + y[1]],
+            [bb[0][2] + z[0], bb[0][2] + z[1]]]

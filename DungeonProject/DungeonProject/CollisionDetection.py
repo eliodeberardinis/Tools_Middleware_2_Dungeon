@@ -2,13 +2,23 @@
 
 from MathModule import *
 
+useOptimizedAABBCollisions = True
+
 # Checks if the given BB overlaps with any of the of BB's in the list
 def checkAndAddCollision(bb1, bbs):
-    for bb in bbs:
-        if testCollision(bb1, bb):
-            return False
-    bbs.append(bb1)
-    return True
+    if useOptimizedAABBCollisions:
+        aabb = BBToAABB(bb1)
+        for aabb2 in bbs:
+            if checkCollision3DAABB(aabb, aabb2):
+                return False
+        bbs.append(aabb)
+        return True
+    else:
+        for bb in bbs:
+            if testCollision(bb1, bb):
+                return False
+        bbs.append(bb1)
+        return True
 
 # Checks if two BB's (Bounding Boxes) overlap
 # A BB is defined by: [centre, [sizeX, sizeY, sizeZ]]
@@ -35,12 +45,18 @@ def testCollisionOnProjectionPlane(angle, bb1, bb2):
     # Check if the AABB's that contain the projected points collide
     aabb1 = AABB(projbb1)
     aabb2 = AABB(projbb2)
-    return checkCollisionAABB(aabb1, aabb2)
+    return checkCollision2DAABB(aabb1, aabb2)
 
 # Checks if the two AABB's (Axis Aligned Bounding Box) collide
 # Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-def checkCollisionAABB(aabb1, aabb2):
+def checkCollision2DAABB(aabb1, aabb2):
     return aabb1[0] < aabb2[0] + aabb2[2] and \
         aabb1[0] + aabb1[2] > aabb2[0] and \
         aabb1[1] < aabb2[1] + aabb2[3] and \
         aabb1[1] + aabb1[3] > aabb2[1]
+
+def checkCollision3DAABB(aabb1, aabb2):
+    for i in range(len(aabb1)):
+        if aabb1[i][0] >= aabb2[i][1] or aabb1[i][1] <= aabb2[i][0]:
+            return False
+    return True
