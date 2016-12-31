@@ -1,0 +1,11 @@
+Execution time results for the experiments run to test the performance of the simple AABB collision system.
+All tests use the seed 0.
+
+N. Iterations	Difficulty	Complex Collisions	AABB Optimized Collisions	Execution time reduction
+3		1		1.763 s			0.105 s				94.04%
+3		2		3.8 s			0.144 s				96.21%
+3		3		20.22 s			0.443 s				97.81%
+3		4		197.796 s		1.689 s				99.15%
+3		5		629.795 s		4.267 s				99.32%
+
+All experiments have been also successfully tested to produce the same exact outputs.

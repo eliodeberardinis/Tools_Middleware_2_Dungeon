@@ -1,13 +1,35 @@
 # This module contains the methods used for collision detection
 
 from MathModule import *
+import numpy as np
 
-# Checks if the given BB overlaps with any of the of BB's in the list
-def checkCollision(bb1, bbs):
-    for bb in bbs:
-        if testCollision(bb1, bb):
+class CollisionSystem:
+    # Initializes the collision system instance
+    def __init__(self, useOptimizedAABBCollisions):
+        self.useOptimizedAABBCollisions = useOptimizedAABBCollisions
+        self.bbs = []
+
+    # Checks if the given BB overlaps with any of the of BB's in the list
+    def checkAndAddCollision(self, bb1):
+        if self.useOptimizedAABBCollisions:
+            aabb = np.array(BBToAABB(bb1))[np.newaxis]
+            if self.bbs == []:
+                self.bbs = aabb
+            else:
+                if checkCollisionAABBBulk(self.bbs, aabb):
+                    return False
+                self.bbs = np.append(self.bbs, aabb, 0)
             return True
-    return False
+        else:
+            for bb in self.bbs:
+                if testCollision(bb1, bb):
+                    return False
+            self.bbs.append(bb1)
+            return True
+
+    # Removes the last element from the collision system
+    def removeLast(self):
+        self.bbs = self.bbs[:-1]
 
 # Checks if two BB's (Bounding Boxes) overlap
 # A BB is defined by: [centre, [sizeX, sizeY, sizeZ]]
@@ -39,7 +61,12 @@ def testCollisionOnProjectionPlane(angle, bb1, bb2):
 # Checks if the two AABB's (Axis Aligned Bounding Box) collide
 # Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
 def checkCollisionAABB(aabb1, aabb2):
-    return aabb1[0] < aabb2[0] + aabb2[2] and \
-        aabb1[0] + aabb1[2] > aabb2[0] and \
-        aabb1[1] < aabb2[1] + aabb2[3] and \
-        aabb1[1] + aabb1[3] > aabb2[1]
+    for i in range(len(aabb1)):
+        if aabb1[i][0] >= aabb2[i][1] or aabb1[i][1] <= aabb2[i][0]:
+            return False
+    return True
+
+# Checks if the given aabb collides with any of the given aabbs
+def checkCollisionAABBBulk(aabbs, aabb):
+    checks = np.dstack((aabbs[:,:,0] < aabb[:,:,1], aabbs[:,:,1] > aabb[:,:,0]))
+    return np.any(np.all(np.all(checks, 2), 1))

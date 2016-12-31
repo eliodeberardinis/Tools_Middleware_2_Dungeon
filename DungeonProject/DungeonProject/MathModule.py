@@ -31,11 +31,11 @@ def cos(angle):
 # Returns the eight corner points of the given BB
 def getBBpoints(bb):
     vectors = [
-        [[bb[1][0][0] * cos(bb[0][3]), 0, bb[1][0][0] * sin(bb[0][3])], 
-            [bb[1][0][1] * cos(bb[0][3]), 0, bb[1][0][1] * sin(bb[0][3])],],
+        [[bb[1][0][0] * cos(bb[0][3]), 0, -bb[1][0][0] * sin(bb[0][3])], 
+            [bb[1][0][1] * cos(bb[0][3]), 0, -bb[1][0][1] * sin(bb[0][3])],],
         [[0, bb[1][1][0], 0], [0, bb[1][1][1], 0]],
-        [[-bb[1][2][0] * sin(bb[0][3]), 0, bb[1][2][0] * cos(bb[0][3])], 
-            [-bb[1][2][1] * sin(bb[0][3]), 0, bb[1][2][1] * cos(bb[0][3])]],
+        [[bb[1][2][0] * sin(bb[0][3]), 0, bb[1][2][0] * cos(bb[0][3])], 
+         [bb[1][2][1] * sin(bb[0][3]), 0, bb[1][2][1] * cos(bb[0][3])]],
         ]
 
     return [
@@ -61,11 +61,12 @@ def addVectors(vectors):
 # Creates the AABB that contains all points
 def AABB(points):
     points = zip(*points)
-    min_x = min(points[0])
-    max_x = max(points[0])
-    min_y = min(points[1])
-    max_y = max(points[1])
-    return (min_x, min_y, max_x - min_x, max_y - min_y)
+    aabb = []
+    for i in range(len(points)):
+        minValue = min(points[i])
+        maxValue = max(points[i])
+        aabb += [[minValue, maxValue]]
+    return aabb
 
 # Projects a point onto a vertical origin-passing plane given by the angle
 # Returns the projected point in the local coordinates of the plane
@@ -80,3 +81,24 @@ def projectPointOntoPlane(angle, point):
 
     # Change the point to return it in the local coordinates of the plane
     return [projected[0] * cos(-angle) - projected[2] * sin(-angle), projected[1]]
+
+# Transform a known 3D AABB given in BB format into AABB format
+# Returns None if the BB is not actually axis-aligned
+def BBToAABB(bb):
+    cosValue = cos(bb[0][3])
+    sinValue = sin(bb[0][3])
+    if cosValue not in [-1, 0, 1]:
+        return None
+
+    # Rotate dimensions as necessary
+    x = bb[1][0] if cosValue > sinValue else [-bb[1][0][1],-bb[1][0][0]]
+    y = bb[1][1]
+    z = bb[1][2] if cosValue + sinValue > 0 else [-bb[1][2][1],-bb[1][2][0]]
+    if cosValue == 0:
+        t = x
+        x = z
+        z = t
+
+    return [[bb[0][0] + x[0], bb[0][0] + x[1]],
+            [bb[0][1] + y[0], bb[0][1] + y[1]],
+            [bb[0][2] + z[0], bb[0][2] + z[1]]]
