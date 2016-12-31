@@ -1,6 +1,5 @@
 from fbx import *
 import sys
-import DungeonBuilder
 from DungeonBuilder import *
 
 # Function to limit the input of difficulty from 1 to 5
@@ -42,12 +41,12 @@ if __name__ == "__main__":
     print("DIFFICULTY: '%s'." % difficulty)
 
     #Create the graph for the dungeon
-    graph = DungeonBuilder.buildGraph(int(numIteration), difficulty)
+    graph = buildGraph(int(numIteration), difficulty)
     print graph
 
     #Make a scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
-    DungeonBuilder.buildDungeon(graph, [0, 0, 0, 0, 0], manager, scene, scene2, [], difficulty)
+    buildDungeon(graph, [0, 0, 0, 0, 0], manager, scene, scene2, [], difficulty)
 
     #Save the scene in a new file
     if len(sys.argv) > 2:
