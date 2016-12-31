@@ -1,0 +1,11 @@
+Execution time results for the experiments run to test the performance of the simple AABB collision system versus the optimized version that uses the numpy library.
+All tests use the seed 0.
+
+N. Iterations	Difficulty	Simple AABB	Numpy Optimized		Execution time reduction
+3		3		0.443 s		0.432 s			2.48%
+3		5		4.289 s		2.047 s			52.27%
+5		5		7.123 s		3.233 s			54.61%
+7		5		8.919 s		4.436 s			50.26%
+10		5		21.575 s	5.83 s			72.98%
+
+All experiments have been also successfully tested to produce the same exact outputs.

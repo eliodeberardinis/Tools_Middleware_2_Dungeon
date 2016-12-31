@@ -43,7 +43,7 @@ def copyTile(index, manager, scene, nodeName = "", meshName = ""):
 # Places a the tile specified by index to match with the point specified by transform, and adds it to the scene.
 # Returns the new transform points where to place the next tiles
 # If the tile to be generated would overlap any of the previously placed tiles, returns false.
-def generateTile(index, transform, manager, kitScene, scene, placedTiles):
+def generateTile(index, transform, manager, kitScene, scene, collisions):
     # Calculates the x and z coordinates of the tile (these depend on the rotation of the "in point" of the tile)
     x = tiles[index][1][0] * cos(tiles[index][1][3]) + tiles[index][1][2] * sin(tiles[index][1][3])
     z = tiles[index][1][2] * cos(tiles[index][1][3]) + tiles[index][1][0] * sin(tiles[index][1][3])
@@ -57,11 +57,8 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
 
     # Check if the tile would overlap any of the previously place
     bb = [newTransform, tiles[index][3]]
-    if checkCollision(bb, placedTiles):
+    if not collisions.checkAndAddCollision(bb):
         return False
-
-    # Add the tile to the collision system
-    placedTiles += [bb]
 
     # Create the node with the tile's mesh and adds it to the scene
     tile = copyTile(tiles[index][0], manager, kitScene)
