@@ -135,7 +135,7 @@ def buildGraph(numIter, difficultyLevel):
 
 # Build a dungeon according to the given branch from the given transform point
 # Builds a path followed by the first room in the graph, the recursively does so for the continuing branches
-def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles, difficultyLevel):
+def buildDungeon(graph, transform, manager, kitScene, scene, collisions, difficultyLevel):
     if len(graph) == 0:
         return
 
@@ -143,7 +143,7 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles, diffic
     path = [transform]
     if graph[0] != "O":
         scene.GetRootNode().AddChild(makeBox(32, 128, 32, manager))
-        path = buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel)
+        path = buildPath(transform, manager, kitScene, scene, collisions, difficultyLevel)
 
     #Obtain the branches after the room to be built
     graphs = split(graph[1:]) if len(graph) > 1 else [] 
@@ -153,7 +153,7 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles, diffic
         "isSpawnRoom": graph[0] == "O",
         "numExits": len(graphs)
         }
-    transform = buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
+    transform = buildRoom(properties, path[-1], manager, kitScene, scene, collisions)
 
     #If failed to place room, retry
     if not transform:
@@ -163,10 +163,10 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles, diffic
             scene.GetRootNode().RemoveChild(node)
             node.Destroy()
             path.pop()
-            placedTiles.pop()
+            collisions.removeLast()
 
             #Retry without adding anything
-            transform = buildRoom(properties, path[-1], manager, kitScene, scene, placedTiles)
+            transform = buildRoom(properties, path[-1], manager, kitScene, scene, collisions)
             #Break when successfully placed the room
             if transform:
                 break
@@ -177,13 +177,13 @@ def buildDungeon(graph, transform, manager, kitScene, scene, placedTiles, diffic
 
     #Recursively build the next part of the dungeon
     for i in range(len(graphs)):
-        buildDungeon(graphs[i], transform[i], manager, kitScene, scene, placedTiles, difficultyLevel)
+        buildDungeon(graphs[i], transform[i], manager, kitScene, scene, collisions, difficultyLevel)
 
 # Builds a path from the given transform point
 # Returns the sequence of path transforms (allowing for simple backtracking)
 # Path transform: end point of the path, from where to build the next part of the dungeon
 # For now, paths should only return one path, since they are built between one room and another
-def buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel):
+def buildPath(transform, manager, kitScene, scene, collisions, difficultyLevel):
     transforms = [transform]
     weights = []
 
@@ -224,7 +224,7 @@ def buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel)
         # Try with all alternatives
         while not ret and len(weights[-1]) > 0:
             tile = randomWeightedChoice(weights[-1])
-            ret = generateTile(tile, transforms[-1], manager, kitScene, scene, placedTiles)
+            ret = generateTile(tile, transforms[-1], manager, kitScene, scene, collisions)
             del weights[-1][tile]
 
         if ret:
@@ -237,7 +237,7 @@ def buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel)
             node = scene.GetRootNode().GetChild(scene.GetRootNode().GetChildCount() - 1)
             scene.GetRootNode().RemoveChild(node)
             node.Destroy()
-            placedTiles.pop()
+            collisions.removeLast()
             weights.pop()
             transforms.pop()
             i -= 1
@@ -246,7 +246,7 @@ def buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel)
 
 # Builds a room from the given transform point according to the given properties
 # Returns the list of points from where build the next paths of the dungeon
-def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
+def buildRoom(properties, transform, manager, kitScene, scene, collisions):
     #Save original transform to place a door if room succeeds to be placed
     originalTransform = [i for i in transform]
 
@@ -256,7 +256,7 @@ def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
             1: 12 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 30,
             2: 15 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 33,
             3: 18 if originalTransform[4] == 400 or properties["isSpawnRoom"] else 36
-        }[properties["numExits"]], transform, manager, kitScene, scene, placedTiles)
+        }[properties["numExits"]], transform, manager, kitScene, scene, collisions)
 
     #If room collided, remove added tiles and return error
     if not transform:
@@ -267,7 +267,7 @@ def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
             400: 22 if not properties["isSpawnRoom"] else 19,
             800: 40 if not properties["isSpawnRoom"] else 37,
             1600: 42 if not properties["isSpawnRoom"] else 39
-        }[originalTransform[4] if not properties["isSpawnRoom"] else 400], originalTransform, manager, kitScene, scene, [])
+        }[originalTransform[4] if not properties["isSpawnRoom"] else 400], originalTransform, manager, kitScene, scene, collisions)
 
     #Build doors on each exit
     for i in range(len(transform)):
@@ -275,6 +275,6 @@ def buildRoom(properties, transform, manager, kitScene, scene, placedTiles):
                 400: 8 if properties["numExits"] > 0 else 9,
                 800: 23 if properties["numExits"] > 0 else 26,
                 1600: 41 if properties["numExits"] > 0 else 44
-            }[transform[i][4]], transform[i], manager, kitScene, scene, [])[0]
+            }[transform[i][4]], transform[i], manager, kitScene, scene, collisions)[0]
 
     return transform

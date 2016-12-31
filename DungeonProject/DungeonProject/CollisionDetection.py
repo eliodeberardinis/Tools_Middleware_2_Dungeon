@@ -2,23 +2,31 @@
 
 from MathModule import *
 
-useOptimizedAABBCollisions = False
+class CollisionSystem:
+    # Initializes the collision system instance
+    def __init__(self, useOptimizedAABBCollisions):
+        self.useOptimizedAABBCollisions = useOptimizedAABBCollisions
+        self.bbs = []
 
-# Checks if the given BB overlaps with any of the of BB's in the list
-def checkAndAddCollision(bb1, bbs):
-    if useOptimizedAABBCollisions:
-        aabb = BBToAABB(bb1)
-        for aabb2 in bbs:
-            if checkCollisionAABB(aabb, aabb2):
-                return False
-        bbs.append(aabb)
-        return True
-    else:
-        for bb in bbs:
-            if testCollision(bb1, bb):
-                return False
-        bbs.append(bb1)
-        return True
+    # Checks if the given BB overlaps with any of the of BB's in the list
+    def checkAndAddCollision(self, bb1):
+        if self.useOptimizedAABBCollisions:
+            aabb = BBToAABB(bb1)
+            for aabb2 in self.bbs:
+                if checkCollisionAABB(aabb, aabb2):
+                    return False
+            self.bbs.append(aabb)
+            return True
+        else:
+            for bb in self.bbs:
+                if testCollision(bb1, bb):
+                    return False
+            self.bbs.append(bb1)
+            return True
+
+    # Removes the last element from the collision system
+    def removeLast(self):
+         self.bbs.pop()
 
 # Checks if two BB's (Bounding Boxes) overlap
 # A BB is defined by: [centre, [sizeX, sizeY, sizeZ]]
