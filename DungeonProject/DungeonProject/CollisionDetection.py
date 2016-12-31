@@ -1,6 +1,7 @@
 # This module contains the methods used for collision detection
 
 from MathModule import *
+import numpy as np
 
 class CollisionSystem:
     # Initializes the collision system instance
@@ -11,11 +12,13 @@ class CollisionSystem:
     # Checks if the given BB overlaps with any of the of BB's in the list
     def checkAndAddCollision(self, bb1):
         if self.useOptimizedAABBCollisions:
-            aabb = BBToAABB(bb1)
-            for aabb2 in self.bbs:
-                if checkCollisionAABB(aabb, aabb2):
+            aabb = np.array(BBToAABB(bb1))[np.newaxis]
+            if self.bbs == []:
+                self.bbs = aabb
+            else:
+                if checkCollisionAABBBulk(self.bbs, aabb):
                     return False
-            self.bbs.append(aabb)
+                self.bbs = np.append(self.bbs, aabb, 0)
             return True
         else:
             for bb in self.bbs:
@@ -26,7 +29,7 @@ class CollisionSystem:
 
     # Removes the last element from the collision system
     def removeLast(self):
-         self.bbs.pop()
+        self.bbs = self.bbs[:-1]
 
 # Checks if two BB's (Bounding Boxes) overlap
 # A BB is defined by: [centre, [sizeX, sizeY, sizeZ]]
@@ -62,3 +65,8 @@ def checkCollisionAABB(aabb1, aabb2):
         if aabb1[i][0] >= aabb2[i][1] or aabb1[i][1] <= aabb2[i][0]:
             return False
     return True
+
+# Checks if the given aabb collides with any of the given aabbs
+def checkCollisionAABBBulk(aabbs, aabb):
+    checks = np.dstack((aabbs[:,:,0] < aabb[:,:,1], aabbs[:,:,1] > aabb[:,:,0]))
+    return np.any(np.all(np.all(checks, 2), 1))
