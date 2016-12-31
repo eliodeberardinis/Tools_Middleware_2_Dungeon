@@ -31,11 +31,11 @@ def cos(angle):
 # Returns the eight corner points of the given BB
 def getBBpoints(bb):
     vectors = [
-        [[bb[1][0][0] * cos(bb[0][3]), 0, bb[1][0][0] * sin(bb[0][3])], 
-            [bb[1][0][1] * cos(bb[0][3]), 0, bb[1][0][1] * sin(bb[0][3])],],
+        [[bb[1][0][0] * cos(bb[0][3]), 0, -bb[1][0][0] * sin(bb[0][3])], 
+            [bb[1][0][1] * cos(bb[0][3]), 0, -bb[1][0][1] * sin(bb[0][3])],],
         [[0, bb[1][1][0], 0], [0, bb[1][1][1], 0]],
-        [[-bb[1][2][0] * sin(bb[0][3]), 0, bb[1][2][0] * cos(bb[0][3])], 
-            [-bb[1][2][1] * sin(bb[0][3]), 0, bb[1][2][1] * cos(bb[0][3])]],
+        [[bb[1][2][0] * sin(bb[0][3]), 0, bb[1][2][0] * cos(bb[0][3])], 
+         [bb[1][2][1] * sin(bb[0][3]), 0, bb[1][2][1] * cos(bb[0][3])]],
         ]
 
     return [
