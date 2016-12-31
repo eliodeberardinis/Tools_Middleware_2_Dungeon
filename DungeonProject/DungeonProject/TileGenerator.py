@@ -57,11 +57,8 @@ def generateTile(index, transform, manager, kitScene, scene, placedTiles):
 
     # Check if the tile would overlap any of the previously place
     bb = [newTransform, tiles[index][3]]
-    if checkCollision(bb, placedTiles):
+    if not checkAndAddCollision(bb, placedTiles):
         return False
-
-    # Add the tile to the collision system
-    placedTiles += [bb]
 
     # Create the node with the tile's mesh and adds it to the scene
     tile = copyTile(tiles[index][0], manager, kitScene)

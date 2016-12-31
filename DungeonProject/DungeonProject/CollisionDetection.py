@@ -3,11 +3,12 @@
 from MathModule import *
 
 # Checks if the given BB overlaps with any of the of BB's in the list
-def checkCollision(bb1, bbs):
+def checkAndAddCollision(bb1, bbs):
     for bb in bbs:
         if testCollision(bb1, bb):
-            return True
-    return False
+            return False
+    bbs.append(bb1)
+    return True
 
 # Checks if two BB's (Bounding Boxes) overlap
 # A BB is defined by: [centre, [sizeX, sizeY, sizeZ]]
