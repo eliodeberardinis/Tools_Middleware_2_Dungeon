@@ -35,22 +35,22 @@ class MathModule:
     @staticmethod
     def getBBpoints(bb):
         vectors = [
-            [[bb[1][0][0] * cos(bb[0][3]), 0, bb[1][0][0] * sin(bb[0][3])], 
-             [bb[1][0][1] * cos(bb[0][3]), 0, bb[1][0][1] * sin(bb[0][3])],],
+            [[bb[1][0][0] * MathModule.cos(bb[0][3]), 0, bb[1][0][0] * MathModule.sin(bb[0][3])], 
+             [bb[1][0][1] * MathModule.cos(bb[0][3]), 0, bb[1][0][1] * MathModule.sin(bb[0][3])],],
             [[0, bb[1][1][0], 0], [0, bb[1][1][1], 0]],
-            [[-bb[1][2][0] * sin(bb[0][3]), 0, bb[1][2][0] * cos(bb[0][3])], 
-             [-bb[1][2][1] * sin(bb[0][3]), 0, bb[1][2][1] * cos(bb[0][3])]],
+            [[-bb[1][2][0] * MathModule.sin(bb[0][3]), 0, bb[1][2][0] * MathModule.cos(bb[0][3])], 
+             [-bb[1][2][1] * MathModule.sin(bb[0][3]), 0, bb[1][2][1] * MathModule.cos(bb[0][3])]],
             ]
 
         return [
-            addVectors([bb[0][:3], vectors[0][0], vectors[1][0], vectors[2][0]]),
-            addVectors([bb[0][:3], vectors[0][0], vectors[1][0], vectors[2][1]]),
-            addVectors([bb[0][:3], vectors[0][0], vectors[1][1], vectors[2][0]]),
-            addVectors([bb[0][:3], vectors[0][0], vectors[1][1], vectors[2][1]]),
-            addVectors([bb[0][:3], vectors[0][1], vectors[1][0], vectors[2][0]]),
-            addVectors([bb[0][:3], vectors[0][1], vectors[1][0], vectors[2][1]]),
-            addVectors([bb[0][:3], vectors[0][1], vectors[1][1], vectors[2][0]]),
-            addVectors([bb[0][:3], vectors[0][1], vectors[1][1], vectors[2][1]])
+            MathModule.addVectors([bb[0][:3], vectors[0][0], vectors[1][0], vectors[2][0]]),
+            MathModule.addVectors([bb[0][:3], vectors[0][0], vectors[1][0], vectors[2][1]]),
+            MathModule.addVectors([bb[0][:3], vectors[0][0], vectors[1][1], vectors[2][0]]),
+            MathModule.addVectors([bb[0][:3], vectors[0][0], vectors[1][1], vectors[2][1]]),
+            MathModule.addVectors([bb[0][:3], vectors[0][1], vectors[1][0], vectors[2][0]]),
+            MathModule.addVectors([bb[0][:3], vectors[0][1], vectors[1][0], vectors[2][1]]),
+            MathModule.addVectors([bb[0][:3], vectors[0][1], vectors[1][1], vectors[2][0]]),
+            MathModule.addVectors([bb[0][:3], vectors[0][1], vectors[1][1], vectors[2][1]])
         ]
 
     # Adds an infinite amount of vectors
@@ -78,7 +78,7 @@ class MathModule:
     @staticmethod
     def projectPointOntoPlane(angle, point):
         # Computes the projection of the point onto the normal vector
-        normal = [-sin(angle), 0, cos(angle)]
+        normal = [-MathModule.sin(angle), 0, MathModule.cos(angle)]
         dotProduct = point[0] * normal[0] + point[2] * normal[2]
         projection = [v * dotProduct for v in normal]
 
@@ -86,7 +86,7 @@ class MathModule:
         projected = [point[i] - projection[i] for i in range(len(point))]
 
         # Change the point to return it in the local coordinates of the plane
-        return [projected[0] * cos(-angle) - projected[2] * sin(-angle), projected[1]]
+        return [projected[0] * MathModule.cos(-angle) - projected[2] * MathModule.sin(-angle), projected[1]]
 
 
 
