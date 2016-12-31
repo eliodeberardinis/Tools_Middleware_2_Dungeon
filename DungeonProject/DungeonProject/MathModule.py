@@ -61,11 +61,12 @@ def addVectors(vectors):
 # Creates the AABB that contains all points
 def AABB(points):
     points = zip(*points)
-    min_x = min(points[0])
-    max_x = max(points[0])
-    min_y = min(points[1])
-    max_y = max(points[1])
-    return (min_x, min_y, max_x - min_x, max_y - min_y)
+    aabb = []
+    for i in range(len(points)):
+        minValue = min(points[i])
+        maxValue = max(points[i])
+        aabb += [[minValue, maxValue]]
+    return aabb
 
 # Projects a point onto a vertical origin-passing plane given by the angle
 # Returns the projected point in the local coordinates of the plane
