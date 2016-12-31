@@ -369,20 +369,6 @@ def buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel)
 
     return transforms
 
-# Projects a point onto a vertical origin-passing plane given by the angle
-# Returns the projected point in the local coordinates of the plane
-def projectPointOntoPlane(angle, point):
-    # Computes the projection of the point onto the normal vector
-    normal = [-MathModule.sin(angle), 0, MathModule.cos(angle)]
-    dotProduct = point[0] * normal[0] + point[2] * normal[2]
-    projection = [v * dotProduct for v in normal]
-
-    # Substract the projection the the original point to obtain the projected point
-    projected = [point[i] - projection[i] for i in range(len(point))]
-
-    # Change the point to return it in the local coordinates of the plane
-    return [projected[0] * MathModule.cos(-angle) - projected[2] * MathModule.sin(-angle), projected[1]]
-
 # Function to limit the input of difficulty to three letter only (E/M/H)
 def inputDifficulty():
     # Get input from command line

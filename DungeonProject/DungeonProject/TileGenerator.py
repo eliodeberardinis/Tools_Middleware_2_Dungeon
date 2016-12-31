@@ -4,6 +4,8 @@ import TileFile
 from TileFile import *
 import MathModule
 from MathModule import *
+import CollisionDetection
+from CollisionDetection import *
 
 class TileGenerator:
 
@@ -61,7 +63,7 @@ class TileGenerator:
 
         # Check if the tile would overlap any of the previously place
         bb = [newTransform, TileFile.tiles[index][3]]
-        if checkCollision(bb, placedTiles):
+        if CollisionDetection.checkCollision(bb, placedTiles):
             return False
 
         # Add the tile to the collision system
@@ -69,7 +71,7 @@ class TileGenerator:
 
         # Create the node with the tile's mesh and adds it to the scene
         tile = TileGenerator.copyTile(TileFile.tiles[index][0], manager, kitScene)
-        scene2.GetRootNode().AddChild(tile)
+        scene.GetRootNode().AddChild(tile)
 
         # Set the transform of the tile
         tile.LclRotation.Set(FbxDouble3(tile.LclRotation.Get()[0], tile.LclRotation.Get()[1] + newTransform[3], tile.LclRotation.Get()[2]))
