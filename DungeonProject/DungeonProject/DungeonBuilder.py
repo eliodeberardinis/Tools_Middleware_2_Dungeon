@@ -1,10 +1,11 @@
 import sys
 import random
-import Utilities
-from Utilities import *
+import MathModule
 from MathModule import *
 import TileGenerator
 from TileGenerator import *
+import Utilities
+from Utilities import *
 
 class DungeonBuilder:
 
@@ -149,7 +150,7 @@ class DungeonBuilder:
         #If the spawn room is to be built, don't build a path first
         path = [transform]
         if graph[0] != "O":
-            scene.GetRootNode().AddChild(makeBox(32, 128, 32, manager))
+            scene.GetRootNode().AddChild(Utilities.makeBox(32, 128, 32, manager))
             path = DungeonBuilder.buildPath(transform, manager, kitScene, scene, placedTiles, difficultyLevel)
 
         #Obtain the branches after the room to be built
