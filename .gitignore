@@ -302,5 +302,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-#FBX files
+# FBX files
 *.fbx
+
+# Python compiled files
+*.pyc
