@@ -277,4 +277,12 @@ def buildRoom(properties, transform, manager, kitScene, scene, collisions):
                 1600: 41 if properties["numExits"] > 0 else 44
             }[transform[i][4]], transform[i], manager, kitScene, scene, collisions)[0]
 
+    #Build room customizations (create a function for this to make it more random and interesting)
+    for i in range(len(transform)):
+        transform[i] = generateCustomRoomTile({
+                400: 46 if properties["numExits"] > 0 else 46,
+                800: 47 if properties["numExits"] > 0 else 47,
+                1600: 47 if properties["numExits"] > 0 else 47
+            }[transform[i][4]], transform[i], manager, kitScene, scene)[0]
+
     return transform

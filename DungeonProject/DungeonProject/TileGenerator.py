@@ -55,10 +55,38 @@ def generateTile(index, transform, manager, kitScene, scene, collisions):
                     transform[3] - tiles[index][1][3], 
                     tiles[index][1][4]]
 
-    # Check if the tile would overlap any of the previously place
+    ## Check if the tile would overlap any of the previously place
     bb = [newTransform, tiles[index][3]]
     if not collisions.checkAndAddCollision(bb):
         return False
+
+    # Create the node with the tile's mesh and adds it to the scene
+    tile = copyTile(tiles[index][0], manager, kitScene)
+    scene.GetRootNode().AddChild(tile)
+
+    # Set the transform of the tile
+    tile.LclRotation.Set(FbxDouble3(tile.LclRotation.Get()[0], tile.LclRotation.Get()[1] + newTransform[3], tile.LclRotation.Get()[2]))
+    tile.LclTranslation.Set(FbxDouble3(newTransform[0], newTransform[1], newTransform[2]))
+
+    # Returns a list of the new points (transforms) where the next tiles will be placed
+    return [[transform[0] + exit[0] * cos(transform[3]) + exit[2] * sin(transform[3]),
+            transform[1] + exit[1],
+            transform[2] + exit[2] * cos(transform[3]) - exit[0] * sin(transform[3]),
+            transform[3] + exit[3],
+            exit[4]]
+            for exit in tiles[index][2]]
+
+def generateCustomRoomTile(index, transform, manager, kitScene, scene):
+    # Calculates the x and z coordinates of the tile (these depend on the rotation of the "in point" of the tile)
+    x = tiles[index][1][0] * cos(tiles[index][1][3]) + tiles[index][1][2] * sin(tiles[index][1][3])
+    z = tiles[index][1][2] * cos(tiles[index][1][3]) + tiles[index][1][0] * sin(tiles[index][1][3])
+
+    # Sets the final coordinates of the tile to match the coordinates of the given transform
+    newTransform = [transform[0] + x * cos(transform[3]) - z * sin(transform[3]),
+                    transform[1] - tiles[index][1][1],
+                    transform[2] - z * cos(transform[3]) + x * sin(transform[3]),
+                    transform[3] - tiles[index][1][3], 
+                    tiles[index][1][4]]
 
     # Create the node with the tile's mesh and adds it to the scene
     tile = copyTile(tiles[index][0], manager, kitScene)
