@@ -280,9 +280,23 @@ def buildRoom(properties, transform, manager, kitScene, scene, collisions):
     #Build room customizations (create a function for this to make it more random and interesting)
     for i in range(len(transform)):
         transform[i] = generateCustomRoomTile({
-                400: 46,
+                400: CustomizeRoom(),
                 800: 47,
                 1600: 47 
             }[transform[i][4]], transform[i], manager, kitScene, scene)[0]
 
     return transform
+
+def CustomizeRoom():
+    CustomRoomIndex = 46
+    return CustomRoomIndex
+
+
+
+    ##Build room customizations (create a function for this to make it more random and interesting)
+    #for i in range(len(transform)):
+    #    transform[i] = generateCustomRoomTile({
+    #            400: 46,
+    #            800: 47,
+    #            1600: 47 
+    #        }[transform[i][4]], transform[i], manager, kitScene, scene)[0]
