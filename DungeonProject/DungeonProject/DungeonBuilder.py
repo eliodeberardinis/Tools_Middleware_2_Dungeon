@@ -269,6 +269,12 @@ def buildRoom(properties, transform, manager, kitScene, scene, collisions):
             1600: 42 if not properties["isSpawnRoom"] else 39
         }[originalTransform[4] if not properties["isSpawnRoom"] else 400], originalTransform, manager, kitScene, scene, collisions)
 
+    # Build the room decorations
+    size = transform[0][4] / 2
+    centreTransform = translate(originalTransform, [0, 0, -size])
+    centreTransform[4] = 0
+    DecorateRoom(centreTransform, [size, 600, size], manager, kitScene, scene, collisions)
+
     #Build doors on each exit
     for i in range(len(transform)):
         transform[i] = generateTile({
@@ -277,26 +283,12 @@ def buildRoom(properties, transform, manager, kitScene, scene, collisions):
                 1600: 41 if properties["numExits"] > 0 else 44
             }[transform[i][4]], transform[i], manager, kitScene, scene, collisions)[0]
 
-    #Build room customizations (create a function for this to make it more random and interesting)
-    for i in range(len(transform)):
-        transform[i] = generateCustomRoomTile({
-                400: CustomizeRoom(),
-                800: 47,
-                1600: 47 
-            }[transform[i][4]], transform[i], manager, kitScene, scene)[0]
-
     return transform
 
-def CustomizeRoom():
-    CustomRoomIndex = 46
-    return CustomRoomIndex
-
-
-
-    ##Build room customizations (create a function for this to make it more random and interesting)
-    #for i in range(len(transform)):
-    #    transform[i] = generateCustomRoomTile({
-    #            400: 46,
-    #            800: 47,
-    #            1600: 47 
-    #        }[transform[i][4]], transform[i], manager, kitScene, scene)[0]
+# Builds decoration for a room, given by its centre point and its dimensions in each axis
+def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
+    # Translate the point where the tile is going to be placed
+    centre = translate(centre, [0, 0, 0])
+    
+    # Place the column
+    generateTile(46, centre, manager, kitScene, scene, None)

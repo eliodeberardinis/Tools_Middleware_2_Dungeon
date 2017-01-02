@@ -32,7 +32,7 @@ def cos(angle):
 def getBBpoints(bb):
     vectors = [
         [[bb[1][0][0] * cos(bb[0][3]), 0, -bb[1][0][0] * sin(bb[0][3])], 
-            [bb[1][0][1] * cos(bb[0][3]), 0, -bb[1][0][1] * sin(bb[0][3])],],
+         [bb[1][0][1] * cos(bb[0][3]), 0, -bb[1][0][1] * sin(bb[0][3])],],
         [[0, bb[1][1][0], 0], [0, bb[1][1][1], 0]],
         [[bb[1][2][0] * sin(bb[0][3]), 0, bb[1][2][0] * cos(bb[0][3])], 
          [bb[1][2][1] * sin(bb[0][3]), 0, bb[1][2][1] * cos(bb[0][3])]],
@@ -102,3 +102,10 @@ def BBToAABB(bb):
     return [[bb[0][0] + x[0], bb[0][0] + x[1]],
             [bb[0][1] + y[0], bb[0][1] + y[1]],
             [bb[0][2] + z[0], bb[0][2] + z[1]]]
+
+def translate(transform, vector):
+    t = [v for v in transform]
+    t[0] += vector[0] * cos(transform[3]) + vector[2] * sin(transform[3])
+    t[1] += vector[1]
+    t[2] += vector[2] * cos(transform[3]) - vector[0] * sin(transform[3])
+    return t

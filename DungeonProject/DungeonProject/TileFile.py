@@ -130,8 +130,7 @@ tiles = [
     [1, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (wide-to-extrawide)
     [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-wide)
     [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-extrawide)
-    [19, [0, 0, -400, 0, 400], [[0, 0, 0, 0, 400]], [[-50, 50], [0, 600], [-50, 50]]], #small-column offset for small rooms
-    [19, [0, 0, -800, 0, 400], [[0, 0, 0, 0, 400]], [[-50, 50], [0, 600], [-50, 50]]], #small-column off-set for big rooms
+    [19, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-50, 50], [0, 600], [-50, 50]]], #small-column
 ]
 
 # DUNGEON TILES HASH ARRAY
