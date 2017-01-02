@@ -134,16 +134,16 @@ def buildGraph(numIter, difficultyLevel):
     return g_
 
 # Build a dungeon according to the given branch from the given transform point
-# Builds a path followed by the first room in the graph, the recursively does so for the continuing branches
+# Builds a corridor followed by the first room in the graph, the recursively does so for the continuing branches
 def buildDungeon(graph, transform, manager, kitScene, scene, collisions, difficultyLevel):
     if len(graph) == 0:
         return
 
     #If the spawn room is to be built, don't build a path first
-    path = [transform]
+    corridorTransform = transform
     if graph[0] != "O":
-        scene.GetRootNode().AddChild(makeBox(32, 128, 32, manager))
-        path = buildPath(transform, manager, kitScene, scene, collisions, difficultyLevel)
+        corridorBuilder = CorridorBuilder(manager, kitScene, scene, collisions, transform, difficultyLevel)
+        corridorTransform = corridorBuilder.run()
 
     #Obtain the branches after the room to be built
     graphs = split(graph[1:]) if len(graph) > 1 else [] 
@@ -153,96 +153,116 @@ def buildDungeon(graph, transform, manager, kitScene, scene, collisions, difficu
         "isSpawnRoom": graph[0] == "O",
         "numExits": len(graphs)
         }
-    transform = buildRoom(properties, path[-1], manager, kitScene, scene, collisions)
+    roomTransforms = buildRoom(properties, corridorTransform, manager, kitScene, scene, collisions)
 
     #If failed to place room, retry
-    if not transform:
-        for back in range(len(path)-1): # Backtrack until no more path is available
-            #Remove last tile
-            node = scene.GetRootNode().GetChild(scene.GetRootNode().GetChildCount() - 1)
-            scene.GetRootNode().RemoveChild(node)
-            node.Destroy()
-            path.pop()
-            collisions.removeLast()
-
-            #Retry without adding anything
-            transform = buildRoom(properties, path[-1], manager, kitScene, scene, collisions)
-            #Break when successfully placed the room
-            if transform:
-                break
-
-        #If still failed to place the room, stop this branch's generation
-        if not transform:
-            return
+    while not roomTransforms and transform != corridorTransform: # Backtrack until no more corridor alternatives can be generated
+        print "--------------"
+        corridorTransform = corridorBuilder.run()
+        roomTransforms = buildRoom(properties, corridorTransform, manager, kitScene, scene, collisions)
 
     #Recursively build the next part of the dungeon
     for i in range(len(graphs)):
-        buildDungeon(graphs[i], transform[i], manager, kitScene, scene, collisions, difficultyLevel)
+        buildDungeon(graphs[i], roomTransforms[i], manager, kitScene, scene, collisions, difficultyLevel)
 
-# Builds a path from the given transform point
-# Returns the sequence of path transforms (allowing for simple backtracking)
-# Path transform: end point of the path, from where to build the next part of the dungeon
+# Builds a path from the given transform point and according to the given difficulty level
 # For now, paths should only return one path, since they are built between one room and another
-def buildPath(transform, manager, kitScene, scene, collisions, difficultyLevel):
-    transforms = [transform]
-    weights = []
+class CorridorBuilder:
 
-    # Choose the length of the corridor depending on the chosen difficulty
-    numTiles = random.randint(*[[5, 10], [5, 15], [10, 20], [15, 25], [20, 30]][difficultyLevel-1])
+    def __init__(self, manager, kitScene, scene, collisions, transform, difficultyLevel):
+        self.manager = manager
+        self.kitScene = kitScene
+        self.scene = scene
+        self.collisions = collisions
+        self.difficultyLevel = difficultyLevel
+        self.transforms = [transform]
+        self.weights = []
 
-    # Repeat the generation until the number of tiles to place has been reached
-    i = 0
-    while i < numTiles: 
-        ret = False
-        # If the generator comes from backtracking, use the remaining weights that 
-        #   were not explored when generating this tile
-        if len(weights) <= i:
-            weights.append({
-                    400: [
-                        {0: 10, 1: 1, 2: 1, 8: 1},
-                        {0: 10, 1: 2.5, 2: 2.5, 8: 1},
-                        {0: 10, 1: 2.5, 2: 2.5, 10: 1, 11: 1, 8: 1, 22: 0.5},
-                        {0: 10, 1: 3.33, 2: 3.33, 10: 2.5, 11: 2.5, 8: 1, 22: 1},
-                        {0: 10, 1: 5, 2: 5, 10: 3.33, 11: 3.33, 8: 1, 22: 1.5}
-                    ],
-                    800: [
-                        {12: 10, 13: 1, 14: 1, 24: 1},
-                        {12: 10, 13: 2.5, 14: 2.5, 24: 1},
-                        {12: 10, 13: 2.5, 14: 2.5, 28: 1, 29: 1, 24: 1, 23: 0.25, 40: 0.25},
-                        {12: 10, 13: 3.33, 14: 3.33, 28: 2.5, 29: 2.5, 24: 1, 23: 0.25, 40: 0.25},
-                        {12: 10, 13: 5, 14: 5, 28: 3.33, 29: 3.33, 24: 1, 23: 0.25, 40: 0.25}
-                    ],
-                    1600: [
-                        {30: 10, 31: 1, 32: 1, 42: 1},
-                        {30: 10, 31: 2.5, 32: 2.5, 42: 1},
-                        {30: 10, 31: 2.5, 32: 2.5, 42: 1, 41: 2.5},
-                        {30: 10, 31: 3.33, 32: 3.33, 42: 1, 41: 6},
-                        {30: 10, 31: 5, 32: 5, 42: 1, 41: 8.16}
-                    ],
-                }[transforms[-1][4]][difficultyLevel-1])
+        # Choose the length of the corridor depending on the chosen difficulty
+        self.length = random.randint(*[[5, 10], [5, 15], [10, 20], [15, 25], [20, 30]][difficultyLevel-1])
 
-        # Try with all alternatives
-        while not ret and len(weights[-1]) > 0:
-            tile = randomWeightedChoice(weights[-1])
-            ret = generateTile(tile, transforms[-1], manager, kitScene, scene, collisions)
-            del weights[-1][tile]
+        # Select the tile weights to be used
+        self.tileWeights = [
+            {
+                400: {0: 10, 1: 1, 2: 1, 8: 1},
+                800: {12: 10, 13: 1, 14: 1, 24: 1},
+                1600: {30: 10, 31: 1, 32: 1, 42: 1}
+            },
+            {
+                400: {0: 10, 1: 2.5, 2: 2.5, 8: 1},
+                800: {12: 10, 13: 2.5, 14: 2.5, 24: 1},
+                1600: {30: 10, 31: 2.5, 32: 2.5, 42: 1}
+            },
+            {
+                400: {0: 10, 1: 2.5, 2: 2.5, 10: 1, 11: 1, 8: 1, 22: 0.5},
+                800: {12: 10, 13: 2.5, 14: 2.5, 28: 1, 29: 1, 24: 1, 23: 0.25, 40: 0.25},
+                1600: {30: 10, 31: 2.5, 32: 2.5, 42: 1, 41: 2.5}
+            },
+            {
+                400: {0: 10, 1: 3.33, 2: 3.33, 10: 2.5, 11: 2.5, 8: 1, 22: 1},
+                800: {12: 10, 13: 3.33, 14: 3.33, 28: 2.5, 29: 2.5, 24: 1, 23: 0.25, 40: 0.25},
+                1600: {30: 10, 31: 3.33, 32: 3.33, 42: 1, 41: 6}
+            },
+            {
+                400: {0: 10, 1: 5, 2: 5, 10: 3.33, 11: 3.33, 8: 1, 22: 1.5},
+                800: {12: 10, 13: 5, 14: 5, 28: 3.33, 29: 3.33, 24: 1, 23: 0.25, 40: 0.25},
+                1600: {30: 10, 31: 5, 32: 5, 42: 1, 41: 8.16}
+            }][difficultyLevel-1]
 
-        if ret:
-            transforms += [ret[0]]
-            i += 1
-        # If all alternatives failed, backtrack and continue generation
-        else: 
-            if i == 0: # Do not backtrack if no more elements available
-                break
-            node = scene.GetRootNode().GetChild(scene.GetRootNode().GetChildCount() - 1)
-            scene.GetRootNode().RemoveChild(node)
-            node.Destroy()
-            collisions.removeLast()
-            weights.pop()
-            transforms.pop()
-            i -= 1
+    # Runs the generation of the corridor
+    # Can be run more than once, and it will keep building corridor alternatives
+    # Returns the transform of the end of the corridor (from where to keep generating the dungeon)
+    def run(self):
+        # If this is not the first run, backtrack and start generation
+        if len(self.transforms) > 1:
+            self.backtrack()
 
-    return transforms
+        # Repeat the generation until the number of tiles to place has been reached
+        i = len(self.transforms) - 1
+        while len(self.transforms) - 1 < self.length: 
+            ret = False
+            # If the generator comes from backtracking, use the remaining weights that 
+            #   were not explored when generating this tile
+            if len(self.weights) <= i:
+                tileWeights = self.tileWeights[self.transforms[-1][4]]
+                self.weights.append({key:tileWeights[key] for key in tileWeights})
+
+            # Try with all alternatives
+            while not ret and len(self.weights[-1]) > 0:
+                tile = randomWeightedChoice(self.weights[-1])
+                print i, tile
+                ret = generateTile(tile, self.transforms[-1], self.manager, self.kitScene, self.scene, self.collisions)
+                del self.weights[-1][tile]
+
+            # If successed, continue iterating
+            if ret:
+                self.transforms += [ret[0]]
+                i += 1
+            # If all alternatives failed, backtrack and continue generation
+            else: 
+                if i == 0: # Do not backtrack if no more elements available
+                    break
+                self.backtrack()
+                i -= 1
+
+        return self.transforms[-1]
+
+    # Removes the last tile that was placed
+    def backtrack(self):
+        print "<--"
+        # Remove the last mesh placed in the scene
+        node = self.scene.GetRootNode().GetChild(self.scene.GetRootNode().GetChildCount() - 1)
+        self.scene.GetRootNode().RemoveChild(node)
+        node.Destroy()
+
+        # Remove the collision data for the removed mesh
+        self.collisions.removeLast()
+
+        self.transforms.pop()
+        if len(self.weights[-1]) == 0:
+            self.weights.pop()
+            self.transforms.pop()
+
 
 # Builds a room from the given transform point according to the given properties
 # Returns the list of points from where build the next paths of the dungeon
