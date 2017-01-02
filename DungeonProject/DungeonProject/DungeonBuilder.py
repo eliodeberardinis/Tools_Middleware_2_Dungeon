@@ -69,7 +69,7 @@ def buildGraph(numIter, difficultyLevel):
 
                 #Hard
                 elif difficultyLevel == 4:
-                    if numSubIter in mylist[:3] and prevSplits < 3: # Maybe change the rules to add minmum 2 1:2 splits
+                    if numSubIter in mylist[:3] and prevSplits < 3: 
                         if num2Splits + num3Splits < 2:
                             branches = random.randint(2,3)
                         else:
@@ -89,7 +89,7 @@ def buildGraph(numIter, difficultyLevel):
                 
                 #VeryHard
                 elif difficultyLevel == 5:
-                    if numSubIter in mylist[:4] and prevSplits < 4: # Maybe change the rules to add minmum 2 1:3 splits
+                    if numSubIter in mylist[:4] and prevSplits < 4:
                         if num2Splits + num3Splits < 3:
                             branches = random.randint(2,3)
                         else:
@@ -287,8 +287,76 @@ def buildRoom(properties, transform, manager, kitScene, scene, collisions):
 
 # Builds decoration for a room, given by its centre point and its dimensions in each axis
 def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
+    # Save the tile Original Center
+    print("Size: '%s'." % size[0]) #DELETE THIS LATER 
+    originalCentre = centre
     # Translate the point where the tile is going to be placed
-    centre = translate(centre, [0, 0, 0])
+    if size[0] == 400:
+        type = random.randint(0,2)
+
+        if type == 0:
+            generateTile(46, originalCentre, manager, kitScene, scene, None)
+        
+        elif type == 1:
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [250, 0, 250])
+                elif i == 1:
+                    centre = translate(originalCentre, [-250, 0, 250])
+                elif i == 2:
+                    centre = translate(originalCentre, [250, 0, -250])
+                elif i == 3:
+                    centre = translate(originalCentre, [-250, 0, -250])
+                generateTile(46, centre, manager, kitScene, scene, None)
+      
+        elif type == 2:
+             for i in range(5):
+                if i == 0:
+                    centre = translate(originalCentre, [250, 0, 250])
+                elif i == 1:
+                    centre = translate(originalCentre, [-250, 0, 250])
+                elif i == 2:
+                    centre = translate(originalCentre, [250, 0, -250])
+                elif i == 3:
+                    centre = translate(originalCentre, [-250, 0, -250])
+                elif i == 4:
+                    centre = translate(originalCentre, [0, 0, 0])
+                generateTile(46, centre, manager, kitScene, scene, None)
+                
+    else:
+        #Bigger Rooms
+        type = random.randint(0,2)
+
+        if type == 0:
+            generateTile(47, originalCentre, manager, kitScene, scene, None)
+        
+        elif type == 1:
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [550, 0, 550])
+                elif i == 1:
+                    centre = translate(originalCentre, [-550, 0, 550])
+                elif i == 2:
+                    centre = translate(originalCentre, [550, 0, -550])
+                elif i == 3:
+                    centre = translate(originalCentre, [-550, 0, -550])
+                generateTile(46, centre, manager, kitScene, scene, None)
+
+        elif type == 2:
+            for i in range(5):
+                if i == 0:
+                    centre = translate(originalCentre, [550, 0, 550])
+                elif i == 1:
+                    centre = translate(originalCentre, [-550, 0, 550])
+                elif i == 2:
+                    centre = translate(originalCentre, [550, 0, -550])
+                elif i == 3:
+                    centre = translate(originalCentre, [-550, 0, -550])
+                elif i == 4:
+                    centre = translate(originalCentre, [0, 0, 0])
+                if i == 4:
+                    generateTile(47, centre, manager, kitScene, scene, None)
+                else:
+                    generateTile(46, centre, manager, kitScene, scene, None)
     
-    # Place the column
-    generateTile(46, centre, manager, kitScene, scene, None)
+
