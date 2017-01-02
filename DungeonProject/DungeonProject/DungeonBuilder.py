@@ -157,9 +157,11 @@ def buildDungeon(graph, transform, manager, kitScene, scene, collisions, difficu
 
     #If failed to place room, retry
     while not roomTransforms and transform != corridorTransform: # Backtrack until no more corridor alternatives can be generated
-        print "--------------"
         corridorTransform = corridorBuilder.run()
         roomTransforms = buildRoom(properties, corridorTransform, manager, kitScene, scene, collisions)
+
+    if not roomTransforms:
+        return
 
     #Recursively build the next part of the dungeon
     for i in range(len(graphs)):
@@ -177,6 +179,7 @@ class CorridorBuilder:
         self.difficultyLevel = difficultyLevel
         self.transforms = [transform]
         self.weights = []
+        self.tiles = []
 
         # Choose the length of the corridor depending on the chosen difficulty
         self.length = random.randint(*[[5, 10], [5, 15], [10, 20], [15, 25], [20, 30]][difficultyLevel-1])
@@ -230,12 +233,13 @@ class CorridorBuilder:
             # Try with all alternatives
             while not ret and len(self.weights[-1]) > 0:
                 tile = randomWeightedChoice(self.weights[-1])
-                print i, tile
-                ret = generateTile(tile, self.transforms[-1], self.manager, self.kitScene, self.scene, self.collisions)
+                if len(self.tiles) == 0 or checkTileCompatibility(self.tiles[-1], tile):
+                    ret = generateTile(tile, self.transforms[-1], self.manager, self.kitScene, self.scene, self.collisions)
                 del self.weights[-1][tile]
 
             # If successed, continue iterating
             if ret:
+                self.tiles += [tile]
                 self.transforms += [ret[0]]
                 i += 1
             # If all alternatives failed, backtrack and continue generation
@@ -243,13 +247,13 @@ class CorridorBuilder:
                 if i == 0: # Do not backtrack if no more elements available
                     break
                 self.backtrack()
+                self.weights.pop()
                 i -= 1
 
         return self.transforms[-1]
 
     # Removes the last tile that was placed
     def backtrack(self):
-        print "<--"
         # Remove the last mesh placed in the scene
         node = self.scene.GetRootNode().GetChild(self.scene.GetRootNode().GetChildCount() - 1)
         self.scene.GetRootNode().RemoveChild(node)
@@ -258,10 +262,8 @@ class CorridorBuilder:
         # Remove the collision data for the removed mesh
         self.collisions.removeLast()
 
+        self.tiles.pop()
         self.transforms.pop()
-        if len(self.weights[-1]) == 0:
-            self.weights.pop()
-            self.transforms.pop()
 
 
 # Builds a room from the given transform point according to the given properties

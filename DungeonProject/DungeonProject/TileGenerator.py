@@ -75,3 +75,6 @@ def generateTile(index, transform, manager, kitScene, scene, collisions):
             transform[3] + exit[3],
             exit[4]]
             for exit in tiles[index][2]]
+
+def checkTileCompatibility(index1, index2):
+    return next((t for t in tiles[index1][4:6][1] if t in tiles[index2][4:6][0]), None) is None
