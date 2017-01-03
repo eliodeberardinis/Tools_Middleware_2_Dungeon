@@ -288,15 +288,18 @@ def buildRoom(properties, transform, manager, kitScene, scene, collisions):
 # Builds decoration for a room, given by its centre point and its dimensions in each axis
 def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
     # Save the tile Original Center
-    print("Size: '%s'." % size[0]) #DELETE THIS LATER 
+    #print("Size: '%s'." % size[0]) #DELETE THIS LATER 
     originalCentre = centre
     # Translate the point where the tile is going to be placed
     if size[0] == 400:
+        #Small Room
         type = random.randint(0,2)
 
+        #Single Small Column in the Center
         if type == 0:
             generateTile(46, originalCentre, manager, kitScene, scene, None)
         
+        #4 Small Columns at every angle
         elif type == 1:
             for i in range(4):
                 if i == 0:
@@ -308,7 +311,8 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
                 elif i == 3:
                     centre = translate(originalCentre, [-250, 0, -250])
                 generateTile(46, centre, manager, kitScene, scene, None)
-      
+
+        #4 Small Columns at every angle + one in the centre
         elif type == 2:
              for i in range(5):
                 if i == 0:
@@ -325,11 +329,11 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
                 
     else:
         #Bigger Rooms
-        type = random.randint(0,2)
-
+        type = 3 #random.randint(2,3)
+        #Single big column in the centre
         if type == 0:
             generateTile(47, originalCentre, manager, kitScene, scene, None)
-        
+        #4 small columns in every corner
         elif type == 1:
             for i in range(4):
                 if i == 0:
@@ -341,7 +345,8 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
                 elif i == 3:
                     centre = translate(originalCentre, [-550, 0, -550])
                 generateTile(46, centre, manager, kitScene, scene, None)
-
+        
+       #4 small columns in every corner + 1 big in the centre
         elif type == 2:
             for i in range(5):
                 if i == 0:
@@ -358,5 +363,22 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
                     generateTile(47, centre, manager, kitScene, scene, None)
                 else:
                     generateTile(46, centre, manager, kitScene, scene, None)
+         
+        #4 round steps in the middle
+        elif type == 3:
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [180, 0, 180])
+                    generateTile(48, centre, manager, kitScene, scene, None) #0 rotation
+                elif i == 1:
+                    centre = translate(originalCentre, [-180, 0, 180])
+                    generateTile(49, centre, manager, kitScene, scene, None) # 90 degrees rotation
+                elif i == 2:
+                    centre = translate(originalCentre, [180, 0, -180])
+                    generateTile(50, centre, manager, kitScene, scene, None) #-90 degrees rotation
+                elif i == 3:
+                    centre = translate(originalCentre, [-180, 0, -180])
+                    generateTile(51, centre, manager, kitScene, scene, None) # 180 degrees rotation
+                
     
 
