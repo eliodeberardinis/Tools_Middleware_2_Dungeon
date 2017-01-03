@@ -329,7 +329,7 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
                 
     else:
         #Bigger Rooms
-        type = 3 #random.randint(2,3)
+        type = 8 #random.randint(0,3)
         #Single big column in the centre
         if type == 0:
             generateTile(47, originalCentre, manager, kitScene, scene, None)
@@ -378,7 +378,133 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
                     generateTile(50, centre, manager, kitScene, scene, None) #-90 degrees rotation
                 elif i == 3:
                     centre = translate(originalCentre, [-180, 0, -180])
+                    generateTile(51, centre, manager, kitScene, scene, None) # 180 degrees 
+
+        #4 round steps in the middle and small columns in the corners of the room
+        elif type == 4:
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [180, 0, 180])
+                    generateTile(48, centre, manager, kitScene, scene, None) #0 rotation
+                elif i == 1:
+                    centre = translate(originalCentre, [-180, 0, 180])
+                    generateTile(49, centre, manager, kitScene, scene, None) # 90 degrees rotation
+                elif i == 2:
+                    centre = translate(originalCentre, [180, 0, -180])
+                    generateTile(50, centre, manager, kitScene, scene, None) #-90 degrees rotation
+                elif i == 3:
+                    centre = translate(originalCentre, [-180, 0, -180])
                     generateTile(51, centre, manager, kitScene, scene, None) # 180 degrees rotation
+
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [550, 0, 550])
+                elif i == 1:
+                    centre = translate(originalCentre, [-550, 0, 550])
+                elif i == 2:
+                    centre = translate(originalCentre, [550, 0, -550])
+                elif i == 3:
+                    centre = translate(originalCentre, [-550, 0, -550])
+                generateTile(46, centre, manager, kitScene, scene, None)
+
+        #4 round steps in the middle and small columns around it
+        elif type == 5:
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [180, 0, 180])
+                    generateTile(48, centre, manager, kitScene, scene, None) #0 rotation
+                elif i == 1:
+                    centre = translate(originalCentre, [-180, 0, 180])
+                    generateTile(49, centre, manager, kitScene, scene, None) # 90 degrees rotation
+                elif i == 2:
+                    centre = translate(originalCentre, [180, 0, -180])
+                    generateTile(50, centre, manager, kitScene, scene, None) #-90 degrees rotation
+                elif i == 3:
+                    centre = translate(originalCentre, [-180, 0, -180])
+                    generateTile(51, centre, manager, kitScene, scene, None) # 180 degrees rotation
+
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [250, 0, 250])
+                elif i == 1:
+                    centre = translate(originalCentre, [-250, 0, 250])
+                elif i == 2:
+                    centre = translate(originalCentre, [250, 0, -250])
+                elif i == 3:
+                    centre = translate(originalCentre, [-250, 0, -250])
+                generateTile(46, centre, manager, kitScene, scene, None)
+
+        #4 round walls in the middle
+        elif type == 6:
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [180, 0, 180])
+                    generateTile(52, centre, manager, kitScene, scene, None) #0 rotation
+                elif i == 1:
+                    centre = translate(originalCentre, [-180, 0, 180])
+                    generateTile(53, centre, manager, kitScene, scene, None) # 90 degrees rotation
+                elif i == 2:
+                    centre = translate(originalCentre, [180, 0, -180])
+                    generateTile(54, centre, manager, kitScene, scene, None) #-90 degrees rotation
+                elif i == 3:
+                    centre = translate(originalCentre, [-180, 0, -180])
+                    generateTile(55, centre, manager, kitScene, scene, None) # 180 degrees 
+
+        #4 round walls in the middle and 4 small columns in the corners on the room
+        elif type == 7:
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [180, 0, 180])
+                    generateTile(52, centre, manager, kitScene, scene, None) #0 rotation
+                elif i == 1:
+                    centre = translate(originalCentre, [-180, 0, 180])
+                    generateTile(53, centre, manager, kitScene, scene, None) # 90 degrees rotation
+                elif i == 2:
+                    centre = translate(originalCentre, [180, 0, -180])
+                    generateTile(54, centre, manager, kitScene, scene, None) #-90 degrees rotation
+                elif i == 3:
+                    centre = translate(originalCentre, [-180, 0, -180])
+                    generateTile(55, centre, manager, kitScene, scene, None) # 180 degrees 
+            #Columns
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [550, 0, 550])
+                elif i == 1:
+                    centre = translate(originalCentre, [-550, 0, 550])
+                elif i == 2:
+                    centre = translate(originalCentre, [550, 0, -550])
+                elif i == 3:
+                    centre = translate(originalCentre, [-550, 0, -550])
+                generateTile(46, centre, manager, kitScene, scene, None)
+
+        #4 round walls in the middle and 4 small columns around it
+        elif type == 8:
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [180, 0, 180])
+                    generateTile(52, centre, manager, kitScene, scene, None) #0 rotation
+                elif i == 1:
+                    centre = translate(originalCentre, [-180, 0, 180])
+                    generateTile(53, centre, manager, kitScene, scene, None) # 90 degrees rotation
+                elif i == 2:
+                    centre = translate(originalCentre, [180, 0, -180])
+                    generateTile(54, centre, manager, kitScene, scene, None) #-90 degrees rotation
+                elif i == 3:
+                    centre = translate(originalCentre, [-180, 0, -180])
+                    generateTile(55, centre, manager, kitScene, scene, None) # 180 degrees 
+            #Columns
+            for i in range(4):
+                if i == 0:
+                    centre = translate(originalCentre, [250, 0, 250])
+                elif i == 1:
+                    centre = translate(originalCentre, [-250, 0, 250])
+                elif i == 2:
+                    centre = translate(originalCentre, [250, 0, -250])
+                elif i == 3:
+                    centre = translate(originalCentre, [-250, 0, -250])
+                generateTile(46, centre, manager, kitScene, scene, None)
+
+
                 
     
 
