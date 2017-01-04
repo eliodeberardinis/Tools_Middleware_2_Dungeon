@@ -292,7 +292,7 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
     # Translate the point where the tile is going to be placed
     if size[0] == 400:
         #Small Room
-        type = 4 #random.randint(0,5)
+        type = random.randint(0,5)
 
         #Single Small Column in the Center
         if type == 0:
