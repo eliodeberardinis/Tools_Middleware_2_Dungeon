@@ -312,16 +312,14 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
             CreateColumnInCenter(originalCentre, manager, kitScene, scene,47)     
 
         elif type == 4:
-            TileRotation = random.randint(0,3)
-            CreateColumnInCenter(originalCentre, manager, kitScene, scene, 52 + TileRotation)
+            CreateColumnInCenter(originalCentre, manager, kitScene, scene, 49)
 
         elif type == 5:
-            TileRotation = random.randint(0,3)
-            CreateColumnInCenter(originalCentre, manager, kitScene, scene, 64 + TileRotation)
+            CreateColumnInCenter(originalCentre, manager, kitScene, scene, 52)
                  
     else:
         #Bigger Rooms
-        type = random.randint(0,9)
+        type = 0 #random.randint(0,9)
         #Single big column in the centre
         if type == 0:
             CreateColumnInCenter(originalCentre, manager, kitScene, scene, 47) #Big Column Tile 47
@@ -346,7 +344,7 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
 
         #4 Square steps in the middle
         elif type == 4:
-            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 60)
+            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 51)
             additions =  random.randint(0,2)
             if additions == 1:
                 CreateFourSmallColumnsFarAway(originalCentre, manager, kitScene, scene)
@@ -355,7 +353,7 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
 
         #4 Round walls in the middle
         elif type == 5:
-            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 52)
+            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 49)
             additions =  random.randint(0,2)
             if additions == 1:
                 CreateFourSmallColumnsFarAway(originalCentre, manager, kitScene, scene)
@@ -364,7 +362,7 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
 
         #4 Squared walls in the middle creating a cross
         elif type == 6:
-            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 56) 
+            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 50) 
             additions =  random.randint(0,2)
             if additions == 1:
                 CreateFourSmallColumnsFarAway(originalCentre, manager, kitScene, scene)
@@ -373,12 +371,12 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
 
         #4 Squared walls in the middle creating an H structure with 2 small columns
         elif type == 7:
-            CreateHStructureInMiddle(originalCentre, manager, kitScene, scene, 56)     
+            CreateHStructureInMiddle(originalCentre, manager, kitScene, scene, 50)     
             CreateTwoColumnsOppositeOnX(originalCentre, manager, kitScene, scene, 46)  
     
         #4 Squared walls in the middle creating a pool
         elif type == 8:
-            CreateSquareFenceInMiddle(originalCentre, manager, kitScene, scene, 56)   
+            CreateSquareFenceInMiddle(originalCentre, manager, kitScene, scene, 50)   
             additions =  random.randint(0,5)
             if additions == 1:
                 CreateColumnInCenter(originalCentre, manager, kitScene, scene, 46)
@@ -395,7 +393,7 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
 
         #4 Square Tallwalls in the middle
         elif type == 9:
-            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 64)
+            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 52)
             additions =  random.randint(0,2)
             if additions == 1:
                 CreateFourSmallColumnsFarAway(originalCentre, manager, kitScene, scene)
@@ -418,6 +416,23 @@ def CreateFourSmallColumnsCloseTogether(Originalcentre, manager, kitScene, scene
                     centre = translate(Originalcentre, [-250, 0, -250])
                 generateTile(46, centre, manager, kitScene, scene, None)
 
+def CreateFourSmallColumns(Originalcentre, manager, kitScene, scene, distance):
+    for i in range(4):
+                if i == 0:
+                    a = distance
+                    b = distance
+                elif i == 1:
+                    a = - distance
+                    b = distance
+                elif i == 2:
+                    a = distance
+                    b = - distance
+                elif i == 3:
+                    a = - distance
+                    b = - distance
+                centre = translate(Originalcentre, [a, 0, b])
+                generateTile(46, centre, manager, kitScene, scene, None)
+
 def CreateFourSmallColumnsFarAway(Originalcentre, manager, kitScene, scene):
     for i in range(4):
                 if i == 0:
@@ -438,17 +453,20 @@ def CreateTwoColumnsOppositeOnX(Originalcentre, manager, kitScene, scene, Column
                     centre = translate(Originalcentre, [-250, 0, 0])
                 generateTile(ColumnTile, centre, manager, kitScene, scene, None) 
 
-def CreateObjectInMiddle(Originalcentre, manager, kitScene, scene, StartTileNumber): #StartTile 48 round steps, 52 round walls, 56 Cross wall
+def CreateObjectInMiddle(Originalcentre, manager, kitScene, scene, StartTileNumber): #StartTile 48 round steps, 49 round walls , 50 Cross wall, 51 square steps, 52 square wall tall
     for i in range(4):
                 if i == 0:
                     centre = translate(Originalcentre, [180, 0, 180])
                 elif i == 1:
                     centre = translate(Originalcentre, [-180, 0, 180])
+                    centre[3] -= 90
                 elif i == 2:
                     centre = translate(Originalcentre, [180, 0, -180])
+                    centre[3] += 90
                 elif i == 3:
                     centre = translate(Originalcentre, [-180, 0, -180])
-                generateTile(StartTileNumber + i, centre, manager, kitScene, scene, None)
+                    centre[3] += 180
+                generateTile(StartTileNumber, centre, manager, kitScene, scene, None)
 
 def CreateHStructureInMiddle(Originalcentre, manager, kitScene, scene, StartTileNumber): #56 for squared wall
     for i in range(4):
