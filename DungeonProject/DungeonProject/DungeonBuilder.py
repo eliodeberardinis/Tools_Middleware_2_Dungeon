@@ -293,7 +293,6 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
     if size[0] == 400:
         #Small Room
         type = random.randint(0,5)
-
         #Single Small Column in the Center
         if type == 0:
             CreateColumnInCenter(originalCentre, manager, kitScene, scene,46) #SmallColumn Tile 46
@@ -318,63 +317,27 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
                  
     else:
         #Bigger Rooms
-        type = random.randint(0,9)
-        #Single big column in the centre
-        if type == 0:
-            CreateColumnInCenter(originalCentre, manager, kitScene, scene, 47) #Big Column Tile 47
+        type = random.randint(43,52)
 
         #4 small columns in every corner
-        elif type == 1:
+        if type == 43:
+            CreateColumnInCenter(originalCentre, manager, kitScene, scene,47)
+            AddSmallColumns = random.randint(0,2)
+            if AddSmallColumns == 1:
+                CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 550)
+            elif AddSmallColumns == 2:
+                CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 250)
+
+        elif type == 44:
             CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 550)
         
-       #4 small columns in every corner + 1 big in the centre
-        elif type == 2:
-            CreateColumnInCenter(originalCentre, manager, kitScene, scene, 47)
-            CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 550)
-         
-        #4 Round steps in the middle
-        elif type == 3:
-            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 48)
-            additions =  random.randint(0,2)
-            if additions == 1:
-                CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 550)
-            elif additions == 2:
-                CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 250)
-
-        #4 Square steps in the middle
-        elif type == 4:
-            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 51)
-            additions =  random.randint(0,2)
-            if additions == 1:
-                CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 550)
-            elif additions == 2:
-                CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 250)
-
-        #4 Round walls in the middle
-        elif type == 5:
-            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 49)
-            additions =  random.randint(0,2)
-            if additions == 1:
-                CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 550)
-            elif additions == 2:
-                CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 250)
-
-        #4 Squared walls in the middle creating a cross
-        elif type == 6:
-            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 50) 
-            additions =  random.randint(0,2)
-            if additions == 1:
-                CreateFourSmallColumns(originalCentre, manager, kitScene, scene,550)
-            elif additions == 2:
-                CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 250)
-
         #4 Squared walls in the middle creating an H structure with 2 small columns
-        elif type == 7:
+        elif type == 45:
             CreateHStructureInMiddle(originalCentre, manager, kitScene, scene, 50)     
             CreateTwoColumnsOppositeOnX(originalCentre, manager, kitScene, scene, 46)  
     
         #4 Squared walls in the middle creating a pool
-        elif type == 8:
+        elif type == 46:
             CreateSquareFenceInMiddle(originalCentre, manager, kitScene, scene, 50)   
             additions =  random.randint(0,6)
             if additions == 1:
@@ -393,9 +356,10 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
                 CreateColumnInCenter(originalCentre, manager, kitScene, scene, 47)
                 CreateFourSmallColumns(originalCentre, manager, kitScene, scene,250)
 
-        #4 Square Tallwalls in the middle
-        elif type == 9:
-            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, 52)
+        #4 Random Object In The Middle with or without columns close or far
+        elif type >= 47:
+            RandObjInMiddle = random.randint(47,52)
+            CreateObjectInMiddle(originalCentre, manager, kitScene, scene, RandObjInMiddle)
             additions =  random.randint(0,2)
             if additions == 1:
                 CreateFourSmallColumns(originalCentre, manager, kitScene, scene,550)
