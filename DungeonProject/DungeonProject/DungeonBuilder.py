@@ -288,7 +288,6 @@ def buildRoom(properties, transform, manager, kitScene, scene, collisions):
 # Builds decoration for a room, given by its centre point and its dimensions in each axis calling pre-defined decoration Methods
 def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
     # Save the tile Original Center
-    #print("Size: '%s'." % size[0]) #DELETE THIS LATER 
     originalCentre = centre
     # Translate the point where the tile is going to be placed
     if size[0] == 400:
