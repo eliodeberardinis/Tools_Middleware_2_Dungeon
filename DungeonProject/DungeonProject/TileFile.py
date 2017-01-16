@@ -80,6 +80,7 @@ Fourth element is the dimensions of the tile (two values for each axis)
 Note that offsets are expressed as 4-dimensional vectorr.
 The three first values are the x, y and z coordinate values.
 The fourth value is the rotation around the Y axis.
+The fifth element is the width of the corridor
 '''
 
 tiles = [
@@ -129,6 +130,13 @@ tiles = [
     [1, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (wide-to-extrawide)
     [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-wide)
     [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-extrawide)
+    [19, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-50, 50], [0, 600], [-50, 50]]], #small-column (46)
+    [15, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #large-column (47)
+    [13, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #roundsteps no rotation (48)
+    [21, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #Round wall no rotation (49)
+    [20, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square wall no rotation (50)
+    [9, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square steps no rotation (51)
+    [7, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square wallTall no rotation (52)
 ]
 
 # DUNGEON TILES HASH ARRAY
@@ -169,6 +177,7 @@ dungeon_tiles = {
     "CORRIDOR_N_2WAY_R_"  : [37, [0, 0, 200, 0], [[200, 0, -200, -90]], [[-200, 200], [0, 800], [-200, 200]]], #narrow corner right
     "CORRIDOR_N_2WAY_L_"  : [37, [200, 0, 0, 90], [[-200, 0, -200, 90]], [[-200, 200], [0, 800], [-200, 200]]] #narrow corner left
     }
+
 
 
 
