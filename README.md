@@ -29,14 +29,14 @@ However, even if simple, this is a slightly intensive computation, specially for
 The first element that is generated is a high-level graph of the dungeon, which basically represents what rooms will exist in the dungeon, and what paths will exist between them. For simplicity purposes, the graph is limited to a grammar-generated tree.
 
 The generation can be controlled with two paramaters:
-- Number of iterations. This is equivalent to the depth of the maximum depth of the tree, and directly relates to the size of the dungeon.
-- Level of difficulty. This value controls several aspects of the generation of the graph, such as the amount of child nodes another node can have, the frequency of these splits, or from how early on in the dungeon can they appear.
+- Number of iterations. This is equivalent to the maximum depth of the tree, and directly relates to the size of the dungeon.
+- Level of difficulty. This value controls several aspects of the generation of the graph, such as the amount of child nodes another node can have, the frequency of these splits, or from how early on in the dungeon can they appear. The difficulty ranges from "Very Easy" to "Very Hard" offering 5 levels of customization. A Detailed Description of these rules can be found in the "RULES for Dungeon Generator.docx" file.
 
 ##Dungeon generation
 
 Using this high-level graph, the dungeon is then generated recursively from the root node, traversing the tree in depth. Each node will generate a room in the dungeon, and the edges will be corridors between the rooms.
 
-Rooms are generated very simplisticly, with only one big tile for the moment. However, they can be populated with other small tiles inside, such as columns and other decorative elements.
+Rooms are generated with one tile thar can be of 2 different sizes and then populated with random decorative elements such as columns, walls, stairs and combination of thereof. This random combination of decorative elements helps adding variety to the dungeon and a more unique feeling for each new instance.
 
 Note that a very simplistic backtracking mechanism exists, where the dungeon will keep trying to place a room if its generation failed, by repeatedly removing the last tile of the corridor that leads to that room. For simplicity purposes, backtracking in this aspect can only performed through the last corridor, and it will finally failed if it reaches the previous room.
 
@@ -49,12 +49,20 @@ Furthermore, another slightly more complex backtracking mechanism exists in the 
 
 #Team
 
-At the beginning of the project, some examples were created from team members with previous experience with the FBX SDK, in order to allow for other team members to gain familiarity and understand how to perform basic operations in the API.
+From very early on the team worked in a well organized schedule meeting in person or via skype twice a week in the beggining and once a week towards the end of the project. Tasks were given to each member during these meetings and updates/collaborations on the progress of each task was discussed between the team members on a regular basis. 
+Pablo took the role of the project manager setting up, among other things, the main framework of the generator. Specifically this is a summary of the main tasks each memeber had within the project:
+
+1. Pablo: Created some Examples from previous experience with the FBX SDK, in order to allow for other team members to gain familiarity and understand how to perform basic operations in the API.
+2. Javier:
+3. Elio: 
+- Catalogue of all the tile types with measurements.
+- Design and code implementation of Difficulty Rules.
+- Design and code implementation of Room Decorations.
 
 ##Future work
 
 Finally, it would be possible to expand the work done in several ways that couldn't be done due to the limited time, as other aspects of the generator were set to yield more attractive results, or were simply higher priority:
 
-1. Room generation could be explored in more detail, by being able to generate different types of rules using the available tiles, such as pillar rooms, custom rooms with lava pits, labyrinths, etc.
+1. Room generation could be explored in more detail, by being able to generate more intricate customizations (Labyrinths, lava pits) and different types of rules using the available decorative tiles instead of leaving them completely random (e.g. counting the appearance of a specific decoration and making sure it's not repeating too often).
 2. Graph generation could be expanded to other that trees, allowing cycles in the graph, which add complexity and depth to the results.
 3. Full backtracking could be explored in more detailed, although it has been tested, but the execution times were growing drastically. This, however, would solve some problems with part of the generations stopping prematurely due to a certain subpart of the tree not being able to be generated.
