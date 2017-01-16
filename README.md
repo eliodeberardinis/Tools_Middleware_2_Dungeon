@@ -55,6 +55,7 @@ Pablo took the role of the project manager setting up, among other things, the m
 1. Pablo: Created some Examples from previous experience with the FBX SDK, in order to allow for other team members to gain familiarity and understand how to perform basic operations in the API.
 2. Javier:
 3. Elio: 
+
 - Catalogue of all the tile types with measurements.
 - Design and code implementation of Difficulty Rules.
 - Design and code implementation of Room Decorations.
