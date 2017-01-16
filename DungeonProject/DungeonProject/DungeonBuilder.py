@@ -292,7 +292,7 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
     # Translate the point where the tile is going to be placed
     if size[0] == 400:
         #Small Room
-        type = random.randint(0,5)
+        type = random.randint(0,4)
         #Single Small Column in the Center
         if type == 0:
             CreateColumnInCenter(originalCentre, manager, kitScene, scene,46) #SmallColumn Tile 46
@@ -310,11 +310,8 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
             CreateColumnInCenter(originalCentre, manager, kitScene, scene,47)  #Big Column
 
         elif type == 4:
-            CreateColumnInCenter(originalCentre, manager, kitScene, scene, 49) #Round wall piece
-
-        elif type == 5:
-            CreateColumnInCenter(originalCentre, manager, kitScene, scene, 52)  #Square Wall Piece
-                 
+            CreateTwoColumnsOppositeOnX(originalCentre, manager, kitScene, scene, 46) #2 small columns opposite
+             
     else:
         #Bigger Rooms
         type = random.randint(43,52)
