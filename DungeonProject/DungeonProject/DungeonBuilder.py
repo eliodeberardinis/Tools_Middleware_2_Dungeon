@@ -179,6 +179,52 @@ def buildDungeon(graph, transform, manager, kitScene, scene, collisions, difficu
     for i in range(len(graphs)):
         buildDungeon(graphs[i], transform[i], manager, kitScene, scene, collisions, difficultyLevel)
 
+# Build a dungeon according to the given branch from the given transform point
+# Builds a path followed by the first room in the graph, the recursively does so for the continuing branches
+def buildDungeonHash(graph, transform, manager, kitScene, scene, collisions, difficultyLevel):
+    if len(graph) == 0:
+        return
+
+    #If the spawn room is to be built, don't build a path first
+    path = [transform]
+    if graph[0] != "O":
+        scene.GetRootNode().AddChild(makeBox(32, 128, 32, manager))
+        path = buildPath(transform, manager, kitScene, scene, collisions, difficultyLevel)
+
+    #Obtain the branches after the room to be built
+    graphs = split(graph[1:]) if len(graph) > 1 else [] 
+
+    #Build the room
+    properties = {
+        "isSpawnRoom": graph[0] == "O",
+        "numExits": len(graphs)
+        }
+    transform = buildRoomHash(properties, path[-1], manager, kitScene, scene, collisions)
+
+    #If failed to place room, retry
+    if not transform:
+        for back in range(len(path)-1): # Backtrack until no more path is available
+            #Remove last tile
+            node = scene.GetRootNode().GetChild(scene.GetRootNode().GetChildCount() - 1)
+            scene.GetRootNode().RemoveChild(node)
+            node.Destroy()
+            path.pop()
+            collisions.removeLast()
+
+            #Retry without adding anything
+            transform = buildRoomHash(properties, path[-1], manager, kitScene, scene, collisions)
+            #Break when successfully placed the room
+            if transform:
+                break
+
+        #If still failed to place the room, stop this branch's generation
+        if not transform:
+            return
+
+    #Recursively build the next part of the dungeon
+    for i in range(len(graphs)):
+        buildDungeonHash(graphs[i], transform[i], manager, kitScene, scene, collisions, difficultyLevel)
+
 # Builds a path from the given transform point
 # Returns the sequence of path transforms (allowing for simple backtracking)
 # Path transform: end point of the path, from where to build the next part of the dungeon
@@ -307,9 +353,9 @@ def buildRoomHash(properties, transform, manager, kitScene, scene, collisions):
     #Build doors on each exit
     for i in range(len(transform)):
         transform[i] = generateTile({
-                400: 8 if properties["numExits"] > 0 else 9,
-                800: 23 if properties["numExits"] > 0 else 26,
-                1600: 41 if properties["numExits"] > 0 else 44
+                400: "DOOR_N_HOUSE_Z_NOT_" if properties["numExits"] > 0 else "DOOR_N_SQUARE_Z_NOT_",
+                800: "DOOR_W_HOUSE_Z_W-N_" if properties["numExits"] > 0 else "DOOR_W_SQUARE_Z_W-N_",
+                1600: "DOOR_EW_SQUARE_Z_EW-W_" if properties["numExits"] > 0 else "DOOR_EW_HOUSE_Z_EW-W_"
             }[transform[i][4]], transform[i], manager, kitScene, scene, collisions)[0]
 
     return transform
