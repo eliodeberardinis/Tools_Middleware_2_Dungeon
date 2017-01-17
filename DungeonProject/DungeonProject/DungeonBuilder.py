@@ -278,3 +278,38 @@ def buildRoom(properties, transform, manager, kitScene, scene, collisions):
             }[transform[i][4]], transform[i], manager, kitScene, scene, collisions)[0]
 
     return transform
+
+# Builds a room from the given transform point according to the given properties
+# Returns the list of points from where build the next paths of the dungeon
+def buildRoomHash(properties, transform, manager, kitScene, scene, collisions):
+    #Save original transform to place a door if room succeeds to be placed
+    originalTransform = [i for i in transform]
+
+    #Build the room with one tile according to the number of exits needed for the room
+    transform = generateTile({
+            0: "CORRIDOR_W_1WAY_Z_NOT_" if originalTransform[4] == 400 or properties["isSpawnRoom"] else "CORRIDOR_EW_1WAY_Z_NOT_",
+            1: "CORRIDOR_W_1WAY_Z_NOT_" if originalTransform[4] == 400 or properties["isSpawnRoom"] else "CORRIDOR_EW_1WAY_Z_NOT_",
+            2: "CORRIDOR_W_3WAY_T_NOT_" if originalTransform[4] == 400 or properties["isSpawnRoom"] else "ROOM_EW_3WAY_T_NOT_",
+            3: "CORRIDOR_W_4WAY_Z_NOT_" if originalTransform[4] == 400 or properties["isSpawnRoom"] else "ROOM_EW_4WAY_Z_NOT_"
+        }[properties["numExits"]], transform, manager, kitScene, scene, collisions)
+
+    #If room collided, remove added tiles and return error
+    if not transform:
+        return False
+
+    #Build entry door
+    generateTile({
+            400: 22 if not properties["isSpawnRoom"] else 19,
+            800: 40 if not properties["isSpawnRoom"] else 37,
+            1600: 42 if not properties["isSpawnRoom"] else 39
+        }[originalTransform[4] if not properties["isSpawnRoom"] else 400], originalTransform, manager, kitScene, scene, collisions)
+
+    #Build doors on each exit
+    for i in range(len(transform)):
+        transform[i] = generateTile({
+                400: 8 if properties["numExits"] > 0 else 9,
+                800: 23 if properties["numExits"] > 0 else 26,
+                1600: 41 if properties["numExits"] > 0 else 44
+            }[transform[i][4]], transform[i], manager, kitScene, scene, collisions)[0]
+
+    return transform
