@@ -104,10 +104,10 @@ tiles = [
     [31, [0, 0, 400, 0, 800], [[0, 0, -800, 0, 800], [400, 0, -400, -90, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 3 right
     [31, [0, 0, -400, 180, 800], [[-400, 0, -400, 90, 800], [0, 0, -800, 0, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 3 left
     [32, [0, 0, 400, 0, 800], [[-400, 0, -400, 90, 800], [0, 0, -800, 0, 800], [400, 0, -400, -90, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide corner 4     # 18
-    [25, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide (narrow-to-wide)
+    [25, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide (narrow-to-wide)                       # 19
     [25, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 400]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide (wide-to-narrow)
     [25, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide (wide-to-wide)
-    [29, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle (narrow-to-wide)
+    [29, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle (narrow-to-wide)                # 22
     [29, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 400]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle (wide-to-narrow)
     [29, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle (wide-to-wide)
     [26, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door square (narrow-to-wide)
@@ -122,12 +122,12 @@ tiles = [
     [4, [0, 0, 800, 0, 1600], [[0, 0, -800, 0, 1600], [800, 0, -800, -90, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 3 right
     [4, [0, 0, -800, 180, 1600], [[-800, 0, -800, 90, 1600], [0, 0, -1600, 0, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 3 left
     [3, [0, 0, 800, 0, 1600], [[-800, 0, -800, 90, 1600], [0, 0, -1600, 0, 1600], [800, 0, -800, -90, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner 4        # 36
-    [2, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle-wide (wide-to-extrawide)
+    [2, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle-wide (wide-to-extrawide)                   # 37
     [2, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle-wide (extrawide-to-wide)
-    [2, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle-wide (extrawide-to-extrawide)
-    [0, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (wide-to-extrawide)
+    [2, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle-wide (extrawide-to-extrawide)             # 39
+    [0, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (wide-to-extrawide)                        # 40
     [0, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (extrawide-to-wide)
-    [0, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (extrawide-to-extrawide)
+    [0, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (extrawide-to-extrawide)                  # 42
     [1, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (wide-to-extrawide)
     [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-wide)
     [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-extrawide)
@@ -138,7 +138,7 @@ tiles = [
 dungeon_tiles = {
     "DOOR_EW_SQUARE_Z_W-EW_"   : [0, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (wide-to-extrawide)
     "DOOR_EW_SQUARE_Z_EW-W_"   : [0, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (extrawide-to-wide)
-    "DOOR_EW_SQUARE_Z_EW-eW_"  : [0, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (extrawide-to-extrawide)
+    "DOOR_EW_SQUARE_Z_EW-EW_"  : [0, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door angle (extrawide-to-extrawide)
     "DOOR_EW_HOUSE_Z_W-EW_"    : [1, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (wide-to-extrawide)
     "DOOR_EW_HOUSE_Z_EW-W_"    : [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-wide)
     "DOOR_EW_HOUSE_Z_EW-EW_"   : [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-extrawide)

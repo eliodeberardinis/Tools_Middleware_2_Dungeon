@@ -299,9 +299,9 @@ def buildRoomHash(properties, transform, manager, kitScene, scene, collisions):
 
     #Build entry door
     generateTile({
-            400: 22 if not properties["isSpawnRoom"] else 19,
-            800: 40 if not properties["isSpawnRoom"] else 37,
-            1600: 42 if not properties["isSpawnRoom"] else 39
+            400: "DOOR_W_HOUSE_Z_N-W_" if not properties["isSpawnRoom"] else "DOOR_W_COMBI_Z_N-W_",
+            800: "DOOR_EW_SQUARE_Z_W-EW_" if not properties["isSpawnRoom"] else "DOOR_EW_COMBI_Z_W-EW_",
+            1600: "DOOR_EW_SQUARE_Z_EW-EW_" if not properties["isSpawnRoom"] else "DOOR_EW_COMBI_Z_EW-EW_"
         }[originalTransform[4] if not properties["isSpawnRoom"] else 400], originalTransform, manager, kitScene, scene, collisions)
 
     #Build doors on each exit
