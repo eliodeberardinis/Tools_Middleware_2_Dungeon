@@ -60,6 +60,7 @@ Pablo took the role of the project manager setting up, among other things, the m
 - Created some Examples from previous experience with the FBX SDK, in order to allow for other team members to gain familiarity and understand how to perform basic operations in the API.
 
 2. Javier:
+
 3. Elio: 
 
 - Catalogue of all the tile types with measurements.
@@ -73,3 +74,14 @@ Finally, it would be possible to expand the work done in several ways that could
 1. Room generation could be explored in more detail, by being able to generate more intricate customizations (Labyrinths, lava pits) and different types of rules using the available decorative tiles instead of leaving them completely random (e.g. counting the appearance of a specific decoration and making sure it's not repeating too often).
 2. Graph generation could be expanded to other that trees, allowing cycles in the graph, which add complexity and depth to the results.
 3. Full backtracking could be explored in more detailed, although it has been tested, but the execution times were growing drastically. This, however, would solve some problems with part of the generations stopping prematurely due to a certain subpart of the tree not being able to be generated.
+
+
+##Images:
+
+![Alt text](https://github.com/eliodeberardinis/octet/blob/try_border_grass/octet/assets/invaderers/Game_Screen_1.png?raw=true"Screen 1")
+
+![Alt text](https://github.com/eliodeberardinis/octet/blob/try_border_grass/octet/assets/invaderers/Game_Screen_2.png?raw=true"Screen 2")
+
+![Alt text](https://github.com/eliodeberardinis/octet/blob/try_border_grass/octet/assets/invaderers/Game_Screen_3.png?raw=true"Screen 3")
+
+
