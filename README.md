@@ -52,16 +52,16 @@ Furthermore, another slightly more complex backtracking mechanism exists in the 
 From very early on the team worked in a well organized schedule meeting in person or via skype twice a week in the beggining and once a week towards the end of the project. Tasks were given to each member during these meetings and updates/collaborations on the progress of each task was discussed between the team members on a regular basis.
 Pablo took the role of the project manager setting up, among other things, the main framework of the generator. Specifically this is a summary of the main tasks each memeber had within the project:
 
-1. Pablo:
+1 Pablo:
 
 - Tile management system & edge points data structure.
 - Collision system and its optimizations.
 - Room and corridor generation, including backtracking mechanisms.
 - Created some Examples from previous experience with the FBX SDK, in order to allow for other team members to gain familiarity and understand how to perform basic operations in the API.
 
-2. Javier:
+2 Javier:
 
-3. Elio: 
+3 Elio: 
 
 - Catalogue of all the tile types with measurements.
 - Design and code implementation of Difficulty Rules.
