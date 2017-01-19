@@ -59,7 +59,13 @@ Pablo took the role of the project manager setting up, among other things, the m
 - Room and corridor generation, including backtracking mechanisms.
 - Created some Examples from previous experience with the FBX SDK, in order to allow for other team members to gain familiarity and understand how to perform basic operations in the API.
 
-2- Javier:
+2. Javier:
+
+- Input parameters from command line
+- Modularization of the project creating separate class depending on functionality
+- Hash Array to store tiles as alternative to the common Array
+
+3. Elio: 
 
 3- Elio: 
 

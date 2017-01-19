@@ -179,6 +179,52 @@ def buildDungeon(graph, transform, manager, kitScene, scene, collisions, difficu
     for i in range(len(graphs)):
         buildDungeon(graphs[i], transform[i], manager, kitScene, scene, collisions, difficultyLevel)
 
+# Build a dungeon according to the given branch from the given transform point
+# Builds a path followed by the first room in the graph, the recursively does so for the continuing branches
+def buildDungeonHash(graph, transform, manager, kitScene, scene, collisions, difficultyLevel):
+    if len(graph) == 0:
+        return
+
+    #If the spawn room is to be built, don't build a path first
+    path = [transform]
+    if graph[0] != "O":
+        scene.GetRootNode().AddChild(makeBox(32, 128, 32, manager))
+        path = buildPathHash(transform, manager, kitScene, scene, collisions, difficultyLevel)
+
+    #Obtain the branches after the room to be built
+    graphs = split(graph[1:]) if len(graph) > 1 else [] 
+
+    #Build the room
+    properties = {
+        "isSpawnRoom": graph[0] == "O",
+        "numExits": len(graphs)
+        }
+    transform = buildRoomHash(properties, path[-1], manager, kitScene, scene, collisions)
+
+    #If failed to place room, retry
+    if not transform:
+        for back in range(len(path)-1): # Backtrack until no more path is available
+            #Remove last tile
+            node = scene.GetRootNode().GetChild(scene.GetRootNode().GetChildCount() - 1)
+            scene.GetRootNode().RemoveChild(node)
+            node.Destroy()
+            path.pop()
+            collisions.removeLast()
+
+            #Retry without adding anything
+            transform = buildRoomHash(properties, path[-1], manager, kitScene, scene, collisions)
+            #Break when successfully placed the room
+            if transform:
+                break
+
+        #If still failed to place the room, stop this branch's generation
+        if not transform:
+            return
+
+    #Recursively build the next part of the dungeon
+    for i in range(len(graphs)):
+        buildDungeonHash(graphs[i], transform[i], manager, kitScene, scene, collisions, difficultyLevel)
+
 # Builds a path from the given transform point
 # Returns the sequence of path transforms (allowing for simple backtracking)
 # Path transform: end point of the path, from where to build the next part of the dungeon
@@ -244,6 +290,71 @@ def buildPath(transform, manager, kitScene, scene, collisions, difficultyLevel):
 
     return transforms
 
+# Builds a path from the given transform point
+# Returns the sequence of path transforms (allowing for simple backtracking)
+# Path transform: end point of the path, from where to build the next part of the dungeon
+# For now, paths should only return one path, since they are built between one room and another
+def buildPathHash(transform, manager, kitScene, scene, collisions, difficultyLevel):
+    transforms = [transform]
+    weights = []
+
+    # Choose the length of the corridor depending on the chosen difficulty
+    numTiles = random.randint(*[[5, 10], [5, 15], [10, 20], [15, 25], [20, 30]][difficultyLevel-1])
+
+    # Repeat the generation until the number of tiles to place has been reached
+    i = 0
+    while i < numTiles: 
+        ret = False
+        # If the generator comes from backtracking, use the remaining weights that 
+        #   were not explored when generating this tile
+        if len(weights) <= i:
+            weights.append({
+                    400: [
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 1, "CORRIDOR_N_2WAY_L_NOT_": 1, "DOOR_N_HOUSE_Z_NOT_": 1},
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 2.5, "CORRIDOR_N_2WAY_L_NOT_": 2.5, "DOOR_N_HOUSE_Z_NOT_": 1},
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 2.5, "CORRIDOR_N_2WAY_L_NOT_": 2.5, "CORRIDOR_N_DOWN_Z_NOT_": 1, "CORRIDOR_N_UP_Z_NOT_": 1, "DOOR_N_HOUSE_Z_NOT_": 1, "DOOR_W_HOUSE_Z_N-W_": 0.5},
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 3.33, "CORRIDOR_N_2WAY_L_NOT_": 3.33, "CORRIDOR_N_DOWN_Z_NOT_": 2.5, "CORRIDOR_N_UP_Z_NOT_": 2.5, "DOOR_N_HOUSE_Z_NOT_": 1, "DOOR_W_HOUSE_Z_N-W_": 1},
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 5, "CORRIDOR_N_2WAY_L_NOT_": 5, "CORRIDOR_N_DOWN_Z_NOT_": 3.33, "CORRIDOR_N_UP_Z_NOT_": 3.33, "DOOR_N_HOUSE_Z_NOT_": 1, "DOOR_W_HOUSE_Z_N-W_": 1.5}
+                    ],
+                    800: [
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 1, "CORRIDOR_W_2WAY_L_NOT_": 1, "DOOR_W_HOUSE_Z_W-W_": 1},
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 2.5, "CORRIDOR_W_2WAY_L_NOT_": 2.5, "DOOR_W_HOUSE_Z_W-W_": 1},
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 2.5, "CORRIDOR_W_2WAY_L_NOT_": 2.5, "CORRIDOR_W_DOWN_Z_NOT_": 1, "CORRIDOR_W_UP_Z_NOT_": 1, "DOOR_W_HOUSE_Z_W-W_": 1, "DOOR_W_HOUSE_Z_W-N_": 0.25, "DOOR_EW_SQUARE_Z_W-EW_": 0.25},
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 3.33, "CORRIDOR_W_2WAY_L_NOT_": 3.33, "CORRIDOR_W_DOWN_Z_NOT_": 2.5, "CORRIDOR_W_UP_Z_NOT_": 2.5, "DOOR_W_HOUSE_Z_W-W_": 1, "DOOR_W_HOUSE_Z_W-N_": 0.25, "DOOR_EW_SQUARE_Z_W-EW_": 0.25},
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 5, "CORRIDOR_W_2WAY_L_NOT_": 5, "CORRIDOR_W_DOWN_Z_NOT_": 3.33, "CORRIDOR_W_UP_Z_NOT_": 3.33, "DOOR_W_HOUSE_Z_W-W_": 1, "DOOR_W_HOUSE_Z_W-N_": 0.25, "DOOR_EW_SQUARE_Z_W-EW_": 0.25}
+                    ],
+                    1600: [
+                        {"CORRIDOR_EW_1WAY_Z_NOT_": 10, "ROOM_EW_2WAY_R_NOT_": 1, "ROOM_EW_2WAY_L_NOT_": 1, "DOOR_EW_SQUARE_Z_EW-EW_": 1},
+                        {"CORRIDOR_EW_1WAY_Z_NOT_": 10, "ROOM_EW_2WAY_R_NOT_": 2.5, "ROOM_EW_2WAY_L_NOT_": 2.5, "DOOR_EW_SQUARE_Z_EW-EW_": 1},
+                        {"CORRIDOR_EW_1WAY_Z_NOT_": 10, "ROOM_EW_2WAY_R_NOT_": 2.5, "ROOM_EW_2WAY_L_NOT_": 2.5, "DOOR_EW_SQUARE_Z_EW-EW_": 1, "DOOR_EW_SQUARE_Z_EW-W_": 2.5},
+                        {"CORRIDOR_EW_1WAY_Z_NOT_": 10, "ROOM_EW_2WAY_R_NOT_": 3.33, "ROOM_EW_2WAY_L_NOT_": 3.33, "DOOR_EW_SQUARE_Z_EW-EW_": 1, "DOOR_EW_SQUARE_Z_EW-W_": 6},
+                        {"CORRIDOR_EW_1WAY_Z_NOT_": 10, "ROOM_EW_2WAY_R_NOT_": 5, "ROOM_EW_2WAY_L_NOT_": 5, "DOOR_EW_SQUARE_Z_EW-EW_": 1, "DOOR_EW_SQUARE_Z_EW-W_": 8.16}
+                    ],
+                }[transforms[-1][4]][difficultyLevel-1])
+
+        # Try with all alternatives
+        while not ret and len(weights[-1]) > 0:
+            tile = randomWeightedChoice(weights[-1])
+            ret = generateTileHash(tile, transforms[-1], manager, kitScene, scene, collisions)
+            del weights[-1][tile]
+
+        if ret:
+            transforms += [ret[0]]
+            i += 1
+        # If all alternatives failed, backtrack and continue generation
+        else: 
+            if i == 0: # Do not backtrack if no more elements available
+                break
+            node = scene.GetRootNode().GetChild(scene.GetRootNode().GetChildCount() - 1)
+            scene.GetRootNode().RemoveChild(node)
+            node.Destroy()
+            collisions.removeLast()
+            weights.pop()
+            transforms.pop()
+            i -= 1
+
+    return transforms
+
 # Builds a room from the given transform point according to the given properties
 # Returns the list of points from where build the next paths of the dungeon
 def buildRoom(properties, transform, manager, kitScene, scene, collisions):
@@ -281,6 +392,47 @@ def buildRoom(properties, transform, manager, kitScene, scene, collisions):
                 400: 8 if properties["numExits"] > 0 else 9,
                 800: 23 if properties["numExits"] > 0 else 26,
                 1600: 41 if properties["numExits"] > 0 else 44
+            }[transform[i][4]], transform[i], manager, kitScene, scene, collisions)[0]
+
+    return transform
+
+# Builds a room from the given transform point according to the given properties
+# Returns the list of points from where build the next paths of the dungeon
+def buildRoomHash(properties, transform, manager, kitScene, scene, collisions):
+    #Save original transform to place a door if room succeeds to be placed
+    originalTransform = [i for i in transform]
+
+    #Build the room with one tile according to the number of exits needed for the room
+    transform = generateTileHash({
+            0: "CORRIDOR_W_1WAY_Z_NOT_" if originalTransform[4] == 400 or properties["isSpawnRoom"] else "CORRIDOR_EW_1WAY_Z_NOT_",
+            1: "CORRIDOR_W_1WAY_Z_NOT_" if originalTransform[4] == 400 or properties["isSpawnRoom"] else "CORRIDOR_EW_1WAY_Z_NOT_",
+            2: "CORRIDOR_W_3WAY_T_NOT_" if originalTransform[4] == 400 or properties["isSpawnRoom"] else "ROOM_EW_3WAY_T_NOT_",
+            3: "CORRIDOR_W_4WAY_Z_NOT_" if originalTransform[4] == 400 or properties["isSpawnRoom"] else "ROOM_EW_4WAY_Z_NOT_"
+        }[properties["numExits"]], transform, manager, kitScene, scene, collisions)
+
+    #If room collided, remove added tiles and return error
+    if not transform:
+        return False
+
+    #Build entry door
+    generateTileHash({
+            400: "DOOR_W_HOUSE_Z_N-W_" if not properties["isSpawnRoom"] else "DOOR_W_COMBI_Z_N-W_",
+            800: "DOOR_EW_SQUARE_Z_W-EW_" if not properties["isSpawnRoom"] else "DOOR_EW_COMBI_Z_W-EW_",
+            1600: "DOOR_EW_SQUARE_Z_EW-EW_" if not properties["isSpawnRoom"] else "DOOR_EW_COMBI_Z_EW-EW_"
+        }[originalTransform[4] if not properties["isSpawnRoom"] else 400], originalTransform, manager, kitScene, scene, collisions)
+
+     # Build the room decorations
+    size = transform[0][4] / 2
+    centreTransform = translate(originalTransform, [0, 0, -size])
+    centreTransform[4] = 0
+    DecorateRoomHash(centreTransform, [size, 600, size], manager, kitScene, scene, collisions)
+
+    #Build doors on each exit
+    for i in range(len(transform)):
+        transform[i] = generateTileHash({
+                400: "DOOR_N_HOUSE_Z_NOT_" if properties["numExits"] > 0 else "DOOR_N_SQUARE_Z_NOT_",
+                800: "DOOR_W_HOUSE_Z_W-N_" if properties["numExits"] > 0 else "DOOR_W_SQUARE_Z_W-N_",
+                1600: "DOOR_EW_SQUARE_Z_EW-W_" if properties["numExits"] > 0 else "DOOR_EW_HOUSE_Z_EW-W_"
             }[transform[i][4]], transform[i], manager, kitScene, scene, collisions)[0]
 
     return transform
@@ -363,6 +515,85 @@ def DecorateRoom(centre, size, manager, kitScene, scene, collisions):
             elif additions == 2:
                 CreateFourSmallColumns(originalCentre, manager, kitScene, scene, 250)
 
+# Builds decoration for a room, given by its centre point and its dimensions in each axis calling pre-defined decoration Methods
+def DecorateRoomHash(centre, size, manager, kitScene, scene, collisions):
+    # Save the tile Original Center
+    originalCentre = centre
+    # Translate the point where the tile is going to be placed
+    if size[0] == 400:
+        #Small Room
+        type = random.randint(0,4)
+        #Single Small Column in the Center
+        if type == 0:
+            CreateColumnInCenterHash(originalCentre, manager, kitScene, scene, "COLUMN_N_SMALL_Z_NOT_") #SmallColumn Tile 46
+        
+        #4 Small Columns at every angle
+        elif type == 1:
+            CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene, 250)
+
+        #4 Small Columns at every angle + one in the centre
+        elif type == 2:
+            CreateColumnInCenterHash(originalCentre, manager, kitScene, scene, "COLUMN_N_SMALL_Z_NOT_")
+            CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene, 250)  
+
+        elif type == 3:
+            CreateColumnInCenterHash(originalCentre, manager, kitScene, scene, "COLUMN_N_LARGE_Z_NOT_")  #Big Column
+
+        elif type == 4:
+            CreateTwoColumnsOppositeOnXHash(originalCentre, manager, kitScene, scene, "COLUMN_N_SMALL_Z_NOT_") #2 small columns opposite
+             
+    else:
+        #Bigger Rooms
+        type = random.randint(43,52)
+
+        #4 small columns in every corner
+        if type == 43:
+            CreateColumnInCenterHash(originalCentre, manager, kitScene, scene, "COLUMN_N_LARGE_Z_NOT_")
+            AddSmallColumns = random.randint(0,2)
+            if AddSmallColumns == 1:
+                CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene, 550)
+            elif AddSmallColumns == 2:
+                CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene, 250)
+
+        elif type == 44:
+            CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene, 550)
+        
+        #4 Squared walls in the middle creating an H structure with 2 small columns
+        elif type == 45:
+            CreateHStructureInMiddleHash(originalCentre, manager, kitScene, scene, "WALL_N_SQUARE_Z_NOT_")     
+            CreateTwoColumnsOppositeOnXHash(originalCentre, manager, kitScene, scene, "COLUMN_N_SMALL_Z_NOT_")  
+    
+        #4 Squared walls in the middle creating a pool
+        elif type == 46:
+            CreateSquareFenceInMiddleHash(originalCentre, manager, kitScene, scene, "WALL_N_SQUARE_Z_NOT_")   
+            additions =  random.randint(0,6)
+            if additions == 1:
+                CreateColumnInCenterHash(originalCentre, manager, kitScene, scene, "COLUMN_N_SMALL_Z_NOT_")
+            elif additions == 2:
+                CreateColumnInCenterHash(originalCentre, manager, kitScene, scene, "COLUMN_N_LARGE_Z_NOT_")
+            elif additions == 3:
+                CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene,550)
+            elif additions == 4:
+                CreateColumnInCenterHash(originalCentre, manager, kitScene, scene, "COLUMN_N_SMALL_Z_NOT_")
+                CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene,550)
+            elif additions == 5:
+                CreateColumnInCenterHash(originalCentre, manager, kitScene, scene, "COLUMN_N_LARGE_Z_NOT_")
+                CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene,550)
+            elif additions == 6:
+                CreateColumnInCenterHash(originalCentre, manager, kitScene, scene, "COLUMN_N_LARGE_Z_NOT_")
+                CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene,250)
+
+        #4 Random Object In The Middle with or without columns close or far
+        elif type >= 47:
+            # Change that to names
+            RandObjInMiddle = random.randint(47,52)
+            CreateObjectInMiddleHash(originalCentre, manager, kitScene, scene, RandObjInMiddle)
+            additions =  random.randint(0,2)
+            if additions == 1:
+                CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene,550)
+            elif additions == 2:
+                CreateFourSmallColumnsHash(originalCentre, manager, kitScene, scene, 250)
+
 #Methods Creating some decorations
 def CreateColumnInCenter(Originalcentre,manager, kitScene, scene, ColumnTile): #Big Column Tile 47, Small Column tile 46
     centre = Originalcentre
@@ -376,6 +607,20 @@ def CreateColumnInCenter(Originalcentre,manager, kitScene, scene, ColumnTile): #
         elif RandomRotation == 3:
             centre[3] -= 90
     generateTile(ColumnTile, centre, manager, kitScene, scene, None)
+
+#Methods Creating some decorations
+def CreateColumnInCenterHash(Originalcentre,manager, kitScene, scene, ColumnTile): #Big Column Tile 47, Small Column tile 46
+    centre = Originalcentre
+    if ColumnTile > 47:
+        centre = translate(Originalcentre, [0, 0, 0])
+        RandomRotation = random.randint(0,3)
+        if RandomRotation == 1:
+            centre[3] += 90
+        elif RandomRotation == 2:
+            centre[3] += 180
+        elif RandomRotation == 3:
+            centre[3] -= 90
+    generateTileHash(ColumnTile, centre, manager, kitScene, scene, None)
 
 def CreateFourSmallColumns(Originalcentre, manager, kitScene, scene, distance):
     for i in range(4):
@@ -394,13 +639,38 @@ def CreateFourSmallColumns(Originalcentre, manager, kitScene, scene, distance):
                 centre = translate(Originalcentre, [a, 0, b])
                 generateTile(46, centre, manager, kitScene, scene, None)
 
+def CreateFourSmallColumnsHash(Originalcentre, manager, kitScene, scene, distance):
+    for i in range(4):
+                if i == 0:
+                    a = distance
+                    b = distance
+                elif i == 1:
+                    a = - distance
+                    b = distance
+                elif i == 2:
+                    a = distance
+                    b = - distance
+                elif i == 3:
+                    a = - distance
+                    b = - distance
+                centre = translate(Originalcentre, [a, 0, b])
+                generateTileHash("COLUMN_N_SMALL_Z_NOT_", centre, manager, kitScene, scene, None)
+
 def CreateTwoColumnsOppositeOnX(Originalcentre, manager, kitScene, scene, ColumnTile):
     for i in range(2):
                 if i == 0:
                     centre = translate(Originalcentre, [250, 0, 0])
                 elif i == 1:
                     centre = translate(Originalcentre, [-250, 0, 0])
-                generateTile(ColumnTile, centre, manager, kitScene, scene, None) 
+                generateTile(ColumnTile, centre, manager, kitScene, scene, None)
+
+def CreateTwoColumnsOppositeOnXHash(Originalcentre, manager, kitScene, scene, ColumnTile):
+    for i in range(2):
+                if i == 0:
+                    centre = translate(Originalcentre, [250, 0, 0])
+                elif i == 1:
+                    centre = translate(Originalcentre, [-250, 0, 0])
+                generateTileHash(ColumnTile, centre, manager, kitScene, scene, None) 
 
 def CreateObjectInMiddle(Originalcentre, manager, kitScene, scene, StartTileNumber): #StartTile 48 round steps, 49 round walls , 50 square wall, 51 square steps, 52 square wall tall
     for i in range(4):
@@ -417,6 +687,21 @@ def CreateObjectInMiddle(Originalcentre, manager, kitScene, scene, StartTileNumb
                     centre[3] += 180
                 generateTile(StartTileNumber, centre, manager, kitScene, scene, None)
 
+def CreateObjectInMiddleHash(Originalcentre, manager, kitScene, scene, StartTileNumber): #StartTile 48 round steps, 49 round walls , 50 square wall, 51 square steps, 52 square wall tall
+    for i in range(4):
+                if i == 0:
+                    centre = translate(Originalcentre, [180, 0, 180])
+                elif i == 1:
+                    centre = translate(Originalcentre, [-180, 0, 180])
+                    centre[3] -= 90
+                elif i == 2:
+                    centre = translate(Originalcentre, [180, 0, -180])
+                    centre[3] += 90
+                elif i == 3:
+                    centre = translate(Originalcentre, [-180, 0, -180])
+                    centre[3] += 180
+                generateTileHash(StartTileNumber, centre, manager, kitScene, scene, None)
+
 def CreateHStructureInMiddle(Originalcentre, manager, kitScene, scene, StartTileNumber): #50 for squared wall
     for i in range(4):
                 if i == 0:
@@ -432,6 +717,21 @@ def CreateHStructureInMiddle(Originalcentre, manager, kitScene, scene, StartTile
                     centre[3] -= 180                 
                 generateTile(StartTileNumber, centre, manager, kitScene, scene, None)
 
+def CreateHStructureInMiddleHash(Originalcentre, manager, kitScene, scene, StartTileNumber): #50 for squared wall
+    for i in range(4):
+                if i == 0:
+                    centre = translate(Originalcentre, [180, 0, -180])           
+                elif i == 1:
+                    centre = translate(Originalcentre, [-180, 0, -180])
+                    centre[3] -= 90
+                elif i == 2:
+                    centre = translate(Originalcentre, [180, 0, 180])
+                    centre[3] += 90
+                elif i == 3:
+                    centre = translate(Originalcentre, [-180, 0, 180])
+                    centre[3] -= 180                 
+                generateTileHash(StartTileNumber, centre, manager, kitScene, scene, None)
+
 def CreateSquareFenceInMiddle(Originalcentre, manager, kitScene, scene, StartTileNumber):  #50 for squared wall
      for i in range(4):
                 if i == 0:
@@ -446,3 +746,18 @@ def CreateSquareFenceInMiddle(Originalcentre, manager, kitScene, scene, StartTil
                     centre = translate(Originalcentre, [180, 0, 180])
                     centre[3] += 180
                 generateTile(StartTileNumber, centre, manager, kitScene, scene, None)
+
+def CreateSquareFenceInMiddleHash(Originalcentre, manager, kitScene, scene, StartTileNumber):  #50 for squared wall
+     for i in range(4):
+                if i == 0:
+                    centre = translate(Originalcentre, [-180, 0, -180])
+                elif i == 1:
+                    centre = translate(Originalcentre, [180, 0, -180])
+                    centre[3] -= 90
+                elif i == 2:
+                    centre = translate(Originalcentre, [-180, 0, 180])
+                    centre[3] += 90
+                elif i == 3:
+                    centre = translate(Originalcentre, [180, 0, 180])
+                    centre[3] += 180
+                generateTileHash(StartTileNumber, centre, manager, kitScene, scene, None)
