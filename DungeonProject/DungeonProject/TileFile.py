@@ -3,7 +3,7 @@ Naming Convention for tiles
 
 Index X : Type_Width_Name_Orientation
 
-TYPE: Room/Door/Corridor/Wall/Stair/Floor/Column
+TYPE: Room/Door/Corridor/Wall/Stair/Floor/Column/Decoration
 WIDTH: EW (extra wide) / W (wide) / N (narrow) / X (nothing)
 NAME: whatever the piece is
 ORIENTATION: L (left) / R (right) / T (t form) / Z (nothing)
@@ -132,11 +132,11 @@ tiles = [
     [1, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (wide-to-extrawide)
     [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 800]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-wide)                       # 44
     [1, [0, 0, 0, 0, 1600], [[0, 0, 0, 0, 1600]], [[-800, 800], [0, 600], [0, 0]]], #extrawide door square (extrawide-to-extrawide)
-    [19, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-50, 50], [0, 600], [-50, 50]]], #small-column (46)
+    [19, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-50, 50], [0, 600], [-50, 50]]], #small-column (46)                                                  # 46
     [15, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #large-column (47)
     [13, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #roundsteps no rotation (48)
     [21, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #Round wall no rotation (49)
-    [20, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square wall no rotation (50)
+    [20, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square wall no rotation (50)                                   # 50
     [9, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square steps no rotation (51)
     [7, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square wallTall no rotation (52)
 ]
@@ -160,9 +160,16 @@ dungeon_tiles = {
     "ROOM_EW_2WAY_L_NOT_"      : [5, [800, 0, 0, 90, 1600], [[-800, 0, -800, 90, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner left
     "ROOM_EW_2WAY_R_NOT_"      : [5, [0, 0, 800, 0, 1600], [[800, 0, -800, -90, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide corner right
     "CORRIDOR_EW_1WAY_Z_NOT_"  : [6, [0, 0, 800, 0, 1600], [[0, 0, -1600, 0, 1600]], [[-800, 800], [0, 600], [-800, 800]]], #extrawide hallway
+    "WALL_N_TALLSQUARE_Z_NOT_" : [7, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square wallTall no rotation
+    "STEP_N_SQUARE_Z_NOT_"     : [9, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square steps no rotation
+    "STEP_N_ROUND_Z_NOT_"      : [13, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #roundsteps no rotation
+    "COLUMN_N_LARGE_Z_NOT_"    : [15, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #large-column
     "CORRIDOR_W_1WAY_Z_NOT_"   : [17, [0, 0, 400, 0, 800], [[0, 0, -800, 0, 800]], [[-400, 400], [0, 600], [-400, 400]]], #wide hallway
     "CORRIDOR_W_DOWN_Z_NOT_"   : [18, [0, 0, -400, 180, 800], [[0, -400, -1600, 0, 800]], [[-400, 400], [-400, 600], [-400, 1200]]], #wide ramp down
     "CORRIDOR_W_UP_Z_NOT_"     : [18, [0, -400, 1200, 0, 800], [[0, 400, -1600, 0, 800]], [[-400, 400], [-400, 600], [-400, 1200]]], #wide ramp up
+    "COLUMN_N_SMALL_Z_NOT_"    : [19, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-50, 50], [0, 600], [-50, 50]]], #small-column 
+    "WALL_N_SQUARE_Z_NOT_"     : [20, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #square wall no rotation
+    "WALL_N_ROUND_Z_NOT_"      : [21, [0, 0, 0, 0, 0], [[0, 0, 0, 0, 0]], [[-200, 200], [0, 600], [-200, 200]]], #Round wall no rotation
     "DOOR_N_RECTANGLE_Z_NOT_"  : [24, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 400]], [[-200, 200], [0, 600], [0, 0]]], #narrow door square-wide (narrow-to-narrow) 
     "DOOR_W_COMBI_Z_N-W_"      : [25, [0, 0, 0, 0, 400], [[0, 0, 0, 0, 800]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide (narrow-to-wide)
     "DOOR_W_COMBI_Z_W-N_"      : [25, [0, 0, 0, 0, 800], [[0, 0, 0, 0, 400]], [[-400, 400], [0, 600], [0, 0]]], #wide door angle-wide (wide-to-narrow)

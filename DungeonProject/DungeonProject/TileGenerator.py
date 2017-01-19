@@ -94,7 +94,7 @@ def generateTileHash(index, transform, manager, kitScene, scene, collisions):
 
     # Check if the tile would overlap any of the previously place
     bb = [newTransform, dungeon_tiles[index][3]]
-    if not collisions.checkAndAddCollision(bb):
+    if collisions and not collisions.checkAndAddCollision(bb):
         return False
 
     # Create the node with the tile's mesh and adds it to the scene

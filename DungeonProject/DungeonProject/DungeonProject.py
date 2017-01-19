@@ -46,7 +46,8 @@ if __name__ == "__main__":
 
     #Make a scene with a composite mesh
     scene2 = FbxScene.Create(manager, '')
-    buildDungeon(graph, [0, 0, 0, 0, 0], manager, scene, scene2, CollisionSystem(True), difficulty)
+    # buildDungeon(graph, [0, 0, 0, 0, 0], manager, scene, scene2, CollisionSystem(True), difficulty)
+    buildDungeonHash(graph, [0, 0, 0, 0, 0], manager, scene, scene2, CollisionSystem(True), difficulty)
 
     #Save the scene in a new file
     if len(sys.argv) > 2:
