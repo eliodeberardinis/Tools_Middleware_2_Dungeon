@@ -310,11 +310,11 @@ def buildPathHash(transform, manager, kitScene, scene, collisions, difficultyLev
         if len(weights) <= i:
             weights.append({
                     400: [
-                        {0: 10, 1: 1, 2: 1, 8: 1},
-                        {0: 10, 1: 2.5, 2: 2.5, 8: 1},
-                        {0: 10, 1: 2.5, 2: 2.5, 10: 1, 11: 1, 8: 1, 22: 0.5},
-                        {0: 10, 1: 3.33, 2: 3.33, 10: 2.5, 11: 2.5, 8: 1, 22: 1},
-                        {0: 10, 1: 5, 2: 5, 10: 3.33, 11: 3.33, 8: 1, 22: 1.5}
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 1, "CORRIDOR_N_2WAY_L_NOT_": 1, "DOOR_N_HOUSE_Z_NOT_": 1},
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 2.5, "CORRIDOR_N_2WAY_L_NOT_": 2.5, "DOOR_N_HOUSE_Z_NOT_": 1},
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 2.5, "CORRIDOR_N_2WAY_L_NOT_": 2.5, "CORRIDOR_N_DOWN_Z_NOT_": 1, "CORRIDOR_N_UP_Z_NOT_": 1, "DOOR_N_HOUSE_Z_NOT_": 1, "DOOR_W_HOUSE_Z_N-W_": 0.5},
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 3.33, "CORRIDOR_N_2WAY_L_NOT_": 3.33, "CORRIDOR_N_DOWN_Z_NOT_": 2.5, "CORRIDOR_N_UP_Z_NOT_": 2.5, "DOOR_N_HOUSE_Z_NOT_": 1, "DOOR_W_HOUSE_Z_N-W_": 1},
+                        {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 5, "CORRIDOR_N_2WAY_L_NOT_": 5, "CORRIDOR_N_DOWN_Z_NOT_": 3.33, "CORRIDOR_N_UP_Z_NOT_": 3.33, "DOOR_N_HOUSE_Z_NOT_": 1, "DOOR_W_HOUSE_Z_N-W_": 1.5}
                     ],
                     800: [
                         {12: 10, 13: 1, 14: 1, 24: 1},
