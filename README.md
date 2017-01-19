@@ -52,7 +52,7 @@ Furthermore, another slightly more complex backtracking mechanism exists in the 
 From very early on the team worked in a well organized schedule meeting in person or via skype twice a week in the beggining and once a week towards the end of the project. Tasks were given to each member during these meetings and updates/collaborations on the progress of each task was discussed between the team members on a regular basis.
 Pablo took the role of the project manager setting up, among other things, the main framework of the generator. Specifically this is a summary of the main tasks each memeber had within the project:
 
-1. Pablo:
+1- Pablo:
 
 - Tile management system & edge points data structure.
 - Collision system and its optimizations.
@@ -67,6 +67,8 @@ Pablo took the role of the project manager setting up, among other things, the m
 
 3. Elio: 
 
+3- Elio: 
+
 - Catalogue of all the tile types with measurements.
 - Design and code implementation of Difficulty Rules.
 - Design and code implementation of Room Decorations.
@@ -78,3 +80,20 @@ Finally, it would be possible to expand the work done in several ways that could
 1. Room generation could be explored in more detail, by being able to generate more intricate customizations (Labyrinths, lava pits) and different types of rules using the available decorative tiles instead of leaving them completely random (e.g. counting the appearance of a specific decoration and making sure it's not repeating too often).
 2. Graph generation could be expanded to other that trees, allowing cycles in the graph, which add complexity and depth to the results.
 3. Full backtracking could be explored in more detailed, although it has been tested, but the execution times were growing drastically. This, however, would solve some problems with part of the generations stopping prematurely due to a certain subpart of the tree not being able to be generated.
+
+
+##Images:
+
+### Small Dungeon with Medium Difficulty
+
+![Alt text](https://github.com/eliodeberardinis/Tools_Middleware_2_Dungeon/blob/master/Pictures/Dungeon1.JPG?raw=true"Screen 1")
+
+### Big Dungeon with Hard Difficulty
+
+![Alt text](https://github.com/eliodeberardinis/Tools_Middleware_2_Dungeon/blob/master/Pictures/Dungeon2.JPG?raw=true"Screen 2")
+
+### Some Room Customizations
+
+![Alt text](https://github.com/eliodeberardinis/Tools_Middleware_2_Dungeon/blob/master/Pictures/Decorations.jpg?raw=true"Screen 3")
+
+
