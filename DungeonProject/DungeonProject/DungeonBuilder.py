@@ -317,11 +317,11 @@ def buildPathHash(transform, manager, kitScene, scene, collisions, difficultyLev
                         {"CORRIDOR_N_1WAY_Z_NOT_": 10, "CORRIDOR_N_2WAY_R_NOT_": 5, "CORRIDOR_N_2WAY_L_NOT_": 5, "CORRIDOR_N_DOWN_Z_NOT_": 3.33, "CORRIDOR_N_UP_Z_NOT_": 3.33, "DOOR_N_HOUSE_Z_NOT_": 1, "DOOR_W_HOUSE_Z_N-W_": 1.5}
                     ],
                     800: [
-                        {12: 10, 13: 1, 14: 1, 24: 1},
-                        {12: 10, 13: 2.5, 14: 2.5, 24: 1},
-                        {12: 10, 13: 2.5, 14: 2.5, 28: 1, 29: 1, 24: 1, 23: 0.25, 40: 0.25},
-                        {12: 10, 13: 3.33, 14: 3.33, 28: 2.5, 29: 2.5, 24: 1, 23: 0.25, 40: 0.25},
-                        {12: 10, 13: 5, 14: 5, 28: 3.33, 29: 3.33, 24: 1, 23: 0.25, 40: 0.25}
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 1, "CORRIDOR_W_2WAY_L_NOT_": 1, "DOOR_W_HOUSE_Z_W-W_": 1},
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 2.5, "CORRIDOR_W_2WAY_L_NOT_": 2.5, "DOOR_W_HOUSE_Z_W-W_": 1},
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 2.5, "CORRIDOR_W_2WAY_L_NOT_": 2.5, "CORRIDOR_W_DOWN_Z_NOT_": 1, "CORRIDOR_W_UP_Z_NOT_": 1, "DOOR_W_HOUSE_Z_W-W_": 1, "DOOR_W_HOUSE_Z_W-N_": 0.25, "DOOR_EW_SQUARE_Z_W-EW_": 0.25},
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 3.33, "CORRIDOR_W_2WAY_L_NOT_": 3.33, "CORRIDOR_W_DOWN_Z_NOT_": 2.5, "CORRIDOR_W_UP_Z_NOT_": 2.5, "DOOR_W_HOUSE_Z_W-W_": 1, "DOOR_W_HOUSE_Z_W-N_": 0.25, "DOOR_EW_SQUARE_Z_W-EW_": 0.25},
+                        {"CORRIDOR_W_1WAY_Z_NOT_": 10, "CORRIDOR_W_2WAY_R_NOT_": 5, "CORRIDOR_W_2WAY_L_NOT_": 5, "CORRIDOR_W_DOWN_Z_NOT_": 3.33, "CORRIDOR_W_UP_Z_NOT_": 3.33, "DOOR_W_HOUSE_Z_W-W_": 1, "DOOR_W_HOUSE_Z_W-N_": 0.25, "DOOR_EW_SQUARE_Z_W-EW_": 0.25}
                     ],
                     1600: [
                         {30: 10, 31: 1, 32: 1, 42: 1},
