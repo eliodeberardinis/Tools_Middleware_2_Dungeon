@@ -586,7 +586,7 @@ def DecorateRoomHash(centre, size, manager, kitScene, scene, collisions):
         #4 Random Object In The Middle with or without columns close or far
         elif type >= 47:
             # Change that to names
-            RandObjInMiddle = random.randint(47,52)
+            RandObjInMiddle = random.choice(["COLUMN_N_LARGE_Z_NOT_", "STEP_N_ROUND_Z_NOT_", "WALL_N_ROUND_Z_NOT_", "WALL_N_SQUARE_Z_NOT_", "STEP_N_SQUARE_Z_NOT_", "WALL_N_TALLSQUARE_Z_NOT_"]);
             CreateObjectInMiddleHash(originalCentre, manager, kitScene, scene, RandObjInMiddle)
             additions =  random.randint(0,2)
             if additions == 1:
