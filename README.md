@@ -86,14 +86,14 @@ Finally, it would be possible to expand the work done in several ways that could
 
 ### Small Dungeon with Medium Difficulty
 
-![Alt text](https://github.com/eliodeberardinis/Tools_Middleware_2_Dungeon/blob/master/Pictures/Dungeon1.JPG?raw=true"Screen 1")
+![Alt text](https://github.com/eliodeberardinis/Tools_Middleware_2_Dungeon/blob/master/Pictures/Dungeon1.JPG?raw=true "Screen 1")
 
 ### Big Dungeon with Hard Difficulty
 
-![Alt text](https://github.com/eliodeberardinis/Tools_Middleware_2_Dungeon/blob/master/Pictures/Dungeon2.JPG?raw=true"Screen 2")
+![Alt text](https://github.com/eliodeberardinis/Tools_Middleware_2_Dungeon/blob/master/Pictures/Dungeon2.JPG?raw=true "Screen 2")
 
 ### Some Room Customizations
 
-![Alt text](https://github.com/eliodeberardinis/Tools_Middleware_2_Dungeon/blob/master/Pictures/Decorations.jpg?raw=true"Screen 3")
+![Alt text](https://github.com/eliodeberardinis/Tools_Middleware_2_Dungeon/blob/master/Pictures/Decorations.jpg?raw=true "Screen 3")
 
 
